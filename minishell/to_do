@@ -1,0 +1,124 @@
+10/02
+
+finire ft_unset  aspettare il parsing
+
+finire ft_export  aspettare il parsing
+
+fare un funzione che smista le builtins? non e necessario ma forse facilita le cose
+
+dove mettere la fn che e in environment.c che copia environment e lo mette in t_ms? 
+	t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
+
+lascio in pause le builtins per concentrarmi sul parsing
+
+
+ft dollar funziona
+
+export da controllare quando avro i comandi
+
+
+finire parser.c
+
+
+13/03
+controllare che abbia ssegnato il type gisto ad ogni token nelle funzioni di parsing 
+
+
+
+
+ALLOCAZIONI DA LIBERARE A FINE PROGRAMMA
+
+la lista di environement variables che conservo in t_ms     la prendo a inizio programma e alla 
+			fine la devo liberare
+
+t_ms lo devo malloccare altrimenti va in segfaul,   ma dove?  nel main?
+			quindi se malloc devo liberare
+
+tutte i valori dentro t_ms che ho malloccato : myenv, cwd, 
+
+un ciclo che:
+legge la linea
+controlla se e valida
+la mette nella lista e la espande
+cerca gli operatori e fa il parsing
+la mette in una struttura-array
+la manda in esecuzione
+salva il exit status
+libera la lista con l'input
+ricomincia
+
+
+
+double free, a lot of problems, how to risolve:
+Set the pointer to NULL after free() to prevent accidental reuse.
+Be careful with multiple pointers to the same memory: If two pointers reference the same allocated block, freeing one affects the other
+
+
+LEGGI LEGGI LEGGI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+cc=123456$USER
+espande prima di salvarlo nelle envs
+
+QUINDI GESTIRE QUESTA ESPANSIONE RICORSIVA PRIMA DI EXPOTARLO IN ENVS
+e dopo non mi serve piu la recursiva in ft_dollar_expansion lo posso levare o se mi fa fatica 
+lo lascio
+da fare
+
+
+$ export HOY=caro"lina correa"		export cmd	HOY=carolina correa	primo arg perche in "
+$ printenv HOY
+carolina correa
+$ export HI=carolina correa		export cmd	HI=carolina primo arg valido(=) correa 2arg
+							non valido perche li manca =
+$ echo $HI
+carolina
+
+da finire export con calma quando avro i comandi in un array, il resto dovrebbe funzionare
+
+1234=gg
+
+"ooo$1234 vvvv"
+
+ooogg vvvv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+command:
+cat < input.txt | grep "error" | sort | uniq > output.txt
+
+
+
+
+
+
+
+aaaaaaaaa a aaaaaaaa	aaaaa 'aa aa'mm 	aaaaa$cc   aaaaaaaa 
+
+					aaaaa123456
+					aaaaa123456
+					
+				aa aamm
+				2 stringhe	origin		aaaaa
+						espansa	aaaaa123456
+
+'123'   strlen 5
