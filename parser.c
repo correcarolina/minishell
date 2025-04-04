@@ -12,42 +12,50 @@
 
 #include "minishell.h"
 
-//This function iterates through the linked list of tokens and assigns a types 
-//command and args
-
-static void	ft_assign_cmd(t_list *line)
+//if the first or last token is a pipe or if there are two pipes in a row or if
+//a pipe is followed by a redirection or if a redirection is followed by a pipe
+int	ft_check_pipes(t_list *line)
 {
 	t_list	*current;
 
 	current = line;
-	while (current != NULL)
+	if (current->type == PIPE)
+		return (ft_putstr_fd("syntax error near unexpected token '|'\n", 2), 0);
+	while (current)
 	{
-		
-		if (current->type == 0)
+		if (current->type == PIPE)
 		{
-			current->type = CMD;
-			current = current->next;
-			while (current != NULL && current->type == 0)
-			{
-				current->type = ARG;
-				current = current->next;
-			}
+			if (current->next == NULL || current->next->type == RD_HEREDOC || \
+			current->next->type == PIPE || current->next->type == RD_IN || \
+			current->next->type == RD_OUT_A || current->next->type == RD_OUT_T)
+				return (ft_putstr_fd("syntax error near unexpected \
+token '|'\n", 2), 0);
 		}
-		if (current != NULL)
+		else if (current->type == RD_IN || current->type == RD_OUT_T \
+		|| current->type == RD_OUT_A || current->type == RD_HEREDOC)
+		{
+			if (current->next == NULL || current->next->type == PIPE)
+				return (ft_putstr_fd("syntax error near unexpected \
+token \n", 2), 0);
+		}
 		current = current->next;
 	}
+	return (1);
 }
 
+//This function iterates through the linked list of tokens and assigns a type:
+//command and arguments, operator, delimiter or file
 void	ft_parse(t_list *line)
 {
 	ft_assign_operator(line);
+	if (!ft_check_pipes(line))
+		return ;
 	ft_assign_delimiter(line);
 	ft_assign_file(line);
 	ft_assign_cmd(line);
-
 }
 
-void	debug_printer(t_list *line)
+void	debug_printer(t_list *line)/********* da levare ************/
 {
 	t_list	*current;
 	char	*token_type;
@@ -80,7 +88,7 @@ void	debug_printer(t_list *line)
 			token_type = "OUTFILE_A";
 		else
 			token_type = "type not assigned";
-		printf("%s		type: %s\n", current->content, token_type);
+		printf("%-15s type: %-10s\n", current->content, token_type);
 		current = current->next;
 	}
 	printf("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");

@@ -16,7 +16,6 @@
 
 t_list	*ft_lstnew(char *content)
 {
-	printf("content: %s\n", content);
 	t_list	*new;
 	int		i;
 
@@ -68,27 +67,33 @@ void	ft_clear_lst(t_list **head)
 		*head = temp;
 	}
 }
-//fn per stampare la lista per debbuging ****************************
 
-void print_list(t_list *lista)
+/*Returns the last node of the list.*/
+
+t_list	*ft_lstlast(t_list *lst)
 {
-    while (lista)
-    {
-        printf("Value: %s, \ttype: %d\n", lista->content, (lista->type));
-        lista = lista->next;
-    }
+	t_list	*ptr;
+
+	ptr = lst;
+	if (lst == NULL)
+		return (NULL);
+	while (ptr->next != NULL)
+	{
+		ptr = ptr->next;
+	}
+	return (ptr);
 }
 
-
+//fn per stampare la lista per debbuging ************************da levare
 void print_input(t_list *lista)
 {
 	int	i;
 
 	i = 0;
-    while (lista)
-    {
-        printf("%i: Value: %s, \ttype: %d\n", i, lista->content, (lista->type));
-        lista = lista->next;
+	while (lista)
+	{
+		printf("%i: Value: %s, \ttype: %d\n", i, lista->content, (lista->type));
+		lista = lista->next;
 		i++;
-    }
+	}
 }

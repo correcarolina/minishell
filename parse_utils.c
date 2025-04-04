@@ -13,9 +13,9 @@
 #include "minishell.h"
 
 //This functions iterate through the linked list of tokens and assign a type 
-//some controls like ir redirections are the last char of the string aare not
-//checked here because they were checked previously in the check_input function
 
+//qui nella strncmp includo anche il terminatore \0 per non assegnare uno di questi operatori
+//a un token che non è un operatore ma in quotes es: "| grep "
 void	ft_assign_operator(t_list *line)
 {
 	t_list	*current;
@@ -25,15 +25,15 @@ void	ft_assign_operator(t_list *line)
 	{
 		if (current->type == 0)
 		{
-			if (ft_strncmp(current->content, "|", 1) == 0)
+			if (ft_strncmp(current->content, "|", 2) == 0)
 				current->type = PIPE;
-			else if (ft_strncmp(current->content, ">>", 2) == 0)
+			else if (ft_strncmp(current->content, ">>", 3) == 0)
 				current->type = RD_OUT_A;
-			else if (ft_strncmp(current->content, ">", 1) == 0)
+			else if (ft_strncmp(current->content, ">", 2) == 0)
 				current->type = RD_OUT_T;
-			else if (ft_strncmp(current->content, "<<", 2) == 0)
+			else if (ft_strncmp(current->content, "<<", 3) == 0)
 				current->type = RD_HEREDOC;
-			else if (ft_strncmp(current->content, "<", 1) == 0)
+			else if (ft_strncmp(current->content, "<", 2) == 0)
 				current->type = RD_IN;
 		}
 		current = current->next;
@@ -68,7 +68,7 @@ void	ft_assign_file(t_list *line)
 				current->type = ft_set_file_type(redir_type);
 			else
 			{
-				ft_putstr_fd("Error: syntax error near unexpected token\n", 2);
+				ft_putstr_fd("Error: syntax error near unexpected token👻\n", 2);
 				return ;
 			}
 		}
@@ -90,10 +90,32 @@ void	ft_assign_delimiter(t_list *line)
 				current->type = DELIMITER;
 			else
 			{
-				ft_putstr_fd("Error: syntax error near unexpected token\n", 2);
+				ft_putstr_fd("Error: syntax error near unexpected token😈\n", 2);
 				return ;
 			}
 		}
 		current = current->next;
+	}
+}
+
+void	ft_assign_cmd(t_list *line)
+{
+	t_list	*current;
+
+	current = line;
+	while (current != NULL)
+	{
+		if (current->type == 0)
+		{
+			current->type = CMD;
+			current = current->next;
+			while (current != NULL && current->type == 0)
+			{
+				current->type = ARG;
+				current = current->next;
+			}
+		}
+		if (current != NULL)
+			current = current->next;
 	}
 }

@@ -139,6 +139,7 @@ t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
 	t_envlst	*new;
 
 	j = 0;
+	myenv = NULL;
 	while (matrix[j] != NULL)
 	{
 		new = env_new_node(matrix[j]);

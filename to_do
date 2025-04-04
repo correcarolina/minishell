@@ -1,5 +1,6 @@
 10/02
 
+
 finire ft_unset  aspettare il parsing
 
 finire ft_export  aspettare il parsing da controllare
@@ -30,6 +31,12 @@ t_ms lo devo malloccare altrimenti va in segfaul,   ma dove?  nel main?
 
 tutte i valori dentro t_ms che ho malloccato : myenv, cwd, 
 
+tutte le liste che ho creato con malloc,  la lista di input, la lista di comandi, la lista di argomenti
+			la lista di comandi la devo liberare a fine programma
+			la lista di argomenti la devo liberare a fine programma
+			la lista di input la devo liberare a fine programma
+
+			
 un ciclo che:
 legge la linea
 controlla se e valida
@@ -71,18 +78,24 @@ commands:
 cat < input.txt | grep "error" | sort | uniq > output.txt
 echo "start" >> log.txt | grep "start" < input.txt
 cat << EOF | grep world < input.txt >> output.txt
+export "cia'o"=mondo -> deve dare errore
+export 'cia"o'=mondo
+export ciao+=mondo -> appende la stringa alla variabile gia esistente
+export cia+o=mondo -> errore
+echo ciao | > p -> deve dare errore (gia fatto)
+echo ciao | > -> deve dare errore (gia fatto)
 
 
 
 
+echo "ciao mondo | |" -> non deve dare errore perche tra virgolette 
+
+sytax errors in pipes:
+>|	<|	>>|	<<|	|>	|<	|>>	|<<	||	| |
 
 
-
-
-
-
-
-
+prima di consegnare:
+levare tutti gli emoji e messaggi di errore utile per debug
 
 
 

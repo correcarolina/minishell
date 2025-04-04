@@ -50,11 +50,10 @@ int	main (int ac, char **av, char **env)
 		{
 			
 			tokenize(mini, line, &input);
-			if (!input)
+			if (!input)/* solo per DB, questo msg va levato. deve restituire il prompt */
 			    ft_putstr_fd("Error: input is NULL after tokenize\n", 2);
 			ft_parse(input);
 			debug_printer(input);
-		//	print_input(input); questa e doppione di debug_printer
 			ft_clear_lst(&input);
 		}//queste le devo gestire dopo, una fn che le gestisce tutte quando ho gia i cmd 
 		//in un array cmd args

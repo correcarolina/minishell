@@ -47,6 +47,10 @@ char	*singlequote(char **str)
 		else
 			word[i++] = *(*str)++;
 	}
+	while (**str && **str != S_QUOTE)
+		word = ft_get_plain_word(str, word);
+	if (**str == S_QUOTE)
+		(*str)++;
 	return (word);
 }
 
@@ -55,8 +59,8 @@ char	*singlequote(char **str)
 char	*ft_dollar_expansion(t_ms mini, char **str)
 {
 	size_t		i;
-	char	*name;
-	char	*value = NULL;
+	char		*name;
+	char		*value = NULL;
 
 	i = 0;
 	if (**str == '\0' || ft_isspace(**str) || **str == D_QUOTE)
@@ -77,14 +81,14 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 	name = ft_substr(*str, 0, i);//checks for NULL in getenv_var
 	value = ft_getenv_var(&mini, name);
 	free(name);
-	(*str ) += i;
+	(*str) += i;
 	return (value);
 }
 
 //returns a copy of the string inside the double quotes
 char	*doublequote(t_ms mini, char **str)
 {
-	char *word;
+	char	*word;
 
 	word = ft_calloc(1, sizeof(char));
 	if (!word)
@@ -96,7 +100,7 @@ char	*doublequote(t_ms mini, char **str)
 		{
 			(*str)++;
 			word = ft_get_expansion(mini, str, word);
-		}	
+		}
 		else
 			word = ft_get_plain_word(str, word);
 	}
@@ -105,41 +109,3 @@ char	*doublequote(t_ms mini, char **str)
 	return (word);
 }
 
-
-
-
-
-/*ultima versione di chatgpt 
-char	*ft_dollar_expansion(t_ms mini, char **str)
-{
-	size_t		i;
-	char		*name;
-	char		*value;
-	char		*expanded;
-	char		*temp;
-
-	i = 0;
-	value = handle_easy_dollar(str);
-	if (value)
-		return (value);
-	while ((*str)[i] != '\0' && (ft_isalnum((*str)[i]) || (*str)[i] == '_'))
-		i++;
-	name = ft_substr(*str, 0, i); // Extract variable name
-	value = ft_getenv_var(&mini, name); // Get the value (malloced)
-	free(name);
-	(*str) += i;
-	if (!value)
-		return (ft_strdup("")); // If variable not found, return empty string
-	expanded = ft_strdup(value); // Duplicate value to avoid modifying original
-	free(value); // Free original malloced value
-
-	while (ft_strchr(expanded, '$')) // If the value contains another variable
-	{
-		temp = ft_dollar_expansion(mini, &expanded);
-		free(expanded); // Free previous value before reassigning
-		expanded = temp;
-		if (!expanded)
-			return (NULL);
-	}
-	return (expanded);
-} */

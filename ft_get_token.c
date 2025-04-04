@@ -49,7 +49,7 @@ char	*ft_get_expansion(t_ms mini, char **str, char *word)
 
 char	*ft_get_token(t_ms mini, char **str)
 {
-	char *token;
+	char	*token;
 
 	token = (char *)ft_calloc(1, sizeof(char));
 	if (! token)
@@ -70,5 +70,3 @@ char	*ft_get_token(t_ms mini, char **str)
 	}
 	return (token);
 }
-
-

@@ -34,7 +34,7 @@
 # define RD_IN		2	// < filename
 # define RD_OUT_T	3	// > filename
 # define RD_OUT_A	4	// >> filename
-# define RD_HEREDOC	5	// << limiter
+# define RD_HEREDOC	5	// << delimiter
 # define CMD		6
 # define ARG		7
 # define DELIMITER	8
@@ -88,57 +88,56 @@ typedef struct s_ms
 t_list	*ft_lstnew(char *content);
 void	ft_append_node(t_list **lst, t_list *new_node);
 void	ft_clear_lst(t_list **head);
-void 	print_list(t_list *lista);/***************da levare***********/
-void 	print_input(t_list *lista);/**************da levare********* */
-int		paired_quotes(const char *str);
-
+t_list	*ft_lstlast(t_list *lst);
+void	print_input(t_list *lista);/**************da levare**********/
 
 /***********************************lexer**************************************/
 
+/*tokenize(3ft)*/
 void	tokenize(t_ms *mini, char *str, t_list **input);
-char	*handle_token(t_ms mini, char **str);
+char	*ft_operator(char **str);
+/*singlequote(4ft)*/
 char	*singlequote(char **str);
 char	*doublequote(t_ms mini, char **str);
-char	*ft_operator(char **str);
+char	*ft_dollar_expansion(t_ms mini, char **str);
+/*ft_get_token*/
 char	*ft_get_plain_word(char **str, char *word);
 char	*ft_get_token(t_ms mini, char **str);
-char	*ft_get_expansion(t_ms mini,char **str, char *word);
-char	*ft_strjoin_free(char *s1, char *s2);
-char	*ft_dollar_expansion(t_ms mini, char **str);
+char	*ft_get_expansion(t_ms mini, char **str, char *word);
 
+/*(3ft)******************************parsing***********************************/
 
-/*******************************parsing****************************************/
-
+int		ft_check_pipes(t_list *line);
 void	ft_parse(t_list *line);
-void	ft_assign_operator(t_list *line);
-void	ft_assign_file(t_list *line);
-void	ft_assign_delimiter(t_list *line);
-
 void	debug_printer(t_list *line);
+
+/*(5ft)parse_utils*/
+void	ft_assign_operator(t_list *line);
+void	ft_assign_delimiter(t_list *line);
+void	ft_assign_file(t_list *line);
+void	ft_assign_cmd(t_list *line);
 
 /*************************************utils************************************/
 
-int	ft_isempty_str(const char *str);
-int	ft_ismetachar(int c);
-int	ft_isvalid_name(char *str);
+int		ft_isempty_str(const char *str);
+int		ft_ismetachar(int c);
+int		ft_isvalid_name(char *str);
+char	*ft_strjoin_free(char *s1, char *s2);
 
-
-/*******************************input_check************************************/
+/*(2ft)*********************** check_input ************************************/
 
 int	ft_isvalid_input(const char *input);
 
-
-/**********************************environment*********************************/
+/**(6ft da levarne una)**********environment***********************************/
 
 t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix);
 t_envlst	*env_new_node(char *var);
-void	env_append_node(t_envlst **lst, t_envlst *new);
-void	env_clear_node(t_envlst *node);
-void	env_rm_node(t_envlst **head, char *str);
-void	env_clear_lst(t_envlst **head);
-
-char	*ft_getenv_var(t_ms *mini, char *env);
-
+void		env_append_node(t_envlst **lst, t_envlst *new);
+void		env_clear_node(t_envlst *node);
+void		env_rm_node(t_envlst **head, char *str);
+void		env_clear_lst(t_envlst **head);
+/*ft_pwc*/
+char		*ft_getenv_var(t_ms *mini, char *env);
 
 /******************************** builtins*************************************/
 
@@ -150,4 +149,3 @@ void	ft_unset(t_ms	*mini, char *key);
 /********************************** others ************************************/
 
 #endif
-
