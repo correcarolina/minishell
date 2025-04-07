@@ -41,7 +41,7 @@
 # define INFILE		9
 # define OUTFILE_T	10
 # define OUTFILE_A	11
-
+//aggiiungere un altro per casi particolari "|" ">>" ?	
 
 
 //una lista per fare il parsing
@@ -147,5 +147,8 @@ void	ft_export(t_ms	*mini);
 void	ft_unset(t_ms	*mini, char *key);
 
 /********************************** others ************************************/
+
+/*nel main per ora*/
+void	ms_cleanup(t_ms *ms);
 
 #endif

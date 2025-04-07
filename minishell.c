@@ -22,7 +22,13 @@
 # define AQUA "\001\033[1;36m\002"
 # define DEFAULT "\001\033[0m\002"
 
-
+void	ms_cleanup(t_ms *ms)
+{
+	if (ms->cwd)
+		free(ms->cwd);
+	if (ms->myenv)
+		env_clear_lst(&ms->myenv);
+}
 
 int	main (int ac, char **av, char **env)
 {
@@ -67,8 +73,40 @@ int	main (int ac, char **av, char **env)
 		//else (error, quotes not closed and return prompt);
 		free (line);
 	}
-	env_clear_lst(&mini->myenv);
+	ms_cleanup(mini);
 	free(mini);
 	return (0);
 }
+
+
+/* //questo main senza readline non ha leaks 7/4/25
+int	main (int ac, char **av, char **env)
+{
+	char		*line;
+	t_list		*input;
+	t_ms		*mini;
+
+	if (ac != 2)
+		return (printf("only one arg required\n"), 0);
+	mini = (t_ms *)malloc(sizeof(t_ms));
+	if (!mini)
+		return (1);//da qui in poi si puo fare ft_init
+	input = NULL;
+	mini->myenv = ft_env_cpy(mini->myenv, env);
+	mini->cwd = ft_getenv_var(mini, "PWD");
+	mini->exit_status = 0;
+	line = av[1];
+	if (ft_isvalid_input((const char *)line))
+	{
+		tokenize(mini, line, &input);
+		if (!input)// solo per DB, questo msg va levato. deve restituire il prompt
+			ft_putstr_fd("Error: input is NULL after tokenize\n", 2);
+		ft_parse(input);
+		debug_printer(input);
+		ft_clear_lst(&input);
+	}
+	ms_cleanup(mini);
+	free(mini);
+	return (0);
+} */
 
