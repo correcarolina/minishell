@@ -41,7 +41,6 @@
 # define INFILE		9
 # define OUTFILE_T	10
 # define OUTFILE_A	11
-//aggiiungere un altro per casi particolari "|" ">>" ?	
 
 
 //una lista per fare il parsing
@@ -66,7 +65,7 @@ typedef struct s_envlst
 typedef	struct s_executor
 {
 	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
-	char				**redir;//ogni str puo essere filein, fileout, append, heredoc
+	t_list				*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
 	struct s_executor	*next;
 }			t_executor;
 //forse la lista per il parsing deve diventare questo una volta che elimino
@@ -93,7 +92,7 @@ void	print_input(t_list *lista);/**************da levare**********/
 
 /***********************************lexer**************************************/
 
-/*tokenize(3ft)*/
+/*tokenize(4ft)*/
 void	tokenize(t_ms *mini, char *str, t_list **input);
 char	*ft_operator(char **str);
 /*singlequote(4ft)*/
