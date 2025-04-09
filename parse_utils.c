@@ -105,6 +105,13 @@ void	ft_assign_cmd(t_list *line)
 	current = line;
 	while (current != NULL)
 	{
+		if (current->type == ARG)
+			current->type = 0;
+		current = current->next;
+	}
+	current = line;
+	while (current != NULL)
+	{
 		if (current->type == 0)
 		{
 			current->type = CMD;

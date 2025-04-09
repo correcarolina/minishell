@@ -127,7 +127,7 @@ static int	paired_quotes(const char *str)
 int	ft_isvalid_input(const char *input)
 {
 	//char	*str;
-
+//da rivedere is_empty_str vedi nota
 	if (input == NULL || ft_isempty_str(input) || (!paired_quotes(input)))
 		return (0);
 	/* str = ft_strtrim(input, " \t\n");

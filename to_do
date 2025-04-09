@@ -86,7 +86,8 @@ echo ciao | > p -> deve dare errore (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
 
 
-
+"|" ">" ">>" "<" "<<" devono essere trattati come args perche sono tra virgolette, invece per ora 
+me lo da come metacharacter, come risolvere? flag, creare subito nodo con type?
 
 echo "ciao mondo | |" -> non deve dare errore perche tra virgolette 
 

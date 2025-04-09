@@ -37,7 +37,7 @@ char	*ft_operator(char **str)
 	return (operator);
 }
 
-static char	*handle_token(t_ms mini, char **str)
+/* static char	*handle_token(t_ms mini, char **str)
 {
 	char	*word;
 
@@ -66,5 +66,48 @@ void	tokenize(t_ms *mini, char *str, t_list **input)
 		if (word != NULL && *word != '\0')
 			ft_append_node(input, ft_lstnew(word));
 //non posso liberare word perche deve rimanere dentro il nodo
+	}
+} */
+
+static void	handle_operator(char **str, t_list **input)
+{
+	char	*word;
+
+	word = ft_operator(str);
+	if (word != NULL)
+		ft_append_node(input, ft_lstnew(word));
+}
+
+static void	handle_word(t_ms *mini, char **str, t_list **input)
+{
+	char	*word;
+	t_list	*temp;
+
+	word = ft_get_token(*mini, str);
+	if (word != NULL && *word != '\0')
+	{
+		if (is_str_operator(word))
+		{
+			temp = ft_lstnew(word);
+			temp->type = ARG;
+			ft_append_node(input, temp);
+		}
+		else
+			ft_append_node(input, ft_lstnew(word));
+	}
+}
+
+void	tokenize(t_ms *mini, char *str, t_list **input)
+{
+	while (*str)
+	{
+		while (*str && isspace(*str))
+			str++;
+		if (*str == '\0')
+			break ;
+		if (ft_ismetachar(*str))
+			handle_operator(&str, input);
+		else
+			handle_word(mini, &str, input);
 	}
 }

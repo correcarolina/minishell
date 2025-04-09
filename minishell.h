@@ -66,7 +66,7 @@ typedef struct s_envlst
 typedef	struct s_executor
 {
 	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
-	int					fd[2];//in and out
+	char				**redir;//ogni str puo essere filein, fileout, append, heredoc
 	struct s_executor	*next;
 }			t_executor;
 //forse la lista per il parsing deve diventare questo una volta che elimino
@@ -117,10 +117,11 @@ void	ft_assign_delimiter(t_list *line);
 void	ft_assign_file(t_list *line);
 void	ft_assign_cmd(t_list *line);
 
-/*************************************utils************************************/
+/*(5ft)*******************************utils************************************/
 
 int		ft_isempty_str(const char *str);
 int		ft_ismetachar(int c);
+int		is_str_operator(char *str);
 int		ft_isvalid_name(char *str);
 char	*ft_strjoin_free(char *s1, char *s2);
 

@@ -15,7 +15,6 @@
 //returns 1 if the sring is NULL or if it is made up of only spaces
 //returns 0 if a non space char is found
 //serve per aggiornare la history solo con str valide *******************
-
 int	ft_isempty_str(const char *str)
 {
 	if (!str)
@@ -32,7 +31,6 @@ int	ft_isempty_str(const char *str)
 
 /*checks only for the metacharacters that we need in this project,
 if is pipe or redirect returns 1, else returns 0*/
-
 int	ft_ismetachar(int c)
 {
 	if (c == '|' || c == '<' || c == '>')
@@ -40,8 +38,21 @@ int	ft_ismetachar(int c)
 	return (0);
 }
 
-//checks if a string is a valid variable name
+/*checks if the string contains only one operator | , >>, <<, >, <
+Helps the parser distinguish between actual operators and quoted strings
+containing characters like '|', '>', or '<'*/
+int	is_str_operator(char *str)
+{
+	if ((ft_strncmp(str, "|", 2) == 0) || \
+		(ft_strncmp(str, ">>", 3) == 0) || \
+		(ft_strncmp(str, "<<", 3) == 0) || \
+		(ft_strncmp(str, ">", 2) == 0) || \
+		(ft_strncmp(str, "<", 2) == 0))
+		return (1);
+	return (0);
+}
 
+//checks if a string is a valid variable name
 int	ft_isvalid_name(char *str)
 {
 	int	i;
