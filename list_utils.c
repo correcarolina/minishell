@@ -29,6 +29,23 @@ t_list	*ft_lstnew(char *content)
 	return (new);
 }
 
+//creates a new node and puts a string in the content and a type in the type
+//this is used for the redirections in the cmdblock list
+t_list	*ft_redir_lstnew(char *content, int type)
+{
+	t_list	*new;
+	int		i;
+
+	i = 0;
+	new = (t_list *)malloc(sizeof(t_list));
+	if (!new)
+		return (NULL);
+	new->content = content;
+	new->type = type;
+	new->next = NULL;
+	return (new);
+}
+
 /*Adds the node ’new’ at the end of the list.
 	@lst: The address of a pointer to the head of a list.
 	@new: The address of a pointer to the node to be added to the list.*/
@@ -57,7 +74,7 @@ void	ft_clear_lst(t_list **head)
 	t_list	*temp;
 
 	temp = NULL;
-	if (*head == NULL)
+	if (!head || !*head)
 		return ;
 	while (*head != NULL)
 	{
@@ -82,18 +99,4 @@ t_list	*ft_lstlast(t_list *lst)
 		ptr = ptr->next;
 	}
 	return (ptr);
-}
-
-//fn per stampare la lista per debbuging ************************da levare
-void print_input(t_list *lista)
-{
-	int	i;
-
-	i = 0;
-	while (lista)
-	{
-		printf("%i: Value: %s, \ttype: %d\n", i, lista->content, (lista->type));
-		lista = lista->next;
-		i++;
-	}
 }

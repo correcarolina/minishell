@@ -60,7 +60,7 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 {
 	size_t		i;
 	char		*name;
-	char		*value = NULL;
+	char		*value = NULL;//levare una riga per sistemare questo
 
 	i = 0;
 	if (**str == '\0' || ft_isspace(**str) || **str == D_QUOTE)
@@ -68,8 +68,8 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 	else if (**str == '?')
 	{
 		(*str)++;
-		printf("sono un segnale/n");//TEMPORANEO
-		return (NULL);/*(ft_itoa(g_signal));*/
+		printf("sono un segnale/n");//db TEMPORANEO
+		return (NULL);/*(ft_itoa(g_signal)); oppure ft_itoa(mini.exit_status);*/
 	}
 	else if (**str != '_' && !ft_isalpha(**str))
 	{
@@ -108,4 +108,3 @@ char	*doublequote(t_ms mini, char **str)
 		(*str)++;
 	return (word);
 }
-

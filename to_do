@@ -76,6 +76,7 @@ da finire export con calma quando avro i comandi in un array, il resto dovrebbe 
 
 commands:
 cat < input.txt | grep "error" | sort | uniq > output.txt
+cat < infile.txt | grep error | wc -l
 echo "start" >> log.txt | grep "start" < input.txt
 cat << EOF | grep world < input.txt >> output.txt
 export "cia'o"=mondo -> deve dare errore
@@ -86,8 +87,8 @@ echo ciao | > p -> deve dare errore (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
 
 
-"|" ">" ">>" "<" "<<" devono essere trattati come args perche sono tra virgolette, invece per ora 
-me lo da come metacharacter, come risolvere? flag, creare subito nodo con type?
+"|" ">" ">>" "<" "<<" devono essere trattati come args perche sono tra 
+virgolette git logs ---> FATTO!!
 
 echo "ciao mondo | |" -> non deve dare errore perche tra virgolette 
 
@@ -102,7 +103,20 @@ levare tutti gli emoji e messaggi di errore utili per debug
 
 
 
+23/04/25
 
+le redirections si possono fare anche senza comandi:
+> miofile
+crea il file
+
+< file
+se deve leggere dal file e il file non esiste da errore: No such file or directory
+
+
+TODO
+Scorrere la lista del parsing e allocare un nodo ogni volta che trova un pipe |
+in final_parse ho gia le funzioni che creano una matrice con cmd e args euna t_list 
+con le redirections
 
 
 

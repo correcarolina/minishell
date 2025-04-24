@@ -53,8 +53,12 @@ void	ft_parse(t_list *line)
 	ft_assign_delimiter(line);
 	ft_assign_file(line);
 	ft_assign_cmd(line);
+	debug_printer(line);/********* da levare ************/	
 }
 
+//This function is a helper to debug the parser.
+//Add "debug_printer(line);" in ft_parse() after ft_assign_cmd to see the output
+//of the parser.
 void	debug_printer(t_list *line)/********* da levare ************/
 {
 	t_list	*current;

@@ -62,12 +62,12 @@ typedef struct s_envlst
 }			t_envlst;
 
 //questo e il nodo che deve arrivare al executor:
-typedef	struct s_executor
+typedef	struct s_cmdblock
 {
 	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
 	t_list				*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
-	struct s_executor	*next;
-}			t_executor;
+	struct s_cmdblock	*next;
+}			t_cmdblock;
 //forse la lista per il parsing deve diventare questo una volta che elimino
 //o includo qui negli fd le pipes e le redirections
 
@@ -75,20 +75,26 @@ typedef	struct s_executor
 /*definire una struct ms che ha le cose principali che non so quali sono
 sicuramente una copia delle env variables (envcpy.c)che copio appena inizia
 il programma, questa ms struct me la porto dietro tutto il tempo*/
-typedef struct s_ms
+typedef struct s_ms_
 {
 	t_envlst	*myenv;
 	char		*cwd;
-	int			exit_status;
+	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
 }			t_ms;
 
 /****************list_utils**** list for parsing ******************************/
 
 t_list	*ft_lstnew(char *content);
+t_list	*ft_redir_lstnew(char *content, int type);
 void	ft_append_node(t_list **lst, t_list *new_node);
 void	ft_clear_lst(t_list **head);
 t_list	*ft_lstlast(t_list *lst);
-void	print_input(t_list *lista);/**************da levare**********/
+
+/******************* cmd_lst ****list utils for command block******************/
+
+t_cmdblock	*ft_new_cmdblock(char **cmd, t_list *redir);
+void		ft_append_cmdblock(t_cmdblock **lst, t_cmdblock *new_node);
+void		ft_clear_cmdblock(t_cmdblock **head);
 
 /***********************************lexer**************************************/
 
@@ -115,6 +121,12 @@ void	ft_assign_operator(t_list *line);
 void	ft_assign_delimiter(t_list *line);
 void	ft_assign_file(t_list *line);
 void	ft_assign_cmd(t_list *line);
+
+/******************************* final parse **********************************/
+
+char	**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
+t_list	*redir_lst(t_list *line);//queste 2 possono essere static
+t_cmdblock	*ft_create_cmdblock(t_list *line);
 
 /*(5ft)*******************************utils************************************/
 
