@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/01/30 12:57:11 by cacorrea         ###   ########.fr        #
+#    Updated: 2025/04/26 17:14:44 by rd-agost         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,9 @@ $(NAME): $(OBJS) $(LIBFT)
 
 %.o: %.c
 	@$(CC) -c $(CFLAGS) -I. $< -o $@
+val: all
+        valgrind --leak-check=full --track-origins=yes -s --show-leak-kinds=all 
+		--suppressions=./supp/supp.supp ./$(NAME)
 
 clean:
 	@make clean -C ./libft
