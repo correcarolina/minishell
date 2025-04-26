@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/01/30 12:32:55 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/04/26 18:52:39 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,10 @@ void	ft_pwd(t_ms *mini);
 void	ft_env(t_ms	*mini);
 void	ft_export(t_ms	*mini);
 void	ft_unset(t_ms	*mini, char *key);
+void	builtin_echo(t_cmdblock *data);
+
+/*2f******************************* executor **********************************/
+void	execute_command(t_cmdblock *data, t_envlst **env, t_ms *mini);
 
 /********************************** others ************************************/
 

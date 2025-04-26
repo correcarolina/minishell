@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 12:10:32 by cacorrea          #+#    #+#              #
-#    Updated: 2023/12/19 12:10:36 by cacorrea         ###   ########.fr        #
+#    Updated: 2025/04/26 18:32:47 by rd-agost         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRC	:= ft_isalpha.c \
 	ft_putstr_fd.c \
 	ft_putendl_fd.c \
 	ft_putnbr_fd.c \
+	ft_strcmp.c
 
 OBJS	= $(SRC:%.c=%.o)	
 

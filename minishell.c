@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/01/30 12:31:07 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/04/26 19:00:03 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,13 @@ int	main (int ac, char **av, char **env)
 		line = readline(GREEN "minishell> " DEFAULT);
 	//DB	printf("%s\n", line);
 		add_history(line); //se line non e vuota?
-		if (ft_isvalid_input((const char *)line))
+		if(ft_strcmp("exit", line) == 0)
+		{
+			rl_clear_history();
+			//free_all(&mini->myenv->key);
+			break;
+		}
+		else if (ft_isvalid_input((const char *)line))
 		{
 			
 			tokenize(mini, line, &input);
@@ -64,6 +70,7 @@ int	main (int ac, char **av, char **env)
 			}
 			ft_parse(input);
 			head = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
+			execute_command(head, &mini->myenv, mini );
 			ft_clear_lst(&input);
 		}//queste le devo gestire dopo, una fn che le gestisce tutte quando ho gia i cmd 
 		//in un array cmd args
