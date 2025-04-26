@@ -1,0 +1,8 @@
+-vedere se funziona supp
+-no .o in makefile
+-exit
+-echo
+-echo -n
+-execution
+-exit status
+-gestione segnali(ctr d, ctrl c ctrl \) [con global var ?]
