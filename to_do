@@ -85,7 +85,17 @@ export ciao+=mondo -> appende la stringa alla variabile gia esistente
 export cia+o=mondo -> errore
 echo ciao | > p -> deve dare errore (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
+cat < input | grep error < Makefile :se non esiste il file da errore,
+	in ogni caso il grep lo fa su Makefiel, sia che input esista o non
+First handle redirections, then if not redirections have made, handle pipes
+oppure piu facile: 
+Always set pipes first, redirections second — because redirections have the final word
+Why?
 
+    Redirections are more specific: if the user said cat < input.txt, they want to read from the file, not from the previous command's pipe.
+
+    Pipes are the default connection only if no redirection replaces stdin or stdout.
+If there is a redirection (<, >, >>, etc.), it overrides the pipe.
 
 "|" ">" ">>" "<" "<<" devono essere trattati come args perche sono tra 
 virgolette git logs ---> FATTO!!
