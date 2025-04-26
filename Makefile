@@ -6,7 +6,7 @@
 #    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/04/26 17:48:40 by rd-agost         ###   ########.fr        #
+#    Updated: 2025/04/26 18:47:03 by rd-agost         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ CFLAGS = -Wall -Wextra -Werror -g
 
 SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		ft_env.c ft_export.c ft_unset.c singlequote.c ft_get_token.c \
-		check_input.c parser.c parse_utils.c final_parse.c cmd_lst.c
+		check_input.c parser.c parse_utils.c final_parse.c cmd_lst.c \
+		exec.c ft_echo.c
 
 
 LIBFT = ./libft/libft.a
