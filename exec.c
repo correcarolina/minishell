@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	print_matrix(t_envlst **matrix)
+static void	print_matrix(t_envlst **matrix)//la stampa c'e in ft_env
 {
 	int i;
 

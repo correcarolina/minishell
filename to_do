@@ -48,6 +48,27 @@ salva il exit status
 libera la lista con l'input
 ricomincia
 
+-----------------------------------------------------------------
+read input
+parse into command blocks
+
+save stdin and stdout backup in m_ts
+
+for each command block:
+    - create pipes if needed
+    - fork()
+    - inside child:
+        - if there is a pipe: dup2(pipe_fd, STDOUT) or STDIN
+		- handle redirections (dup2)
+        - execve()
+    - inside parent:
+        - close pipe fds
+        - wait
+
+after all:
+    restore stdin and stdout from saved copy
+    wait for all children
+-----------------------------------------------------------------
 
 
 double free, a lot of problems, how to risolve:
@@ -85,6 +106,11 @@ export ciao+=mondo -> appende la stringa alla variabile gia esistente
 export cia+o=mondo -> errore
 echo ciao | > p -> deve dare errore (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
+$ echo ciao | exit oppure ls | exit non fa niente (o meglio esesgue ls, lo scrive nella 
+pipe poi esce dalla minishell cosi noi non vediamo il contenuto della pipe)
+$ exit | ls esegue ls e non esce della minishell (segue ls ed esce dal suo child?)
+
+
 cat < input | grep error < Makefile :se non esiste il file da errore,
 	in ogni caso il grep lo fa su Makefiel, sia che input esista o non
 First handle redirections, then if not redirections have made, handle pipes
@@ -124,10 +150,46 @@ se deve leggere dal file e il file non esiste da errore: No such file or directo
 
 
 TODO
-Scorrere la lista del parsing e allocare un nodo ogni volta che trova un pipe |
-in final_parse ho gia le funzioni che creano una matrice con cmd e args euna t_list 
-con le redirections
 
+int		handle_heredoc(char *delimiter); fare questa funzione
+
+nel caso l'input sia ""  o '' gestire: errore di bash \n e Command '' not found
+cacorrea@c1r4p8:~$ ""
+
+Command '' not found, but can be installed with:
+cacorrea@c1r4p8:~$ echo ciao | ""
+
+Command '' not found, but can be installed with:
+
+
+se un solo cmd e builtin  ----->  eseguo nel parent no faccio fork
+se piu di un cmd ----->  eseguo nel sempre nel child
+
+all'inizio con dup, salvare una copia di fd 0 e di fd 1 (che prenderanno il valore
+di 3 e 4 che sono i primi fd liberi) per non perdere stdin e stdout
+perche nel caso di heredoc mi serve stdin e in tutti i casi alla fine li
+devo ripristinare prima di chiudere la shell
+If you are inside a child process, maybe you don't need to restore (because the child will exit after execve)
+
+fn aussiliare per controllare errore e fare dup2, le passi i due 
+fd e fa il dup2, se fd del file aperto e -1 vuole dire che c'e stato un errore
+con open
+
+int help_dup(int file_fs, int input_output);
+{
+	if (file_fs == -1)
+	{
+		perror("open");
+		return (-1); o dirgli di uscire
+	}
+	dup2(file_fs, input_output);
+	close (file_fs);
+}
+
+gestire heredoc per conto suo, anche l'apertura del file, quando finisce 
+chiudere il file con ulink.  serve get next line
+dopo che ha finito di leggere, serve fare un'ulteriore chiamata a gnl per
+liberare la statica???
 
 
 

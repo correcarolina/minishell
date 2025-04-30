@@ -19,7 +19,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		ft_env.c ft_export.c ft_unset.c singlequote.c ft_get_token.c \
 		check_input.c parser.c parse_utils.c final_parse.c cmd_lst.c \
-		exec.c ft_echo.c
+		exec.c ft_echo.c handle_redirection.c execute_cmdblocks.c
 
 
 LIBFT = ./libft/libft.a

@@ -28,6 +28,8 @@ void	ms_cleanup(t_ms *ms)
 		free(ms->cwd);
 	if (ms->myenv)
 		env_clear_lst(&ms->myenv);
+	close(ms->stdinout_copy[0]);//da vedere se c'e bisogno di chiudere
+	close(ms->stdinout_copy[1]);
 }
 
 int	main (int ac, char **av, char **env)
@@ -46,35 +48,37 @@ int	main (int ac, char **av, char **env)
 	input = NULL;
 	mini->myenv = ft_env_cpy(mini->myenv, env);
 	mini->cwd = ft_getenv_var(mini, "PWD");
+	mini->stdinout_copy[0] = dup(STDIN_FILENO);//serve per heredoc e per ripristinare 
+	mini->stdinout_copy[1] = dup(STDOUT_FILENO);//stdin-out alla fine se sei nel parent
+	/***************chiudere queste copie a fine programma dopo il loro ripristino*/
+	if (mini->stdinout_copy[0] == -1 || mini->stdinout_copy[1] == -1)
+	{
+		perror("dup");
+		free(mini);
+		return (1);
+	}
 	mini->exit_status = 0;
 	while(1)
 	{
 		//signals setting
 		line = readline(GREEN "minishell> " DEFAULT);
 	//DB	printf("%s\n", line);
-		add_history(line); //se line non e vuota?
+		add_history(line);
 		if(ft_strcmp("exit", line) == 0)
 		{
 			rl_clear_history();
 			//free_all(&mini->myenv->key);
-			break;
+			printf("exit\n");
+			break;/*oppure exit(0);*/
 		}
 		else if (ft_isvalid_input((const char *)line))
 		{
-			
 			tokenize(mini, line, &input);
-			if (!input)/* solo per DB, questo msg va levato. deve restituire il prompt */
-			{
-				ft_putstr_fd("Error: input is NULL after tokenize\n", 2);
-				return (0);
-			}
 			ft_parse(input);
 			head = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
 			execute_command(head, &mini->myenv, mini );
 			ft_clear_lst(&input);
-		}//queste le devo gestire dopo, una fn che le gestisce tutte quando ho gia i cmd 
-		//in un array cmd args
-		
+		}
 		/* if (ft_strncmp(line, "pwd", 3) == 0)
 			ft_pwd(mini);
 		if (ft_strncmp(line, "env", 3) == 0)

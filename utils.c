@@ -14,19 +14,17 @@
 
 //returns 1 if the sring is NULL or if it is made up of only spaces
 //returns 0 if a non space char is found
-//serve per aggiornare la history solo con str valide *******************
 int	ft_isempty_str(const char *str)
 {
-	if (!str)
+	if (!str || str[0] == '\0')
 		return (1);
-	/* while (*str)in realta se la str e solo spazi debe cmq stare nella history
+	while (*str)
 	{
 		if (!ft_isspace(*str))
 			return (0);
 		str++;
 	}
-	return (1); */
-	return (0);
+	return (1);
 }
 
 /*checks only for the metacharacters that we need in this project,

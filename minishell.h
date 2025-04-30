@@ -79,6 +79,7 @@ typedef struct s_ms_
 {
 	t_envlst	*myenv;
 	char		*cwd;
+	int			stdinout_copy[2];
 	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
 }			t_ms;
 
@@ -159,7 +160,26 @@ void	ft_export(t_ms	*mini);
 void	ft_unset(t_ms	*mini, char *key);
 void	builtin_echo(t_cmdblock *data);
 
+/************************** exec_utils ****************************************/
+
+int	only_one_cmd(t_cmdblock *cmdblocks);
+int	is_built_in(char *cmd);
+void	close_fds(int fd1, int fd2);
+
+/************************** execute_cmdblocks *********************************/
+
+void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms);
+void	create_pipes(t_cmdblock *cmdblock, t_ms *ms);
+int 	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
+
+/*5f********************* handle_redirection **********************************/
+
+int		handle_redirection(t_list *redir);
+int		redirection_out(t_list *redir);
+int		handle_heredoc(char *delimiter);//da mettere in un file a parte
+
 /*2f******************************* executor **********************************/
+
 void	execute_command(t_cmdblock *data, t_envlst **env, t_ms *mini);
 
 /********************************** others ************************************/
