@@ -162,15 +162,16 @@ void	builtin_echo(t_cmdblock *data);
 
 /************************** exec_utils ****************************************/
 
-int	only_one_cmd(t_cmdblock *cmdblocks);
-int	is_built_in(char *cmd);
-void	close_fds(int fd1, int fd2);
+int		only_one_cmd(t_cmdblock *cmdblocks);
+int		is_built_in(char *cmd);
+void	close_fd(int fd);
 
 /************************** execute_cmdblocks *********************************/
 
 void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms);
 void	create_pipes(t_cmdblock *cmdblock, t_ms *ms);
 int 	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
+int		wait_for_childs(void);
 
 /*5f********************* handle_redirection **********************************/
 

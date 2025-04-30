@@ -18,7 +18,8 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 		dup2(prev_fd, STDIN_FILENO);
 	if (cmd->next)//non e l'ultimo comando
 		dup2(next_fd, STDOUT_FILENO);
-	close_fds(prev_fd, next_fd);
+	close_fd(prev_fd);
+	close_fd(next_fd);
 	if (handle_redirection(cmd->redir) == -1)
 		exit(EXIT_FAILURE);
 	//execve_wrapper(cmd->cmd, ms);or
@@ -43,14 +44,14 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 		pid = fork();
 		if (pid == 0)//child
 			child_process(cmdblock, prev_fd, pipe_fd[1], ms);
-		close_fds(prev_fd, -1);
+		close_fd(prev_fd);
 		if (cmdblock->next)//non e l'ultimo commando
 		{
 			close(pipe_fd[1]);
 			prev_fd = pipe_fd[0];
 		}
 		else
-			close(prev_fd);
+			close_fd(prev_fd);
 		cmdblock = cmdblock->next;
 	}
 }

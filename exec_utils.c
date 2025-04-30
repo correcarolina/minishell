@@ -34,10 +34,8 @@ int	is_built_in(char *cmd)
 	return (0);
 }
 
-void	close_fds(int fd1, int fd2)
+void	close_fd(int fd)
 {
-	if (fd1 != -1)
-		close(fd1);
-	if (fd2 != -1)
-		close(fd2);
+	if (fd != -1)
+		close(fd);
 }
