@@ -76,8 +76,10 @@ int	main (int ac, char **av, char **env)
 			tokenize(mini, line, &input);
 			ft_parse(input);
 			head = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
-			execute_command(head, &mini->myenv, mini );
 			ft_clear_lst(&input);
+		//	execute_cmdblocks(head, mini);
+			execute_command(head, &mini->myenv, mini );
+			
 		}
 		/* if (ft_strncmp(line, "pwd", 3) == 0)
 			ft_pwd(mini);
