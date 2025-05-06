@@ -97,7 +97,7 @@ void	env_clear_lst(t_envlst **head)
 	}
 }
 
-//removes a node with a from the environment list by key. 
+//removes a node from the environment list by key. 
 //@str: the key to be removed
 //if key is found, the node is removed and the memory is freeded, 
 //if not found, the list remains unchanged

@@ -26,8 +26,13 @@ static int	open_file(const char *filename, int flags, mode_t mode)
 	if (fd == -1)
 	{
 		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(filename, 2);
-		perror("");
+		ft_putstr_fd((char *)filename, 2);
+		if (errno == EACCES)
+			ft_putstr_fd(": Permission denied\n", 2);
+		else if (errno == ENOENT)
+			ft_putstr_fd(": No such file or directory\n", 2);
+		else
+			perror("");
 		return (-1);
 	}
 	return (fd);
@@ -65,8 +70,9 @@ int	handle_redirection(t_list *redir)
 	{
 		if (redir->type == RD_HEREDOC)
 		{
-			if (handle_heredoc(redir->content) == -1)
-				return (-1);
+			printf("in handle_redirection da fare l'heredoc\n");
+			/* if (handle_heredoc(redir->content) == -1)
+				return (-1); */
 		}
 		else if (redir->type == RD_IN)
 		{

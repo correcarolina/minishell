@@ -62,7 +62,7 @@ typedef struct s_envlst
 }			t_envlst;
 
 //questo e il nodo che deve arrivare al executor:
-typedef	struct s_cmdblock
+typedef struct s_cmdblock
 {
 	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
 	t_list				*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
@@ -85,11 +85,11 @@ typedef struct s_ms_
 
 /****************list_utils**** list for parsing ******************************/
 
-t_list	*ft_lstnew(char *content);
-t_list	*ft_redir_lstnew(char *content, int type);
-void	ft_append_node(t_list **lst, t_list *new_node);
-void	ft_clear_lst(t_list **head);
-t_list	*ft_lstlast(t_list *lst);
+t_list		*ft_lstnew(char *content);
+t_list		*ft_redir_lstnew(char *content, int type);
+void		ft_append_node(t_list **lst, t_list *new_node);
+void		ft_clear_lst(t_list **head);
+t_list		*ft_lstlast(t_list *lst);
 
 /******************* cmd_lst ****list utils for command block******************/
 
@@ -100,46 +100,46 @@ void		ft_clear_cmdblock(t_cmdblock **head);
 /***********************************lexer**************************************/
 
 /*tokenize(4ft)*/
-void	tokenize(t_ms *mini, char *str, t_list **input);
-char	*ft_operator(char **str);
+void		tokenize(t_ms *mini, char *str, t_list **input);
+char		*ft_operator(char **str);
 /*singlequote(4ft)*/
-char	*singlequote(char **str);
-char	*doublequote(t_ms mini, char **str);
-char	*ft_dollar_expansion(t_ms mini, char **str);
+char		*singlequote(char **str);
+char		*doublequote(t_ms mini, char **str);
+char		*ft_dollar_expansion(t_ms mini, char **str);
 /*ft_get_token*/
-char	*ft_get_plain_word(char **str, char *word);
-char	*ft_get_token(t_ms mini, char **str);
-char	*ft_get_expansion(t_ms mini, char **str, char *word);
+char		*ft_get_plain_word(char **str, char *word);
+char		*ft_get_token(t_ms mini, char **str);
+char		*ft_get_expansion(t_ms mini, char **str, char *word);
 
 /*(3ft)******************************parsing***********************************/
 
-int		ft_check_pipes(t_list *line);
-void	ft_parse(t_list *line);
-void	debug_printer(t_list *line);
+int			ft_check_pipes(t_list *line);
+void		ft_parse(t_list *line);
+void		debug_printer(t_list *line);
 
 /*(5ft)parse_utils*/
-void	ft_assign_operator(t_list *line);
-void	ft_assign_delimiter(t_list *line);
-void	ft_assign_file(t_list *line);
-void	ft_assign_cmd(t_list *line);
+void		ft_assign_operator(t_list *line);
+void		ft_assign_delimiter(t_list *line);
+void		ft_assign_file(t_list *line);
+void		ft_assign_cmd(t_list *line);
 
 /******************************* final parse **********************************/
 
-char	**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
-t_list	*redir_lst(t_list *line);//queste 2 possono essere static
+char		**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
+t_list		*redir_lst(t_list *line);//queste 2 possono essere static
 t_cmdblock	*ft_create_cmdblock(t_list *line);
 
 /*(5ft)*******************************utils************************************/
 
-int		ft_isempty_str(const char *str);
-int		ft_ismetachar(int c);
-int		is_str_operator(char *str);
-int		ft_isvalid_name(char *str);
-char	*ft_strjoin_free(char *s1, char *s2);
+int			ft_isempty_str(const char *str);
+int			ft_ismetachar(int c);
+int			is_str_operator(char *str);
+int			ft_isvalid_name(char *str);
+char		*ft_strjoin_free(char *s1, char *s2);
 
 /*(2ft)*********************** check_input ************************************/
 
-int	ft_isvalid_input(const char *input);
+int			ft_isvalid_input(const char *input);
 
 /**(6ft da levarne una)**********environment***********************************/
 
@@ -154,38 +154,38 @@ char		*ft_getenv_var(t_ms *mini, char *env);
 
 /******************************** builtins*************************************/
 
-void	ft_pwd(t_ms *mini);
-void	ft_env(t_ms	*mini);
-void	ft_export(t_ms	*mini);
-void	ft_unset(t_ms	*mini, char *key);
-void	builtin_echo(t_cmdblock *data);
+void		ft_pwd(char **cmd, t_ms *mini);
+void		ft_env(char **cmd, t_ms *mini);
+void		ft_export(char **cmd, t_ms *mini);
+void		ft_unset(char **cmd, t_ms *mini);
+//void		builtin_echo(t_cmdblock *data);
 
 /************************** exec_utils ****************************************/
 
-int		only_one_cmd(t_cmdblock *cmdblocks);
-int		is_built_in(char *cmd);
-void	close_fd(int fd);
+int			only_one_cmd(t_cmdblock *cmdblocks);
+int			is_built_in(char *cmd);
+void		close_fd(int fd);
 
 /************************** execute_cmdblocks *********************************/
 
-void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms);
-void	create_pipes(t_cmdblock *cmdblock, t_ms *ms);
-int 	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
-int		wait_for_childs(void);
+void		child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms);
+void		create_pipes(t_cmdblock *cmdblock, t_ms *ms);
+int			execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
+int			wait_for_childs(void);
 
 /*5f********************* handle_redirection **********************************/
 
-int		handle_redirection(t_list *redir);
-int		redirection_out(t_list *redir);
-int		handle_heredoc(char *delimiter);//da mettere in un file a parte
+int			handle_redirection(t_list *redir);
+int			redirection_out(t_list *redir);
+//int			handle_heredoc(char *delimiter);//da mettere in un file a parte
 
 /*2f******************************* executor **********************************/
 
-void	execute_command(t_cmdblock *data, t_envlst **env, t_ms *mini);
+int			execute_single_command(char **cmd, t_ms *mini);
 
 /********************************** others ************************************/
 
 /*nel main per ora*/
-void	ms_cleanup(t_ms *ms);
+void		ms_cleanup(t_ms *ms);
 
 #endif

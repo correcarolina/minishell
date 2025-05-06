@@ -34,7 +34,7 @@ char	*ft_getenv_var(t_ms *mini, char *name)
 
 //gets the working directory from the env var in my t_ms struct and prints it.
 
-void	ft_pwd(t_ms *mini)
+void	ft_pwd(char **cmd, t_ms *mini)
 {
 	char *actual_dir;
 

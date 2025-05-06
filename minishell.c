@@ -77,8 +77,8 @@ int	main (int ac, char **av, char **env)
 			ft_parse(input);
 			head = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
 			ft_clear_lst(&input);
-		//	execute_cmdblocks(head, mini);
-			execute_command(head, &mini->myenv, mini );
+			execute_cmdblocks(head, mini);
+		//	execute_command(head, &mini->myenv, mini );
 			
 		}
 		/* if (ft_strncmp(line, "pwd", 3) == 0)

@@ -55,16 +55,18 @@ int	ft_isvalid_name(char *str)
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	if (!str)
 		return (0);
 	if (str[0] != '_' && !ft_isalpha(str[0]))
 		return (0);
-	while(str[i] != '\0' && (ft_isalnum(str[i]) || str[i] == '_'))
+	while(str[i] != '\0')
+	{
+		if (!(ft_isalnum(str[i]) || str[i] == '_'))
+			return (0);
 		i++;
-	if (str[i] == '\0')
-		return (1);
-	return (0);
+	}
+	return (1);
 }
 
 //concatenates two strings while freeing the first one

@@ -12,16 +12,17 @@
 
 #include "minishell.h"
 
-void	ft_env(t_ms	*mini)//e il cmd
+void	ft_env(char **cmd, t_ms	*mini)//e il cmd
 {
-	//controllare che il numero di arg sia == 1 (env senza argomenti)solo il cmd
-	//cosa li passo?:	una matrice:	env'\0'
-	//									ciao'\0'
-	//									carolina'\0'
-	//se ci sono flags o args manda error msg
 	t_envlst	*temp;
 
 	temp = mini->myenv;
+	if(cmd[1] != NULL)
+	{
+		printf("env: %s: No such file or directory\n", cmd[1]);
+		mini->exit_status = 127;
+		return ;
+	}
 	while (temp)
 	{
 		printf("%s=%s\n", temp->key, temp->value);

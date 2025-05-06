@@ -5,7 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 17:19:05 by cacorrea          #+#             */
+/*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
 /*   Updated: 2025/04/28 17:19:09 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -22,12 +22,14 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 	close_fd(next_fd);
 	if (handle_redirection(cmd->redir) == -1)
 		exit(EXIT_FAILURE);
-	//execve_wrapper(cmd->cmd, ms);or
-	execute_single_command(cmd, prev_fd, -1, ms);
-	perror("execve");
+	execute_single_command(cmd->cmd, ms);
+//	perror("execve");serve?
 	exit(EXIT_FAILURE);
 }
 
+//takes the command block list and creates pipes between them (one pipe per
+//command block if it is not the last one)
+//it also forks a child for each command block
 void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 {
 	int			pipe_fd[2];
@@ -35,8 +37,8 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 	pid_t		pid;
 
 	while (cmdblock)
-	{
-		if (cmdblock->next && pipe(pipe_fd) == -1)//non e l'ultimo commando
+	{//se non e l'ultimo comando crea la pipe
+		if (cmdblock->next && pipe(pipe_fd) == -1)
 		{
 			perror("pipe");
 			exit(EXIT_FAILURE);
@@ -63,7 +65,7 @@ int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 	current = cmdblocks;
 	if (only_one_cmd(current) && is_built_in(current->cmd[0]))
 	{
-		execute_built_in_inparent(current, ms);
+		execute_single_command(current->cmd, ms);//execute_built_in_inparent(current, ms);
 		return (0);
 	}
 	create_pipes(current, ms);

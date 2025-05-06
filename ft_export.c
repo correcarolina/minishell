@@ -61,46 +61,70 @@ static char	*ft_export_expansion(t_ms mini, char *s)
 
 /*da sistemare e testare*********************/
 
-void	ft_export(t_ms	*mini)//anche il cmd come matrice
+void	ft_export(char **cmd, t_ms *mini)
 {
 	t_envlst	*temp;
 	int			i;
-	char		*str1;//da levare arriva con gli argomenti della funzione
+	int 		j;
 	char		*str;
 	char		*key;
-	char		*expanded;
 
 	temp = mini->myenv;
 	i = 0;
-	str = NULL;
-	str1 = "wwwwwwww=carolina";//solo per sostituire il primo argomento str = arg[1]
-	//if se ce solo export senza argomenti: stampa e poi return;
-	while (temp)
+	j = 1;
+	str = cmd[1];
+	if (cmd[1] == NULL)//se non ci sono argomenti
 	{
-		printf("declare -x %s=\"%s\"\n", temp->key, temp->value);
-		temp = temp->next;
-	}
-	//else fare un ciclo per tutti gli args
-	if (!ft_strchr(str, '='))//cerca se ce un =, se non lo trova esce
-		return ;//giusto cosi, bash non da errore, ritorna il prompt
-	while (str1[i] != '\0' && str1[i] != '=')
-		i++;
-	key = ft_substr(str1, 0, i);
-	if (ft_isvalid_name(key))
-	{
-		env_rm_node(&mini->myenv, key);
-		if (ft_strchr(&str1[i], '$'))//expand the var
+		while (temp)
 		{
-			expanded = ft_export_expansion(*mini, &str1[i]);
-
-			str = ft_expandedstr(key, expanded);
+			printf("declare -x %s=\"%s\"\n", temp->key, temp->value);
+			temp = temp->next;
 		}
-		env_append_node(&mini->myenv, env_new_node(str));	
 	}
+	else//else fare un ciclo per tutti gli args
+	{
+		while (cmd[j] != NULL)
+		{
+			str = cmd[j];
+			if (!ft_strchr(str, '=') || ft_strchr(str, '=') == str)
+			{
+				ft_putstr_fd("minishell: 👹export: `", 2);
+				ft_putstr_fd(str, 2);
+				ft_putstr_fd("': not a valid identifier\n", 2);
+				mini->exit_status = 1;
+				j++;
+				continue;
+			}
+			i = 0;
+			while (str[i] != '\0' && str[i] != '=')
+				i++;
+			key = ft_substr(str, 0, i);
+			printf("👽key: %s\n", key);
+			printf("%d\n", ft_isvalid_name(key));
+			if (ft_isvalid_name(key))
+			{//qui non sta funzionando
+				env_rm_node(&mini->myenv, key);
+				env_append_node(&mini->myenv, env_new_node(str));	
+			}
+			else
+			{
+				ft_putstr_fd("minishell: 😾export: `", 2);
+				ft_putstr_fd(str, 2);
+				ft_putstr_fd("': not a valid identifier\n", 2);
+				mini->exit_status = 1;
+			}
+			free(key);
+			j++;
+		}
+	}
+
+	
 	//else
 		//msg errore (export: 'str': not a valid identifier)ma continua nel ciclo
-	free(key);
-	return;
+	//cacorrea@c1r5p3:~/sgoinfre/minishell$ export =
+	//bash: export: `=': not a valid identifier
+	//cacorrea@c1r5p3:~/sgoinfre/minishell$ export=
+	//cacorrea@c1r5p3:~/sgoinfre/minishell$ 
 	//cosa li passo?: 	una str: env ciao carolina
 	//					una matrice:	env'\0'
 	//									ciao'\0'
