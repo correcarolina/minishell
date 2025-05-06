@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:08:07 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/06 11:08:11 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:38:45 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	execute_single_command(char **cmd, t_ms *mini)
 {
 	if (ft_strncmp(cmd[0], "echo", 5) == 0)
-		printf("builtin echo da collegare\n");//builtin_echo(cmd);
+		builtin_echo(cmd);
 	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
-		printf("builtin cd da collegare\n");//ft_cd(cmd, mini);
+		ft_cd(cmd, mini);
 	else if (ft_strncmp(cmd[0], "pwd", 4) == 0)
 		ft_pwd(cmd, mini);
 	else if (ft_strncmp(cmd[0], "export", 7) == 0)
