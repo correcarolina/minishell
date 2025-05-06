@@ -6,7 +6,7 @@
 #    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/04/26 18:47:03 by rd-agost         ###   ########.fr        #
+#    Updated: 2025/05/06 19:40:17 by rd-agost         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		ft_env.c ft_export.c ft_unset.c singlequote.c ft_get_token.c \
 		check_input.c parser.c parse_utils.c final_parse.c cmd_lst.c \
 		executor.c ft_echo.c handle_redirection.c execute_cmdblocks.c \
-		exec_utils.c
+		exec_utils.c ft_cd.c 
 #da cambiare executer con exec per collegare al file di Roberta
 
 LIBFT = ./libft/libft.a

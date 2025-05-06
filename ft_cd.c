@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/06 19:18:41 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:31:06 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*get_home_dir(t_ms *mini)
  * @param mini Pointer to the shell structure
  * @return Exit status (0 for success, 1 for error)
  */
-int	ft_cd(t_cmdblock *data, t_ms *mini)
+int	ft_cd(char **cmd, t_ms *mini)
 {
 	char	cwd[1024];
 	char	owd[1024];
@@ -79,7 +79,7 @@ int	ft_cd(t_cmdblock *data, t_ms *mini)
 	
 	if (getcwd(owd, 1024) == NULL)
 		return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
-	if (data->cmd[1] == NULL)
+	if (cmd[1] == NULL)
 	{
 		target_dir = get_home_dir(mini);
 		if (!target_dir)
@@ -90,7 +90,7 @@ int	ft_cd(t_cmdblock *data, t_ms *mini)
 		}
 	}
 	else
-		target_dir = data->cmd[1];
+		target_dir = cmd[1];
 
 	if (chdir(target_dir) != 0)
 	{

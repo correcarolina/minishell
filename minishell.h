@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/04/26 18:52:39 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:37:44 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,8 @@ void		ft_pwd(char **cmd, t_ms *mini);
 void		ft_env(char **cmd, t_ms *mini);
 void		ft_export(char **cmd, t_ms *mini);
 void		ft_unset(char **cmd, t_ms *mini);
-//void		builtin_echo(t_cmdblock *data);
+void		builtin_echo(char **cmd);
+int			ft_cd(char **cmd, t_ms *mini);
 
 /************************** exec_utils ****************************************/
 
