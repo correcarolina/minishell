@@ -38,7 +38,7 @@ static int	open_file(const char *filename, int flags, mode_t mode)
 	return (fd);
 }
 
-int	redirection_out(t_list *redir)
+int	redirection_out(t_redirlst *redir)
 {
 	int	fd_out;
 
@@ -62,7 +62,7 @@ int	redirection_out(t_list *redir)
 	return (0);
 }
 
-int	handle_redirection(t_list *redir)
+int	handle_redirection(t_redirlst *redir)
 {
 	int	fd_in;
 
@@ -71,8 +71,8 @@ int	handle_redirection(t_list *redir)
 		if (redir->type == RD_HEREDOC)
 		{
 			printf("in handle_redirection da fare l'heredoc\n");
-			/* if (handle_heredoc(redir->content) == -1)
-				return (-1); */
+			/* dup2(redir->heredoc_fd, STDIN_FILENO);
+			close_file(fd_in); */
 		}
 		else if (redir->type == RD_IN)
 		{

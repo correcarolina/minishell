@@ -53,7 +53,7 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 			prev_fd = pipe_fd[0];
 		}
 		else
-			close_fd(prev_fd);
+			close_fd(pipe_fd[0]);
 		cmdblock = cmdblock->next;
 	}
 }

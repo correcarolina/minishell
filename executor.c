@@ -28,7 +28,7 @@ int	execute_single_command(char **cmd, t_ms *mini)
 		ft_env(cmd, mini);
 	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 	{
-		printf("exit\n");//o meglio da fare aparte
+		printf("exit\n");//da fare aparte
 		exit(0);
 	}
 	else

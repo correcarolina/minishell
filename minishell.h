@@ -61,11 +61,22 @@ typedef struct s_envlst
 	struct s_envlst	*next;
 }			t_envlst;
 
+//una lista per gestire le redirections, in un campo metto il nome del file o il
+//delimitatore nel caso di heredoc, in un'altroil type (filein, fileout, append, heredoc)
+//e un terzo per il fd nel caso di heredoc
+typedef struct s_redirlst
+{
+	char				*content;
+	int					type;
+	int					heredoc_fd;
+	struct s_redirlst	*next;
+}		t_redirlst;
+
 //questo e il nodo che deve arrivare al executor:
 typedef struct s_cmdblock
 {
 	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
-	t_list				*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
+	t_redirlst			*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
 	struct s_cmdblock	*next;
 }			t_cmdblock;
 //forse la lista per il parsing deve diventare questo una volta che elimino
@@ -86,16 +97,22 @@ typedef struct s_ms_
 /****************list_utils**** list for parsing ******************************/
 
 t_list		*ft_lstnew(char *content);
-t_list		*ft_redir_lstnew(char *content, int type);
+
 void		ft_append_node(t_list **lst, t_list *new_node);
 void		ft_clear_lst(t_list **head);
 t_list		*ft_lstlast(t_list *lst);
 
 /******************* cmd_lst ****list utils for command block******************/
 
-t_cmdblock	*ft_new_cmdblock(char **cmd, t_list *redir);
+t_cmdblock	*ft_new_cmdblock(char **cmd, t_redirlst *redir);
 void		ft_append_cmdblock(t_cmdblock **lst, t_cmdblock *new_node);
 void		ft_clear_cmdblock(t_cmdblock **head);
+
+/******************************* redir_lst ************************************/
+
+t_redirlst	*ft_redir_lstnew(char *content, int type);
+void		ft_redir_append_node(t_redirlst **lst, t_redirlst *new_node);
+void		ft_redir_clear_lst(t_redirlst **head);
 
 /***********************************lexer**************************************/
 
@@ -126,7 +143,7 @@ void		ft_assign_cmd(t_list *line);
 /******************************* final parse **********************************/
 
 char		**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
-t_list		*redir_lst(t_list *line);//queste 2 possono essere static
+t_redirlst	*redir_lst(t_list *line);//queste 2 possono essere static
 t_cmdblock	*ft_create_cmdblock(t_list *line);
 
 /*(5ft)*******************************utils************************************/
@@ -176,8 +193,8 @@ int			wait_for_childs(void);
 
 /*5f********************* handle_redirection **********************************/
 
-int			handle_redirection(t_list *redir);
-int			redirection_out(t_list *redir);
+int			handle_redirection(t_redirlst *redir);
+int			redirection_out(t_redirlst *redir);
 //int			handle_heredoc(char *delimiter);//da mettere in un file a parte
 
 /*2f******************************* executor **********************************/

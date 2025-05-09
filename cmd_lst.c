@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_cmdblock	*ft_new_cmdblock(char **cmd, t_list *redir)
+t_cmdblock	*ft_new_cmdblock(char **cmd, t_redirlst *redir)
 {
 	t_cmdblock	*new;
 	int			i;
@@ -56,7 +56,7 @@ void	ft_clear_cmdblock(t_cmdblock **head)
 	{
 		tmp = (*head)->next;
 		ft_free_matrix((*head)->cmd);
-		ft_clear_lst(&((*head)->redir));
+		ft_redir_clear_lst(&((*head)->redir));
 		free(*head);
 		*head = tmp;
 	}

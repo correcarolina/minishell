@@ -28,6 +28,8 @@ void	ms_cleanup(t_ms *ms)
 		free(ms->cwd);
 	if (ms->myenv)
 		env_clear_lst(&ms->myenv);
+	dup2(ms->stdinout_copy[0], STDIN_FILENO);
+	dup2(ms->stdinout_copy[1], STDOUT_FILENO);
 	close(ms->stdinout_copy[0]);//da vedere se c'e bisogno di chiudere
 	close(ms->stdinout_copy[1]);
 }
@@ -58,6 +60,7 @@ int	main (int ac, char **av, char **env)
 		return (1);
 	}
 	mini->exit_status = 0;
+	//BD	printf("il valore di cwd e: %s\n", mini->cwd);
 	while(1)
 	{
 		//signals setting

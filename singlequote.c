@@ -68,8 +68,7 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 	else if (**str == '?')
 	{
 		(*str)++;
-		printf("sono un segnale/n");//db TEMPORANEO
-		return (NULL);/*(ft_itoa(g_signal)); oppure ft_itoa(mini.exit_status);*/
+		return (ft_itoa(mini.exit_status));
 	}
 	else if (**str != '_' && !ft_isalpha(**str))
 	{

@@ -1,41 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_utils.c                                       :+:      :+:    :+:   */
+/*   redir_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 18:13:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/01 18:13:12 by cacorrea         ###   ########.fr       */
+/*   Created: 2025/05/08 11:04:52 by cacorrea          #+#    #+#             */
+/*   Updated: 2025/05/08 11:04:55 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//creates a new node and puts a string in the content
-
-t_list	*ft_lstnew(char *content)
+//creates a new node and puts a string in the content and a type in the type
+//this is used for the redirections in the cmdblock list
+t_redirlst	*ft_redir_lstnew(char *content, int type)
 {
-	t_list	*new;
+	t_redirlst	*new;
 	int		i;
 
 	i = 0;
-	new = (t_list *)malloc(sizeof(t_list));
+	new = (t_redirlst *)malloc(sizeof(t_redirlst));
 	if (!new)
 		return (NULL);
 	new->content = content;
-	new->type = 0;
+	new->type = type;
+	new->heredoc_fd = -1;
 	new->next = NULL;
 	return (new);
 }
 
-/*Adds the node ’new’ at the end of the list.
-	@lst: The address of a pointer to the head of a list.
-	@new: The address of a pointer to the node to be added to the list.*/
-
-void	ft_append_node(t_list **lst, t_list *new_node)
+void	ft_redir_append_node(t_redirlst **lst, t_redirlst *new_node)
 {
-	t_list	*last;
+	t_redirlst	*last;
 
 	if (!lst || !new_node)
 		return ;
@@ -52,9 +49,9 @@ void	ft_append_node(t_list **lst, t_list *new_node)
 
 //function that clears the list
 
-void	ft_clear_lst(t_list **head)
+void	ft_redir_clear_lst(t_redirlst **head)
 {
-	t_list	*temp;
+	t_redirlst	*temp;
 
 	temp = NULL;
 	if (!head || !*head)
@@ -68,18 +65,3 @@ void	ft_clear_lst(t_list **head)
 	}
 }
 
-/*Returns the last node of the list.*/
-
-t_list	*ft_lstlast(t_list *lst)
-{
-	t_list	*ptr;
-
-	ptr = lst;
-	if (lst == NULL)
-		return (NULL);
-	while (ptr->next != NULL)
-	{
-		ptr = ptr->next;
-	}
-	return (ptr);
-}

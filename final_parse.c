@@ -71,10 +71,10 @@ char	**ft_cmd_matrix(t_list *line)
 
 //This function takes a linked list of tokens and creates a linked list of
 //redirections. Each node contains the file name and the redirection type
-t_list	*redir_lst(t_list *line)
+t_redirlst	*redir_lst(t_list *line)
 {
-	t_list	*redir;
-	t_list	*current;
+	t_redirlst	*redir;
+	t_list		*current;
 
 	current = line;
 	redir = NULL;
@@ -83,7 +83,7 @@ t_list	*redir_lst(t_list *line)
 		if (current->type == RD_IN || current->type == RD_OUT_T \
 		|| current->type == RD_OUT_A || current->type == RD_HEREDOC)
 		{
-			ft_append_node(&redir, \
+			ft_redir_append_node(&redir, \
 				ft_redir_lstnew(current->next->content, current->type));
 		}
 		current = current->next;

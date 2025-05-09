@@ -14,7 +14,6 @@ dove mettere la fn che e in environment.c che copia environment e lo mette in t_
 
 ft dollar funziona
 
-finire parser.c
 
 
 
@@ -80,17 +79,6 @@ LEGGI LEGGI LEGGI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 cc=123456$USER
 espande prima di salvarlo nelle envs
-
-QUINDI GESTIRE QUESTA ESPANSIONE RICORSIVA PRIMA DI EXPOTARLO IN ENVS   gia fatto!
-e dopo non mi serve piu la recursiva in ft_dollar_expansion lo posso levare o se mi fa fatica 
-lo lascio
-da fare
-
-da finire export con calma quando avro i comandi in un array, il resto dovrebbe funzionare
-
-
-
-
 
 
 
@@ -190,7 +178,102 @@ gestire heredoc per conto suo, anche l'apertura del file, quando finisce
 chiudere il file con ulink.  serve get next line
 dopo che ha finito di leggere, serve fare un'ulteriore chiamata a gnl per
 liberare la statica???
+oppure farlo con readline che e pui semplice per la gestione dei segnali
+pero bisogna aggiungere il \n alla fine
+mentre con gnl ce gia il \n pero e piu complicata la gestione dei esgnali
+bisogna fare un fork per la heredoc, altrimenti non funziona???? questo lo dice copilot
+prima di iniziare a fare l'esecuzione bisogna aprire tutti i heredoc
+e chiuderli prima di eseguire il comando poi il commando li usa come un file qualsiasi
 
+la gestione dei segnali dentro gli heredoc e differente:
+ctrl c deve uscire dalla heredoc e non dalla shell
+ctrl d deve chiudere la heredoc e non la shell
+ctrl \ dentro il heredoc cosa fa?
+
+segnali in minishell:
+ctrl c:  SIGINT		non deve chiudere la shell, stampa un prompt nella newline
+ctrl d:  SIGQUIT	exit della shell: stampa exit ed esce
+ctrl \: non fa niente, non e un segnale ma il carattere nullo
+
+
+dentro heredoc:
+ctrl c non esegue gli altri comandi, ma esce dalla heredoc e stampa il prompt
+ctrl d da il seguente messaggio di errore:
+bash: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')
+cacorrea@c2r3p1:~/Desktop$ cat << eof | echo ciao
+> ^C
+cacorrea@c2r3p1:~/Desktop$ 
+
+da chatgpt:
+ 1. get_next_line (GNL)
+✅ Pros:
+
+    Simple and controlled: You wrote it yourself, so you fully control its behavior.
+
+    No external dependencies: Doesn't rely on readline or link to -lreadline.
+
+❌ Cons:
+
+    Signals are harder:
+
+        GNL reads from stdin (typically), so if a heredoc is interrupted (e.g., Ctrl+C), you must manually handle signals like SIGINT and reset the shell prompt correctly.
+
+        This is tricky inside a forked child, especially because Bash handles SIGINT in heredoc differently than in interactive prompts.
+
+    No line editing / history: GNL doesn’t support up/down arrows, backspace, etc. You can’t use command history either.
+
+Example challenge with GNL:
+
+If a user presses Ctrl+C during a heredoc:
+
+minishell> cat << EOF
+> ^C
+# your minishell must stop the heredoc, not crash, and return to prompt
+
+You’d need to:
+
+    Detect the signal.
+
+    Clean up the temp file.
+
+    Avoid printing weird things.
+
+    Reset the prompt.
+
+🔹 2. readline
+✅ Pros:
+
+    Signal handling is done for you: readline takes care of:
+
+        SIGINT (Ctrl+C) — it exits the read cleanly.
+
+        SIGQUIT (Ctrl+\) — not handled unless you configure it.
+
+    User-friendly:
+
+        Line editing.
+
+        Arrow key navigation.
+
+        History integration (if you want).
+
+    Cleaner code: readline() returns NULL on Ctrl+D and respects user interruptions naturally.
+
+❌ Cons:
+
+    Requires linking with -lreadline.
+
+    More overhead: If you're not already using readline in your shell, it means introducing a new dependency.
+
+✅ Which One Should You Use?
+
+For the heredoc specifically, use readline. Here's why:
+
+    You need to handle SIGINT (Ctrl+C) differently in heredoc mode than in normal shell input. Bash exits heredoc input on SIGINT but doesn't kill the main shell. readline makes this much easier to replicate.
+
+    It's closer to how bash behaves.
+
+    You'll spend less time debugging signals and can still use your own get_next_line elsewhere (like in pipelines or I/O redirection).
 
 
 
