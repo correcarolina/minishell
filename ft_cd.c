@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/06 19:31:06 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:27:56 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	ft_cd(char **cmd, t_ms *mini)
 	if (mini->cwd)
 		free(mini->cwd);
 	mini->cwd = ft_strdup(cwd);
+	mini->cwd = NULL;
 	mini->exit_status = 0;
 	return (0);
 }
