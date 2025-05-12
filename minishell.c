@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/04/26 19:00:03 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:01:56 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,15 @@ int	main (int ac, char **av, char **env)
 		line = readline(GREEN "minishell> " DEFAULT);
 	//DB	printf("%s\n", line);
 		add_history(line);
-		if(ft_strcmp("exit", line) == 0)
-		{
-			rl_clear_history();
-			//free_all(&mini->myenv->key);
-			printf("exit\n");
-			break;/*oppure exit(0);*/
-		}
-		else if (ft_isvalid_input((const char *)line))
-		{
-			tokenize(mini, line, &input);
+		
+	if (ft_isvalid_input((const char *)line))
+	{
+		tokenize(mini, line, &input);
 			ft_parse(input);
 			head = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
-			ft_clear_lst(&input);
 			execute_cmdblocks(head, mini);
-		//	execute_command(head, &mini->myenv, mini );
-			
-		}
-		/* if (ft_strncmp(line, "pwd", 3) == 0)
-			ft_pwd(mini);
-		if (ft_strncmp(line, "env", 3) == 0)
-			ft_env(mini);
-		if (ft_strncmp(line, "export", 6) == 0)
-			ft_export(mini); */
-		//else (error, quotes not closed and return prompt);
+			ft_clear_lst(&input);
+	}
 		free (line);
 	}
 	ms_cleanup(mini);
