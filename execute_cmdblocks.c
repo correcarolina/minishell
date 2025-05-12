@@ -3,28 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/04/28 17:19:09 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:16:37 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
+void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 {
-	if (prev_fd != -1)//non e il primo comando
-		dup2(prev_fd, STDIN_FILENO);
-	if (cmd->next)//non e l'ultimo comando
-		dup2(next_fd, STDOUT_FILENO);
-	close_fd(prev_fd);
-	close_fd(next_fd);
-	if (handle_redirection(cmd->redir) == -1)
-		exit(EXIT_FAILURE);
-	execute_single_command(cmd->cmd, ms);
-//	perror("execve");serve?
-	exit(EXIT_FAILURE);
+	int status;
+	
+    if (prev_fd != -1)
+        dup2(prev_fd, STDIN_FILENO);
+    if (cmd->next)
+        dup2(next_fd, STDOUT_FILENO);
+    
+    close_fd(prev_fd);
+    close_fd(next_fd);
+    if (handle_redirection(cmd->redir) == -1)
+        exit(EXIT_FAILURE);
+    // Execute command and exit with its status
+    status = execute_single_command(cmd->cmd, ms);
+    exit(status);
 }
 
 //takes the command block list and creates pipes between them (one pipe per
@@ -58,19 +61,27 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 	}
 }
 
-int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
+int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 {
-	t_cmdblock	*current;
+    int ret;
+    
+    if (!cmdblocks || !cmdblocks->cmd || !cmdblocks->cmd[0])
+        return 0;
 
-	current = cmdblocks;
-	if (only_one_cmd(current) && is_built_in(current->cmd[0]))
-	{
-		execute_single_command(current->cmd, ms);//execute_built_in_inparent(current, ms);
-		return (0);
-	}
-	create_pipes(current, ms);
-	ms->exit_status = wait_for_childs();
-	return (ms->exit_status);
+    if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
+    {
+        handle_redirection(cmdblocks->redir);
+        return ft_exit(cmdblocks->cmd, ms);
+    }
+    if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
+    {
+        handle_redirection(cmdblocks->redir);
+        ret = execute_single_command(cmdblocks->cmd, ms);
+        return ret;
+    }
+    create_pipes(cmdblocks, ms);
+    ms->exit_status = wait_for_childs();
+    return ms->exit_status;
 }
 
 int	wait_for_childs(void)/*da aggiunggere qualcosa per segnali*/
@@ -91,7 +102,7 @@ int	wait_for_childs(void)/*da aggiunggere qualcosa per segnali*/
 	}
 	if (pid == -1 && errno != ECHILD)  // Error checking
 		perror("wait");
-	return (-1);
+	return (last_status);
 }
 
 /* Key Components:

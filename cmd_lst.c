@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_lst.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:10:29 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/04/23 18:10:33 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:01:28 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ t_cmdblock	*ft_new_cmdblock(char **cmd, t_redirlst *redir)
 	return (new);
 }
 
-//adds the node ’new’ at the end of the list.
 void	ft_append_cmdblock(t_cmdblock **lst, t_cmdblock *new_node)
 {
 	t_cmdblock	*last;
@@ -49,6 +48,7 @@ void	ft_append_cmdblock(t_cmdblock **lst, t_cmdblock *new_node)
 void	ft_clear_cmdblock(t_cmdblock **head)
 {
 	t_cmdblock	*tmp;
+	tmp = NULL;
 
 	if (!head || !*head)
 		return ;

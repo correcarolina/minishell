@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/06 19:37:44 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:35:56 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <limits.h>
 # include "libft/libft.h"
 
 # define S_QUOTE	39
@@ -92,6 +94,7 @@ typedef struct s_ms_
 	char		*cwd;
 	int			stdinout_copy[2];
 	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
+	t_cmdblock  *cmdblocks;
 }			t_ms;
 
 /****************list_utils**** list for parsing ******************************/
@@ -171,12 +174,13 @@ char		*ft_getenv_var(t_ms *mini, char *env);
 
 /******************************** builtins*************************************/
 
-void		ft_pwd(char **cmd, t_ms *mini);
+int			ft_pwd(t_ms *mini);
 void		ft_env(char **cmd, t_ms *mini);
 void		ft_export(char **cmd, t_ms *mini);
 void		ft_unset(char **cmd, t_ms *mini);
 void		builtin_echo(char **cmd);
 int			ft_cd(char **cmd, t_ms *mini);
+int 		ft_exit(char **cmd, t_ms *ms);
 
 /************************** exec_utils ****************************************/
 
@@ -199,10 +203,8 @@ int			redirection_out(t_redirlst *redir);
 
 /*2f******************************* executor **********************************/
 
-int			execute_single_command(char **cmd, t_ms *mini);
-
+int		execute_single_command(char **cmd, t_ms *mini);
 /********************************** others ************************************/
-
 /*nel main per ora*/
 void		ms_cleanup(t_ms *ms);
 

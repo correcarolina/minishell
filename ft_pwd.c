@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:39:58 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/10 10:40:04 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:46:16 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,18 @@ char	*ft_getenv_var(t_ms *mini, char *name)
 
 //gets the working directory from the env var in my t_ms struct and prints it.
 
-void	ft_pwd(char **cmd, t_ms *mini)
+int ft_pwd(t_ms *mini)
 {
-	char *actual_dir;
+    char cwd[1024];
 
-	if (!mini)
-		return;
-	actual_dir = mini->cwd;
-	if (!actual_dir)
-	{
-		mini->exit_status = EXIT_FAILURE;
-		return;
-	}	
-	printf("%s\n", actual_dir);
-	mini->exit_status = EXIT_SUCCESS;
-	free(actual_dir);
+    if (getcwd(cwd, 1024) == NULL)
+    {
+        ft_putstr_fd("pwd: getcwd error\n", 2);
+        mini->exit_status = 1;
+        return (1);
+    }
+    ft_putendl_fd(cwd, 1);
+    mini->exit_status = 0;
+    return (0);
 }
 

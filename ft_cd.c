@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/09 17:27:56 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:50:41 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 /*devo aggiornare mini->cwd ogni volta che cambio directory
 mettere in mini->exit_status il valore di $?*/
-
-#include "minishell.h"
 
 /**
  * Updates PWD and OLDPWD environment variables after changing directory
@@ -71,46 +69,55 @@ static char	*get_home_dir(t_ms *mini)
  * @param mini Pointer to the shell structure
  * @return Exit status (0 for success, 1 for error)
  */
-int	ft_cd(char **cmd, t_ms *mini)
+int ft_cd(char **cmd, t_ms *mini)
 {
-	char	cwd[1024];
-	char	owd[1024];
-	char	*target_dir;
-	
-	if (getcwd(owd, 1024) == NULL)
-		return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
-	if (cmd[1] == NULL)
-	{
-		target_dir = get_home_dir(mini);
-		if (!target_dir)
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			mini->exit_status = 1;
-			return (1);
-		}
-	}
-	else
-		target_dir = cmd[1];
+    char cwd[1024];
+    char owd[1024];
+    char *target_dir;
+    
+    if (getcwd(owd, 1024) == NULL)
+        return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
+    if (cmd[1] == NULL)
+    {
+        target_dir = get_home_dir(mini);
+        if (!target_dir)
+        {
+            ft_putstr_fd("cd: HOME not set\n", 2);
+            mini->exit_status = 1;
+            return (1);
+        }
+    }
+    else
+        target_dir = cmd[1];
+    if (chdir(target_dir) != 0)
+    {
+        ft_putstr_fd("cd: ", 2);
+        ft_putstr_fd(target_dir, 2);
+        ft_putstr_fd(": ", 2);
+        ft_putstr_fd(strerror(errno), 2);
+        ft_putstr_fd("\n", 2);
+        mini->exit_status = 1;
+        return (1);
+    }
 
-	if (chdir(target_dir) != 0)
-	{
-		ft_putstr_fd("cd: ", 2);
-		ft_putstr_fd(target_dir, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		mini->exit_status = 1;
-		return (1);
-	}
-	if (getcwd(cwd, 1024) == NULL)
-		return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
-	update_pwd_vars(mini, cwd, owd);
-	if (mini->cwd)
-		free(mini->cwd);
-	mini->cwd = ft_strdup(cwd);
-	mini->cwd = NULL;
-	mini->exit_status = 0;
-	return (0);
+    if (getcwd(cwd, 1024) == NULL)
+        return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
+
+    update_pwd_vars(mini, cwd, owd);
+    if (mini->cwd)
+    {
+        free(mini->cwd);
+        mini->cwd = NULL;
+    }
+    mini->cwd = ft_strdup(cwd);
+    if (!mini->cwd)
+    {
+        ft_putstr_fd("cd: memory allocation error\n", 2);
+        mini->exit_status = 1;
+        return (1);
+    }
+    mini->exit_status = 0;
+    return (0);
 }
 
 
