@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/12 18:16:37 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:15:53 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,16 @@
 
 void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 {
-	int status;
-	
+    int status;
+    setup_child_signals();
     if (prev_fd != -1)
         dup2(prev_fd, STDIN_FILENO);
     if (cmd->next)
         dup2(next_fd, STDOUT_FILENO);
-    
     close_fd(prev_fd);
     close_fd(next_fd);
     if (handle_redirection(cmd->redir) == -1)
         exit(EXIT_FAILURE);
-    // Execute command and exit with its status
     status = execute_single_command(cmd->cmd, ms);
     exit(status);
 }
@@ -67,7 +65,6 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
     
     if (!cmdblocks || !cmdblocks->cmd || !cmdblocks->cmd[0])
         return 0;
-
     if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
     {
         handle_redirection(cmdblocks->redir);
@@ -84,7 +81,38 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
     return ms->exit_status;
 }
 
-int	wait_for_childs(void)/*da aggiunggere qualcosa per segnali*/
+int wait_for_childs(void)
+{
+    int status;     // Stores the exit status of child processes
+    int last_status; // Stores the last exit status
+    pid_t pid;      // Stores the process ID of terminated children
+
+    last_status = 0;
+    pid = wait(&status);  // Wait for any child process to terminate
+    while (pid > 0)  // Loop continues as long as there are children to wait for
+    {
+        if (WIFEXITED(status))  // Child terminated normally
+            last_status = WEXITSTATUS(status);  // Return the exit code (0-255)
+        else if (WIFSIGNALED(status))  // Child terminated by a signal
+        {
+            int sig = WTERMSIG(status);
+            if (sig == SIGINT)
+                write(STDERR_FILENO, "\n", 1);
+            else if (sig == SIGQUIT)
+                write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+            last_status = (128 + sig);
+        }
+        pid = wait(&status);
+    }
+    g_signo = 0;
+    if (pid == -1 && errno != ECHILD)
+        perror("wait");
+    return (last_status);
+}
+
+/* 
+old one: 
+int	wait_for_childs(void) //da aggiunggere qualcosa per segnali
 {
 	int status;     // Stores the exit status of child processes
 	int	last_status; // Stores the last exit status
@@ -104,6 +132,8 @@ int	wait_for_childs(void)/*da aggiunggere qualcosa per segnali*/
 		perror("wait");
 	return (last_status);
 }
+*/
+
 
 /* Key Components:
 Wait Loop:
