@@ -39,3 +39,40 @@ void	close_fd(int fd)
 	if (fd != -1)
 		close(fd);
 }
+
+//takes the env list and creates a matrix of strings to pass to execve
+
+char **envlst_to_matrix(t_envlst *env)
+{
+	//cosa succede se c'e solo la key ma manca il value?
+	char		**matrix;
+	char		*key;
+	char		*value;
+	int			i;
+
+	matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(env) + 1));
+	if (!matrix)
+		return (NULL);
+	i = 0;
+	while (env)
+	{
+		key = ft_strdup(env->key);
+		value = ft_strdup(env->value);
+		if (!key || !value)
+		{
+			free(key);
+			free(value);
+			return (free_matrix(matrix, i - 1), NULL);
+		}
+		matrix[i] = ft_strjoin_3(key, "=", value);
+		free(key);
+		free(value);
+		if (!matrix[i])
+			return (free_matrix(matrix, i - 1), NULL);
+		env = env->next;
+		i++;
+	}
+	matrix[i] = NULL;
+	return (matrix);
+}
+

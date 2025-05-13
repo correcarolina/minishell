@@ -48,6 +48,10 @@
 # define OUTFILE_A	11
 
 extern volatile sig_atomic_t g_signo;
+#define GREEN "\001\033[1;92m\002"
+#define AQUA "\001\033[1;36m\002"
+#define DEFAULT "\001\033[0m\002"
+
 //una lista per fare il parsing
 typedef struct s_list
 {
@@ -95,18 +99,17 @@ typedef struct s_ms_
 {
 	t_envlst	*myenv;
 	char		*cwd;
+	t_cmdblock 	*cmdblocks;
 	int			stdinout_copy[2];
 	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
-	t_cmdblock  *cmdblocks;
 }			t_ms;
 
 /****************list_utils**** list for parsing ******************************/
 
 t_list		*ft_lstnew(char *content);
-
 void		ft_append_node(t_list **lst, t_list *new_node);
 void		ft_clear_lst(t_list **head);
-t_list		*ft_lstlast(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);//da levare perche non si usa???
 
 /******************* cmd_lst ****list utils for command block******************/
 
@@ -151,6 +154,7 @@ void		ft_assign_cmd(t_list *line);
 char		**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
 t_redirlst	*redir_lst(t_list *line);//queste 2 possono essere static
 t_cmdblock	*ft_create_cmdblock(t_list *line);
+void		free_matrix(char **matrix, int i);
 
 /*(5ft)*******************************utils************************************/
 
@@ -164,7 +168,7 @@ char		*ft_strjoin_free(char *s1, char *s2);
 
 int			ft_isvalid_input(const char *input);
 
-/**(6ft da levarne una)**********environment***********************************/
+/**(7ft da levarne una)**********environment***********************************/
 
 t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix);
 t_envlst	*env_new_node(char *var);
@@ -172,6 +176,7 @@ void		env_append_node(t_envlst **lst, t_envlst *new);
 void		env_clear_node(t_envlst *node);
 void		env_rm_node(t_envlst **head, char *str);
 void		env_clear_lst(t_envlst **head);
+int			ft_lstsize(t_envlst *lst);
 /*ft_pwc*/
 char		*ft_getenv_var(t_ms *mini, char *env);
 
@@ -202,16 +207,21 @@ int			wait_for_childs(void);
 
 int			handle_redirection(t_redirlst *redir);
 int			redirection_out(t_redirlst *redir);
-//int			handle_heredoc(char *delimiter);//da mettere in un file a parte
+
+/*4f***************************** heredoc *************************************/
+
+int			handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini);
 
 /*2f******************************* executor **********************************/
 
+int		execute_builtin(char **cmd, t_ms *mini);
 int		execute_single_command(char **cmd, t_ms *mini);
 
 /* ******************************SIGNALS************************************* */
 void	signal_handler(int signo);
 void	setup_signals(void);
 void	setup_child_signals(void);
+
 
 /********************************** others ************************************/
 /*nel main per ora*/

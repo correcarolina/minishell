@@ -18,7 +18,7 @@ void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
     setup_child_signals();
     if (prev_fd != -1)
         dup2(prev_fd, STDIN_FILENO);
-    if (cmd->next)
+    if (cmd->next)//non e l'ultimo comando
         dup2(next_fd, STDOUT_FILENO);
     close_fd(prev_fd);
     close_fd(next_fd);
@@ -63,8 +63,9 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 {
     int ret;
     
-    if (!cmdblocks || !cmdblocks->cmd || !cmdblocks->cmd[0])
-        return 0;
+	if (!cmdblocks || !cmdblocks->cmd || \
+		(!cmdblocks->cmd[0] && !cmdblocks->redir))//se ci sono solo redir nella cmdblock bisogna arrivare a create_pipes
+		return 0;//oppure return errore?
     if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
     {
         handle_redirection(cmdblocks->redir);
@@ -73,12 +74,12 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
     if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
     {
         handle_redirection(cmdblocks->redir);
-        ret = execute_single_command(cmdblocks->cmd, ms);
-        return ret;
+		ret = execute_builtin(cmdblocks->cmd, ms);
+        return (ret);
     }
     create_pipes(cmdblocks, ms);
     ms->exit_status = wait_for_childs();
-    return ms->exit_status;
+    return (ms->exit_status);
 }
 
 int wait_for_childs(void)

@@ -153,3 +153,18 @@ t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
 	}
 	return (myenv);
 }
+
+int	ft_lstsize(t_envlst *lst)
+{
+	int		i;
+	t_envlst	*ptr;
+
+	i = 0;
+	ptr = lst;
+	while (ptr != NULL)
+	{
+		ptr = ptr->next;
+		i++;
+	}
+	return (i);
+}

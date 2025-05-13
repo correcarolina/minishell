@@ -42,7 +42,7 @@ static void	export_loop(char *str, t_ms	*mini)
 
 	i = 0;
 	if (!ft_strchr(str, '=') || ft_strchr(str, '=') == str)
-	{
+	{//da aggiustare, se non c'e '=' bisogna settarla cmq, pensavo di averlo gia fatto
 		print_export_error(str, mini);
 		return ;
 	}

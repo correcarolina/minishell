@@ -23,7 +23,12 @@ t_redirlst	*ft_redir_lstnew(char *content, int type)
 	new = (t_redirlst *)malloc(sizeof(t_redirlst));
 	if (!new)
 		return (NULL);
-	new->content = content;
+	new->content = ft_strdup(content);
+	if (!new->content)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->type = type;
 	new->heredoc_fd = -1;
 	new->next = NULL;

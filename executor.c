@@ -12,8 +12,11 @@
 
 #include "minishell.h"
 
-int	execute_single_command(char **cmd, t_ms *mini)
+int	execute_builtin(char **cmd, t_ms *mini)//cosa restituiscono?
 {
+	int	status;
+
+	status = 0;
 	if (!cmd || !cmd[0])
 	        return 0;
 	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
@@ -30,7 +33,18 @@ int	execute_single_command(char **cmd, t_ms *mini)
 		ft_env(cmd, mini);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
 		return (ft_exit(cmd, mini));
-	else
-		printf("da fare l'esecutore :(\n");//execve_wrapper(cmd, mini);
+	//exit (status)?;
 	return (0);
+}
+
+
+int	execute_single_command(char **cmd, t_ms *mini)
+{
+	//char **env;
+	printf("da fare l'esecutore :(\n");//execve_wrapper(cmd, mini);
+	//env = envlist_to_matrix(mini->myenv);da fare in exec_utils
+	//	execve(cmd[0], cmd, mini->envp);
+	//ms_cleanup(mini);
+	perror("execve");
+	return (127);
 }

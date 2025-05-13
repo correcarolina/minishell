@@ -20,7 +20,7 @@ SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		ft_env.c ft_export.c ft_unset.c singlequote.c ft_get_token.c \
 		check_input.c parser.c parse_utils.c redir_lst.c final_parse.c \
 		 cmd_lst.c executor.c handle_redirection.c execute_cmdblocks.c \
-		exec_utils.c ft_echo.c ft_cd.c ft_exit.c signals.c
+		exec_utils.c ft_echo.c ft_cd.c ft_exit.c heredoc.c signals.c
 #da cambiare executer con exec per collegare al file di Roberta
 
 LIBFT = ./libft/libft.a

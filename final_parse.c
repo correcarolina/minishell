@@ -28,7 +28,7 @@ static int	ft_cmd_size(t_list *line)
 	return (i);
 }
 
-static void	free_matrix(char **matrix, int i)
+void	free_matrix(char **matrix, int i)
 {
 	while (i >= 0)
 	{

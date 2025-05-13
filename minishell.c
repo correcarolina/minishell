@@ -36,66 +36,70 @@ void	ms_cleanup(t_ms *ms)
 
 int main(int ac, char **av, char **env)
 {
-    char        *line;
-    t_list      *input;
-    t_cmdblock  *head;
-    t_ms        *mini;
-	int 		in_fd;
+	char		*line;
+	t_list		*input;
+	t_ms		*mini;
 
-	in_fd = dup(0);
-    (void) **av;
-    if (ac != 1)
-        return (0);
-    mini = (t_ms *)malloc(sizeof(t_ms));
-    if (!mini)
-        return (1);
-    input = NULL;
-    mini->myenv = ft_env_cpy(mini->myenv, env);
-    mini->cwd = ft_getenv_var(mini, "PWD");
-    mini->stdinout_copy[0] = dup(STDIN_FILENO);
-    mini->stdinout_copy[1] = dup(STDOUT_FILENO);
-    if (mini->stdinout_copy[0] == -1 || mini->stdinout_copy[1] == -1)
-    {
-        perror("dup");
-        free(mini);
-        return (1);
-    }
-    mini->exit_status = 0;
-    
-    // Initialize signals
-    setup_signals();
-    while(1)
-    {
+	(void) **av;
+	if (ac != 1)
+		return (0);
+	mini = (t_ms *)malloc(sizeof(t_ms));
+	if (!mini)
+		return (1);//da qui in poi si puo fare ft_init
+	input = NULL;
+	mini->cmdblocks = NULL;
+	mini->myenv = ft_env_cpy(mini->myenv, env);
+	mini->cwd = ft_getenv_var(mini, "PWD");
+	mini->stdinout_copy[0] = dup(STDIN_FILENO);//serve per heredoc e per ripristinare 
+	mini->stdinout_copy[1] = dup(STDOUT_FILENO);//stdin-out alla fine se sei nel parent
+	/***************chiudere queste copie a fine programma dopo il loro ripristino*/
+	if (mini->stdinout_copy[0] == -1 || mini->stdinout_copy[1] == -1)
+	{
+		perror("dup");
+		free(mini);
+		return (1);
+	}
+	mini->exit_status = 0;
+	//BD	printf("il valore di cwd e: %s\n", mini->cwd);
+	  // Initialize signals
+	  setup_signals();
+	while(1)
+	{
 		g_signo = 0;
         line = readline(GREEN "minishell> " DEFAULT);
 		//printf("line %s\n g_signo %d\n", line, g_signo);
 		if (g_signo == SIGINT)
 		{
-			dup2(in_fd, 0);
+			dup2(mini->stdinout_copy[0], 0);
 			continue ;
 		}
         if (line == NULL && g_signo != SIGINT)
         {
-			dup2(in_fd, 0);
+			dup2(mini->stdinout_copy[0], 0);
             write(STDOUT_FILENO, "exit\n", 5);
             break;
         }
         
         add_history(line);
         
-        if (ft_isvalid_input((const char *)line))
-        {
-            tokenize(mini, line, &input);
-            ft_parse(input);
-            head = ft_create_cmdblock(input);
-            execute_cmdblocks(head, mini);
-            ft_clear_lst(&input);
-        }
-        free(line);
-    }
-    ms_cleanup(mini);
-    free(mini);
-    return (0);
+		if (ft_isvalid_input((const char *)line))
+		{
+			tokenize(mini, line, &input);
+			ft_parse(input);
+			mini->cmdblocks = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
+			ft_clear_lst(&input);
+			handle_heredocs(mini->cmdblocks, mini);//se ritorna -1 errore da gestire
+			execute_cmdblocks(mini->cmdblocks, mini);
+			ft_clear_cmdblock(&mini->cmdblocks);
+		}
+		free (line);
+		line = NULL;
+		dup2(mini->stdinout_copy[0], STDIN_FILENO);
+		dup2(mini->stdinout_copy[1], STDOUT_FILENO);
+	}
+	ms_cleanup(mini);
+	free(mini);
+	return (0);
 }
 
 
