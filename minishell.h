@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/12 18:35:56 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:16:25 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <fcntl.h>
+# include <sys/signal.h> 
+# include <termios.h>  
 # include <errno.h>
 # include <limits.h>
+
 # include "libft/libft.h"
 
 # define S_QUOTE	39
@@ -44,7 +47,7 @@
 # define OUTFILE_T	10
 # define OUTFILE_A	11
 
-
+extern volatile sig_atomic_t g_signo;
 //una lista per fare il parsing
 typedef struct s_list
 {
@@ -204,6 +207,12 @@ int			redirection_out(t_redirlst *redir);
 /*2f******************************* executor **********************************/
 
 int		execute_single_command(char **cmd, t_ms *mini);
+
+/* ******************************SIGNALS************************************* */
+void	signal_handler(int signo);
+void	setup_signals(void);
+void	setup_child_signals(void);
+
 /********************************** others ************************************/
 /*nel main per ora*/
 void		ms_cleanup(t_ms *ms);
