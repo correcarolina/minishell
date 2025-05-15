@@ -27,57 +27,62 @@ static void	env_print(t_envlst *env)
 	}
 }
 
-static void	print_export_error(char *str, t_ms *mini)
+//es: se non e un arg valido: minishell: export: '?????': not a valid identifier
+void	print_export_error(char *builtin, char *arg, t_ms *mini)
 {
 	mini->exit_status = 1;
-	ft_putstr_fd("minishell: export: `", 2);
-	ft_putstr_fd(str, 2);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(builtin, 2);
+	ft_putstr_fd(": '", 2);
+	ft_putstr_fd(arg, 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 }
 
-static void	export_loop(char *str, t_ms	*mini)
+static int	export_loop(char *str, t_ms	*mini)
 {
 	int			i;
 	char		*key;
 
 	i = 0;
-	if (!ft_strchr(str, '=') || ft_strchr(str, '=') == str)
-	{//da aggiustare, se non c'e '=' bisogna settarla cmq, pensavo di averlo gia fatto
-		print_export_error(str, mini);
-		return ;
-	}
 	while (str[i] != '\0' && str[i] != '=')
 		i++;
 	key = ft_substr(str, 0, i);
-	printf("👽key: %s\n", key);/************db**************/
-	if (ft_isvalid_name(key))
+	if (!key)
 	{
-		env_rm_node(&mini->myenv, key);
-		env_append_node(&mini->myenv, env_new_node(str));
+		perror("malloc");
+		return (1);
 	}
-	else
-		print_export_error(str, mini);
+	if (!ft_isvalid_name(key))
+	{
+		print_export_error("export", str, mini);
+		return (1);
+	}
+	env_rm_node(&mini->myenv, key);
+	env_append_node(&mini->myenv, env_new_node(str));
 	free(key);
+	return (0);
 }
 
-void	ft_export(char **cmd, t_ms *mini)
+int	ft_export(char **cmd, t_ms *mini)
 {
-	int	j;
+	int	i;
+	int	status;
 
-	j = 1;
+	i = 1;
+	status = 0;
 	if (cmd[1] == NULL)//se non ci sono argomenti
-	{
 		env_print(mini->myenv);
-		return ;//devo salvare lo stato di uscita?
-	}
 	else//else fare un ciclo per tutti gli args
 	{
-		while (cmd[j] != NULL)
+		while (cmd[i] != NULL)
 		{
-			export_loop(cmd[j], mini);
-			j++;
+			if (export_loop(cmd[i], mini) == 1)
+				status = 1;
+			i++;
 		}
 	}
+	mini->exit_status = status;
+	return (status);
 }
 	
 	//else

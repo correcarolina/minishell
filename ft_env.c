@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	ft_env(char **cmd, t_ms	*mini)//e il cmd
+int	ft_env(char **cmd, t_ms	*mini)//e il cmd
 {
 	t_envlst	*temp;
 
@@ -21,11 +21,13 @@ void	ft_env(char **cmd, t_ms	*mini)//e il cmd
 	{
 		printf("env: %s: No such file or directory\n", cmd[1]);
 		mini->exit_status = 127;
-		return ;
+		return (127);
 	}
 	while (temp)
 	{
 		printf("%s=%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
+	mini->exit_status = 0;
+	return (0);
 }

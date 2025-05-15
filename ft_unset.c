@@ -15,11 +15,26 @@
 //unset HOME   cerca se trova HOME (primo arg o arg[1] se arg[0] = unset)
 //se lo trova rimove il nodo
 
-void	ft_unset(char **cmd, t_ms *mini) //unset e il cmd e key e il primo arg
+int	ft_unset(char **cmd, t_ms *mini) //unset e il cmd e key e il primo arg
 {
-	printf("ancora non sono pronta: %s\n", cmd[1]);
-	(void)mini;
-	/* if (!mini || !mini->myenv || !key)
-		return ;
-	env_rm_node(&mini->myenv, key); */
+	int	i;
+	int	status;
+
+	i = 1;
+	status = 0;
+	while (cmd[i])
+	{
+		if (!ft_isvalid_name(cmd[i]))
+		{
+			print_export_error(cmd[0], cmd[i], mini);
+			status = 1;
+		}
+		else
+		{
+			env_rm_node(&mini->myenv, cmd[i]);
+		}
+		i++;
+	}
+	mini->exit_status = status;
+	return (status);
 }

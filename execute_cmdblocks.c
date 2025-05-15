@@ -15,6 +15,8 @@
 void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 {
     int status;
+
+	status = 0;
     setup_child_signals();
     if (prev_fd != -1)
         dup2(prev_fd, STDIN_FILENO);
@@ -75,6 +77,7 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
     {
         handle_redirection(cmdblocks->redir);
 		ret = execute_builtin(cmdblocks->cmd, ms);
+	//	ft_clear_cmdblock(&cmdblocks); //da invalid read
         return (ret);
     }
     create_pipes(cmdblocks, ms);

@@ -45,6 +45,7 @@ static char	*ft_expand_heredoc(t_ms *mini, char **line)//non cosi
 static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 {
 	char	*line;
+	char	*tmp;
 
 	//gestire i segnali
 	while (1)
@@ -55,7 +56,11 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		if (ft_strcmp(line, delimiter) == 0)
 			break ;
 		if (ft_strchr(line, '$'))//da aggiungere non farlo se delimiter e fra virgolette
-			line = ft_expand_heredoc(mini, &line);
+		{
+			tmp = ft_expand_heredoc(mini, &line);//if (!tmp) free(line), break???;
+			free(line);//se lungo questo check spostarlo in ft_expand_heredoc
+			line = tmp;
+		}
 		printf("%s\n", line);
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);

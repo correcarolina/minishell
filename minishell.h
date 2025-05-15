@@ -183,9 +183,10 @@ char		*ft_getenv_var(t_ms *mini, char *env);
 /******************************** builtins*************************************/
 
 int			ft_pwd(t_ms *mini);
-void		ft_env(char **cmd, t_ms *mini);
-void		ft_export(char **cmd, t_ms *mini);
-void		ft_unset(char **cmd, t_ms *mini);
+int			ft_env(char **cmd, t_ms *mini);
+int			ft_export(char **cmd, t_ms *mini);
+void		print_export_error(char *builtin, char *arg, t_ms *mini);
+int			ft_unset(char **cmd, t_ms *mini);
 void		builtin_echo(char **cmd);
 int			ft_cd(char **cmd, t_ms *mini);
 int 		ft_exit(char **cmd, t_ms *ms);

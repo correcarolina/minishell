@@ -19,6 +19,7 @@
 char	*ft_getenv_var(t_ms *mini, char *name)
 {
 	t_envlst	*temp;
+	char		*value;
 
 	if (!mini || !mini->myenv || !name)
 		return (NULL);
@@ -26,7 +27,15 @@ char	*ft_getenv_var(t_ms *mini, char *name)
 	while (temp)
 	{
 		if (ft_strncmp(name, temp->key, ft_strlen(name) + 1) == 0)
-			return (ft_strdup(temp->value));
+		{
+			value = ft_strdup(temp->value);
+			if (!value)
+			{
+				perror("malloc");
+				return (NULL);
+			}
+			return (value);
+		}
 		temp = temp->next;
 	}
 	return (NULL);
