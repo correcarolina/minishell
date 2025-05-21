@@ -70,7 +70,7 @@ void	ft_clear_lst(t_list **head)
 
 /*Returns the last node of the list.*/
 
-t_list	*ft_lstlast(t_list *lst)/********* forse non si usa *********/
+t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*ptr;
 

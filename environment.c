@@ -15,7 +15,10 @@
 /********************funziona e non ha leaks*********************/
 
 //creates a new node and puts an environment variable into two separates strings
-
+//the key is the string before the '=' and the value is the string after the '='
+//if there is no '=', the value is NULL, 
+//if there is the '=' but no value, the value is an empty string
+//returns the new node
 t_envlst	*env_new_node(char *var)
 {
 	t_envlst		*new;
@@ -34,21 +37,16 @@ t_envlst	*env_new_node(char *var)
 		return (NULL);
 	}
 	if (i == ft_strlen(var))//se non c'e '='
-	{
-		new->value = (char *)ft_calloc(1, sizeof(char));
-		if (!new->value)
-			new->value = NULL;
-	}
+		new->value = NULL;
 	else
-		new->value = ft_strdup((var + i + 1));//devo controllare errore di malloc
-	new->next = NULL;//e liberare il nodo?
+		new->value = ft_strdup((var + i + 1));
+	new->next = NULL;
 	return (new);
 }
 
 /*Adds the node ’new’ at the end of the list.
 	lst: The address of a pointer to the head of a list.
 	new: The address of a pointer to the node to be added to the list.*/
-
 void	env_append_node(t_envlst **lst, t_envlst *new)
 {
 	t_envlst	*last;
@@ -65,35 +63,6 @@ void	env_append_node(t_envlst **lst, t_envlst *new)
 			last = last->next;
 		}
 		last->next = new;
-	}
-}
-
-//function to clear one node
-
-void	env_clear_node(t_envlst *node)
-{
-	if (!node)
-		return ;
-	free(node->key);
-	free(node->value);
-	free(node);
-}
-
-//function that clears the list
-
-void	env_clear_lst(t_envlst **head)
-{
-	t_envlst	*temp;
-
-	if (!head || !*head)
-		return ;
-	while (*head != NULL)
-	{
-		temp = (*head)->next;
-		free((*head)->key);
-		free((*head)->value);
-		free(*head);
-		*head = temp;
 	}
 }
 
@@ -131,40 +100,53 @@ void	env_rm_node(t_envlst **head, char *str)
 	}
 }
 
-//copies a matrix into a linked list
-
-t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
+//function to get the node by key
+//returns the node if found, NULL if not found
+//if the list is empty, or the key is NULL, returns NULL
+t_envlst	*env_get_node(t_envlst **head, char *key)
 {
-	int			j;
-	t_envlst	*new;
+	t_envlst	*temp;
 
-	j = 0;
-	myenv = NULL;
-	while (matrix[j] != NULL)
+	if (!head || !*head || !key)
+		return (NULL);
+	temp = *head;
+	while (temp != NULL)
 	{
-		new = env_new_node(matrix[j]);
-		if (!new)
-		{
-			env_clear_lst(&myenv);
-			return (NULL);
-		}
-		env_append_node(&myenv, new);
-		j++;
+		if (ft_strncmp(key, temp->key, ft_strlen(key) + 1) == 0)
+			return (temp);
+		temp = temp->next;
 	}
-	return (myenv);
+	return (NULL);
 }
 
-int	ft_lstsize(t_envlst *lst)
-{
-	int		i;
-	t_envlst	*ptr;
+//Searches for the given environment variable in my t_ms struct and returns 
+//its value as a newly allocated string. 
+//If the variable is not found, prints an error message and returns NULL.
 
-	i = 0;
-	ptr = lst;
-	while (ptr != NULL)
+char	*ft_getenv_var(t_ms *mini, char *name)
+{
+	t_envlst	*temp;
+	char		*value;
+
+	value = NULL;
+	if (!mini || !mini->myenv || !name)
+		return (NULL);
+	temp = mini->myenv;
+	while (temp)
 	{
-		ptr = ptr->next;
-		i++;
+		if (ft_strncmp(name, temp->key, ft_strlen(name) + 1) == 0)
+		{
+			if (temp->value == NULL)
+				return (NULL);
+			value = ft_strdup(temp->value);
+			if (!value)
+			{
+				perror("malloc");
+				return (NULL);
+			}
+			return (value);
+		}
+		temp = temp->next;
 	}
-	return (i);
+	return (NULL);
 }

@@ -67,11 +67,11 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
     
 	if (!cmdblocks || !cmdblocks->cmd || \
 		(!cmdblocks->cmd[0] && !cmdblocks->redir))//se ci sono solo redir nella cmdblock bisogna arrivare a create_pipes
-		return 0;//oppure return errore?
+		return (0);//oppure return errore?
     if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
     {
         handle_redirection(cmdblocks->redir);
-        return ft_exit(cmdblocks->cmd, ms);
+        return (ft_exit(cmdblocks->cmd, ms));
     }
     if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
     {

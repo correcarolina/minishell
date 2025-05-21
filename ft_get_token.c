@@ -47,13 +47,17 @@ char	*ft_get_expansion(t_ms mini, char **str, char *word)
 
 //gets a token from the input string checking one char at a time 
 
-char	*ft_get_token(t_ms mini, char **str)
+char	*ft_get_token(t_ms mini, char **str, int hd)
 {
 	char	*token;
 
 	token = (char *)ft_calloc(1, sizeof(char));
 	if (! token)
 		return (NULL);
+	while (**str && ft_isspace(**str))
+		(*str)++;
+	if ((**str == D_QUOTE || **str == S_QUOTE) && hd == 1)
+		hd = 42;
 	while (**str && !ft_isspace(**str) && !ft_ismetachar(**str))
 	{
 		if (**str == '$')
@@ -68,5 +72,7 @@ char	*ft_get_token(t_ms mini, char **str)
 		else
 			token = ft_get_plain_word(str, token);
 	}
+	if (hd == 42)
+		token = ft_strjoin("'", token);
 	return (token);
 }

@@ -17,7 +17,7 @@ int	ft_env(char **cmd, t_ms	*mini)//e il cmd
 	t_envlst	*temp;
 
 	temp = mini->myenv;
-	if(cmd[1] != NULL)
+	if (cmd[1] != NULL)
 	{
 		printf("env: %s: No such file or directory\n", cmd[1]);
 		mini->exit_status = 127;
@@ -25,9 +25,25 @@ int	ft_env(char **cmd, t_ms	*mini)//e il cmd
 	}
 	while (temp)
 	{
-		printf("%s=%s\n", temp->key, temp->value);
+		if (temp->value)
+			printf("%s=%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
 	mini->exit_status = 0;
 	return (0);
+}
+
+void	env_export_print(t_envlst *env)
+{
+	t_envlst	*temp;
+
+	temp = env;
+	while (temp)
+	{
+		if (!temp->value)
+			printf("declare -x %s\n", temp->key);
+		else
+			printf("declare -x %s=\"%s\"\n", temp->key, temp->value);
+		temp = temp->next;
+	}
 }

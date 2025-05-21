@@ -88,10 +88,10 @@ cat < input.txt | grep "error" | sort | uniq > output.txt
 cat < infile.txt | grep error | wc -l
 echo "start" >> log.txt | grep "start" < input.txt
 cat << EOF | grep world < input.txt >> output.txt
-export "cia'o"=mondo -> deve dare errore
-export 'cia"o'=mondo
+export "cia'o"=mondo -> deve dare errore (gia fatto)
+export 'cia"o'=mondo (gia fatto)
 export ciao+=mondo -> appende la stringa alla variabile gia esistente
-export cia+o=mondo -> errore
+export cia+o=mondo -> errore (gia fatto)
 echo ciao | > p -> deve dare errore (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
 $ echo ciao | exit oppure ls | exit non fa niente (o meglio esesgue ls, lo scrive nella 
@@ -148,6 +148,16 @@ Command '' not found, but can be installed with:
 cacorrea@c1r4p8:~$ echo ciao | ""
 
 Command '' not found, but can be installed with:
+
+in heredoc:
+se esce con ctrl+d stampare messaggio di warning come bash:
+cacorrea@c1r4p4:~$ << EOF cat | grep ciao
+> ciao
+> ciao
+> bash: warning: here-document at line 31 delimited by end-of-file (wanted `EOF')
+ciao
+ciao
+
 
 
 se un solo cmd e builtin  ----->  eseguo nel parent no faccio fork
@@ -276,10 +286,12 @@ For the heredoc specifically, use readline. Here's why:
     You'll spend less time debugging signals and can still use your own get_next_line elsewhere (like in pipelines or I/O redirection).
 
 
+da finire controlli su heredoc 'EOF' fra virgolette
 
 
-
-
+export aa 
+export aa+=bb
+controllare, perche se value = NULL mi va in seggfault, devo aggiraarlo
 
 
 

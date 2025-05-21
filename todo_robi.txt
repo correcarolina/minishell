@@ -6,3 +6,10 @@
 -execution
 -exit status
 -gestione segnali(ctr d, ctrl c ctrl \) [con global var ?]
+
+ls | exit    non deve stampare niente e retituisce il prompt
+			attualmente stampa exit e restituisce il prompt
+
+echo   deve gestire -n (gia fatto)  -nnnnnnnnn (da fare se sono solo n)
+echo -nnnnooo   stampa -nnnnooo\n
+

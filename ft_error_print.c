@@ -1,37 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   ft_error_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 12:49:27 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/11 12:49:31 by cacorrea         ###   ########.fr       */
+/*   Created: 2025/05/21 12:03:19 by cacorrea          #+#    #+#             */
+/*   Updated: 2025/05/21 12:03:22 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_unset(char **cmd, t_ms *mini)
+void	ft_error_print(char *str, t_ms *mini, int err)
 {
-	int	i;
-	int	status;
-
-	i = 1;
-	status = 0;
-	while (cmd[i])
+	if (err == 1)
 	{
-		if (!ft_isvalid_name(cmd[i]))
-		{
-			print_builtin_error(cmd[0], cmd[i], mini);
-			status = 1;
-		}
-		else
-		{
-			env_rm_node(&mini->myenv, cmd[i]);
-		}
-		i++;
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putendl_fd(": command not found", 2);
+		mini->exit_status = 127;
 	}
-	mini->exit_status = status;
-	return (status);
+	else if (err == 2)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		mini->exit_status = 2;
+	}
 }

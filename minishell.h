@@ -134,7 +134,7 @@ char		*doublequote(t_ms mini, char **str);
 char		*ft_dollar_expansion(t_ms mini, char **str);
 /*ft_get_token*/
 char		*ft_get_plain_word(char **str, char *word);
-char		*ft_get_token(t_ms mini, char **str);
+char		*ft_get_token(t_ms mini, char **str, int hd);
 char		*ft_get_expansion(t_ms mini, char **str, char *word);
 
 /*(3ft)******************************parsing***********************************/
@@ -158,7 +158,7 @@ void		free_matrix(char **matrix, int i);
 
 /*(5ft)*******************************utils************************************/
 
-int			ft_isempty_str(const char *str);
+void		print_builtin_error(char *builtin, char *arg, t_ms *mini);
 int			ft_ismetachar(int c);
 int			is_str_operator(char *str);
 int			ft_isvalid_name(char *str);
@@ -167,25 +167,30 @@ char		*ft_strjoin_free(char *s1, char *s2);
 /*(2ft)*********************** check_input ************************************/
 
 int			ft_isvalid_input(const char *input);
+int			ft_isempty_str(const char *str);
 
-/**(7ft da levarne una)**********environment***********************************/
+/**(5ft)*************************environment***********************************/
 
-t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix);
 t_envlst	*env_new_node(char *var);
 void		env_append_node(t_envlst **lst, t_envlst *new);
-void		env_clear_node(t_envlst *node);
 void		env_rm_node(t_envlst **head, char *str);
-void		env_clear_lst(t_envlst **head);
-int			ft_lstsize(t_envlst *lst);
-/*ft_pwc*/
+t_envlst	*env_get_node(t_envlst **head, char *key);
 char		*ft_getenv_var(t_ms *mini, char *env);
+
+/*(4ft)******************** environment_utils *********************************/
+
+void		env_clear_node(t_envlst *node);
+void		env_clear_lst(t_envlst **head);
+t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix);
+int			ft_lstsize(t_envlst *lst);
+
 
 /******************************** builtins*************************************/
 
 int			ft_pwd(t_ms *mini);
 int			ft_env(char **cmd, t_ms *mini);
+void		env_export_print(t_envlst *env);
 int			ft_export(char **cmd, t_ms *mini);
-void		print_export_error(char *builtin, char *arg, t_ms *mini);
 int			ft_unset(char **cmd, t_ms *mini);
 void		builtin_echo(char **cmd);
 int			ft_cd(char **cmd, t_ms *mini);
@@ -196,6 +201,7 @@ int 		ft_exit(char **cmd, t_ms *ms);
 int			only_one_cmd(t_cmdblock *cmdblocks);
 int			is_built_in(char *cmd);
 void		close_fd(int fd);
+char		**envlst_to_matrix(t_envlst *env);
 
 /************************** execute_cmdblocks *********************************/
 
@@ -215,13 +221,18 @@ int			handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini);
 
 /*2f******************************* executor **********************************/
 
-int		execute_builtin(char **cmd, t_ms *mini);
-int		execute_single_command(char **cmd, t_ms *mini);
+int			execute_builtin(char **cmd, t_ms *mini);
+int			execute_single_command(char **cmd, t_ms *mini);
+int			check_access(char *cmd, t_ms *mini, int print_error);
+
+/**************************** ft_error_print **********************************/
+
+void		ft_error_print(char *str, t_ms *mini, int err);
 
 /* ******************************SIGNALS************************************* */
-void	signal_handler(int signo);
-void	setup_signals(void);
-void	setup_child_signals(void);
+void		signal_handler(int signo);
+void		setup_signals(void);
+void		setup_child_signals(void);
 
 
 /********************************** others ************************************/

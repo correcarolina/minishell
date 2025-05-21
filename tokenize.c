@@ -78,12 +78,23 @@ static void	handle_operator(char **str, t_list **input)
 		ft_append_node(input, ft_lstnew(word));
 }
 
+static int	last_is_heredoc(t_list *lst)
+{
+	t_list	*last = ft_lstlast(lst);
+	return (last && last->content && ft_strcmp(last->content, "<<") == 0);
+}
+
+
 static void	handle_word(t_ms *mini, char **str, t_list **input)
 {
 	char	*word;
 	t_list	*temp;
-
-	word = ft_get_token(*mini, str);
+	int		hd;
+	
+	hd = 0;
+	if (last_is_heredoc(*input))
+		hd = 1;
+	word = ft_get_token(*mini, str, hd);
 	if (word != NULL && *word != '\0')
 	{
 		if (is_str_operator(word))

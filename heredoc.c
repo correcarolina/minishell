@@ -46,8 +46,15 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 {
 	char	*line;
 	char	*tmp;
+	int		quoted_hd;
 
-	//gestire i segnali
+	//gestire i segnali, se esce con ctrl+d stampare messaggio di warning
+	quoted_hd = 0;
+	if (delimiter && delimiter[0] == S_QUOTE && delimiter[1] != '\0')
+	{
+		quoted_hd = 1;
+		delimiter++;
+	}
 	while (1)
 	{
 		line = readline(AQUA "HEREDOC> " DEFAULT);
@@ -55,13 +62,12 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 			break ;
 		if (ft_strcmp(line, delimiter) == 0)
 			break ;
-		if (ft_strchr(line, '$'))//da aggiungere non farlo se delimiter e fra virgolette
+		if (ft_strchr(line, '$') && quoted_hd == 1)//da aggiungere non farlo se delimiter e fra virgolette
 		{
 			tmp = ft_expand_heredoc(mini, &line);//if (!tmp) free(line), break???;
 			free(line);//se lungo questo check spostarlo in ft_expand_heredoc
 			line = tmp;
 		}
-		printf("%s\n", line);
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);

@@ -18,7 +18,7 @@ int	execute_builtin(char **cmd, t_ms *mini)//cosa restituiscono?
 
 	status = 0;
 	if (!cmd || !cmd[0])
-	        return 0;
+	        return (0);
 	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
 		builtin_echo(cmd);
 	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
@@ -37,21 +37,57 @@ int	execute_builtin(char **cmd, t_ms *mini)//cosa restituiscono?
 	return (status);
 }
 
+static char	*get_path(char *cmd, char *envpath, t_ms *mini)
+{
+	char	*initial_path;
+	char	*cmd_path;
+	char	**path_array;
+	int		i;
+
+	i = 0;
+	path_array = ft_split(envpath, ':');
+	while (path_array[i] != NULL)
+	{
+		initial_path = ft_strjoin(path_array[i], "/");
+		cmd_path = ft_strjoin(initial_path, cmd);
+		free(initial_path);
+		if (access(cmd_path, X_OK) == 0)
+		{
+			ft_free_matrix(path_array);
+			return (cmd_path);
+		}	
+		free(cmd_path);
+		i++;
+	}
+	ft_free_matrix(path_array);
+	return (NULL);
+}
+
 
 int	execute_single_command(char **cmd, t_ms *mini)
 {
-	//char **env;
-	printf("da fare l'esecutore :(\n");//execve_wrapper(cmd, mini);
-	//env = envlist_to_matrix(mini->myenv);in exec_utils
-	//if (access(cmd[0], F_OK) == 0)
-	//altrimenti cercarsi il percorso nel PATH ---> ft_getenv_var gia esiste
-	//splittare il path in una matrice di stringhe
-	//char **path = ft_split(ft_getenv_var(mini, "PATH"), ':');
-	//se non ce il '\' nel path, lo aggiungo
-	//provare access con le stringe nella nuova matric finche non lo trova 
-	//	execve(cmd[0], cmd, mini->envp);
-	//se arriva qui vuole dire che c'e un errore con access al file o percorso e quindi fa pulizia e ritorna errore
-	//free(path);
-	//ms_cleanup(mini);
-	//(perror("execve"); return (127);
+	char **env;
+	char *cmd_path;
+
+	env = envlst_to_matrix(mini->myenv);
+	if (is_built_in(cmd[0]))
+		return (execute_builtin(cmd, mini));
+	if (access(cmd[0], X_OK) == 0)
+	{
+		execve(cmd[0], cmd, env);
+		free(env);
+		return (0);
+	}
+	cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"), mini);
+	if (!cmd_path)
+	{
+		ft_error_print(cmd[0], mini, 1);
+		free(env);
+		return (127);
+	}
+	execve(cmd_path, cmd, env);
+	free(cmd_path);
+	free(env);
+	mini->exit_status = 126;
+	return (perror("execve"), 127);
 }

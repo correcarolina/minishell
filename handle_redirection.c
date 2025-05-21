@@ -70,9 +70,8 @@ int	handle_redirection(t_redirlst *redir)
 	{
 		if (redir->type == RD_HEREDOC)
 		{
-			printf("in handle_redirection da fare l'heredoc\n");
-			/* dup2(redir->heredoc_fd, STDIN_FILENO);
-			close_file(fd_in); */
+			dup2(redir->heredoc_fd, STDIN_FILENO);
+			close_file(fd_in);
 		}
 		else if (redir->type == RD_IN)
 		{

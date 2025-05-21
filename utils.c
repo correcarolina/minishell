@@ -12,19 +12,15 @@
 
 #include "minishell.h"
 
-//returns 1 if the sring is NULL or if it is made up of only spaces
-//returns 0 if a non space char is found
-int	ft_isempty_str(const char *str)
+//es: se non e un arg valido: minishell: export: '?????': not a valid identifier
+void	print_builtin_error(char *builtin, char *arg, t_ms *mini)
 {
-	if (!str || str[0] == '\0')
-		return (1);
-	while (*str)
-	{
-		if (!ft_isspace(*str))
-			return (0);
-		str++;
-	}
-	return (1);
+	mini->exit_status = 1;
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(builtin, 2);
+	ft_putstr_fd(": '", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
 }
 
 /*checks only for the metacharacters that we need in this project,

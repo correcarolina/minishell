@@ -96,6 +96,20 @@ static int	ft_isvalid_pipe(const char *str)
 	}
 	return (1);
 }*/
+//returns 1 if the sring is NULL or if it is made up of only spaces
+//returns 0 if a non space char is found
+int	ft_isempty_str(const char *str)
+{
+	if (!str || str[0] == '\0')
+		return (1);
+	while (*str)
+	{
+		if (!ft_isspace(*str))
+			return (0);
+		str++;
+	}
+	return (1);
+}
 
 /*cheks number of quotes, even nb returns 1, odd nb returns 0*/
 
@@ -126,17 +140,7 @@ static int	paired_quotes(const char *str)
 
 int	ft_isvalid_input(const char *input)
 {
-	//char	*str;
-//da rivedere is_empty_str vedi nota
 	if (input == NULL || ft_isempty_str(input) || (!paired_quotes(input)))
 		return (0);
-	/* str = ft_strtrim(input, " \t\n");
-	if (!ft_isvalid_pipe(str) || !ft_isvalid_redirection(str))
-	{
-		free(str);
-		return (0);
-	}
-	else
-		free(str); */ 
 	return (1);
 }

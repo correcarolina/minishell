@@ -20,7 +20,7 @@ void builtin_echo(char **cmd)
 	if (cmd == NULL ||cmd[0] == NULL)
 	{
 		printf("\n");
-		return;
+		return ;
 	}
 	if (cmd[i] && strcmp(cmd[i], "-n") == 0)
 	{
