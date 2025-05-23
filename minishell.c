@@ -85,7 +85,14 @@ int main(int ac, char **av, char **env)
 		if (ft_isvalid_input((const char *)line))
 		{
 			tokenize(mini, line, &input);
-			ft_parse(input);
+			if (ft_parse(input) == -1)
+			{
+				free (line);
+				line = NULL;
+				dup2(mini->stdinout_copy[0], STDIN_FILENO);
+				dup2(mini->stdinout_copy[1], STDOUT_FILENO);
+				continue ;
+			}
 			mini->cmdblocks = ft_create_cmdblock(input);//si puo mettere dentro ft-parse?
 			ft_clear_lst(&input);
 			handle_heredocs(mini->cmdblocks, mini);//se ritorna -1 errore da gestire

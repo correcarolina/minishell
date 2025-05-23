@@ -1,14 +1,45 @@
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --errors-for-leak-kinds=all --track-fds=yes --trace-children=yes --suppressions=readline.supp ./minishell
+
 10/02
 
 
-finire ft_unset  aspettare il parsing
 
-finire ft_export  aspettare il parsing da controllare
+< Makefile | wc -l  (se in una pipeline c'e la redirection ma no il comando,
+	non manda correttamente quello che prende dal file sulla pipe)
 
-fare un funzione che smista le builtins? non e necessario ma forse facilita le cose
+cat | cat | grep #exit code dovrebbe essere 2  (che e quello di grep)
+exit gestire numero piu lungo di long long
 
-dove mettere la fn che e in environment.c che copia environment e lo mette in t_ms? 
-	t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
+#echo
+echo -n -nmnn -nnnn efdfdfhheh
+echo -n -n -n jgdj
+
+
+
+cd,pwd,exit,env,export,unset,
+echo
+
+dal manuale di bash
+All builtins return an exit status of 2 to indicate incorrect usage,
+ generally invalid options or missing arguments. cioe 127 (125 + 2)
+
+
+
+
+
+
+
+IN GDB
+set follow-fork-mode child   per entrare nel child
+set follow-fork-mode parent  per evitare di entrare nei seguenti child
+
+
+
+
+
+
+
+
 
 
 
@@ -86,6 +117,7 @@ espande prima di salvarlo nelle envs
 commands:
 cat < input.txt | grep "error" | sort | uniq > output.txt
 cat < infile.txt | grep error | wc -l
+cat < infile.txt | grep error | wc -l > output.txt
 echo "start" >> log.txt | grep "start" < input.txt
 cat << EOF | grep world < input.txt >> output.txt
 export "cia'o"=mondo -> deve dare errore (gia fatto)
@@ -289,9 +321,6 @@ For the heredoc specifically, use readline. Here's why:
 da finire controlli su heredoc 'EOF' fra virgolette
 
 
-export aa 
-export aa+=bb
-controllare, perche se value = NULL mi va in seggfault, devo aggiraarlo
 
 
 

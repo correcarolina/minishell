@@ -140,7 +140,7 @@ char		*ft_get_expansion(t_ms mini, char **str, char *word);
 /*(3ft)******************************parsing***********************************/
 
 int			ft_check_pipes(t_list *line);
-void		ft_parse(t_list *line);
+int			ft_parse(t_list *line);
 void		debug_printer(t_list *line);
 
 /*(5ft)parse_utils*/

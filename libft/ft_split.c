@@ -67,6 +67,8 @@ void	ft_free_matrix(char **strs)
 	int	i;
 
 	i = 0;
+	if (!strs)
+		return ;
 	while (strs[i] != NULL)
 	{
 		free (strs[i]);

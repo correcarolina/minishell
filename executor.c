@@ -37,7 +37,8 @@ int	execute_builtin(char **cmd, t_ms *mini)//cosa restituiscono?
 	return (status);
 }
 
-static char	*get_path(char *cmd, char *envpath, t_ms *mini)
+
+static char	*get_path(char *cmd, char *envpath)
 {
 	char	*initial_path;
 	char	*cmd_path;
@@ -45,6 +46,8 @@ static char	*get_path(char *cmd, char *envpath, t_ms *mini)
 	int		i;
 
 	i = 0;
+	if (envpath == NULL)
+		return (NULL);
 	path_array = ft_split(envpath, ':');
 	while (path_array[i] != NULL)
 	{
@@ -69,16 +72,16 @@ int	execute_single_command(char **cmd, t_ms *mini)
 	char **env;
 	char *cmd_path;
 
-	env = envlst_to_matrix(mini->myenv);
 	if (is_built_in(cmd[0]))
 		return (execute_builtin(cmd, mini));
+	env = envlst_to_matrix(mini->myenv);
 	if (access(cmd[0], X_OK) == 0)
 	{
 		execve(cmd[0], cmd, env);
 		free(env);
 		return (0);
 	}
-	cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"), mini);
+	cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"));
 	if (!cmd_path)
 	{
 		ft_error_print(cmd[0], mini, 1);

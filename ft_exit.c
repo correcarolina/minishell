@@ -45,6 +45,7 @@ int ft_exit(char **cmd, t_ms *ms)
         }
         exit_code = ft_atoi(cmd[1]) & 255;
     }
+	ft_clear_cmdblock(&ms->cmdblocks);
     ms_cleanup(ms);
     exit(exit_code & 255);
     return 42; // Never reached

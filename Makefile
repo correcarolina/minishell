@@ -32,7 +32,7 @@ $(LIBFT):
 	@make -C ./libft
 
 $(NAME): $(SRCS) $(LIBFT)
-	$(CC) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) -lreadline
 	@echo "\033[0;96mminishell compiled\033[0m"
 
 

@@ -18,6 +18,22 @@ static void	close_file(int fd)
 		close(fd);
 }
 
+// This function duplicates fd1 to fd2 and closes fd1.
+int	p_dup2(int fd1, int fd2)
+{
+	if (dup2(fd1, fd2) == -1)
+	{
+		perror("dup2");
+		return (-1);
+	}
+	if (fd1 != fd2)
+	{
+		close_file(fd1);
+	}
+	return (0);
+}
+
+// This function opens a file and handles errors.
 static int	open_file(const char *filename, int flags, mode_t mode)
 {
 	int	fd;
@@ -48,16 +64,16 @@ int	redirection_out(t_redirlst *redir)
 		fd_out = open_file(redir->content, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fd_out == -1)
 			return (-1);
-		dup2(fd_out, STDOUT_FILENO);
-		close_file(fd_out);
+		if (p_dup2(fd_out, STDOUT_FILENO) == -1)
+			return (-1);
 	}
 	else if (redir->type == RD_OUT_T)
 	{
 		fd_out = open_file(redir->content, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd_out == -1)
 			return (-1);
-		dup2(fd_out, STDOUT_FILENO);
-		close_file(fd_out);
+		if (p_dup2(fd_out, STDOUT_FILENO) == -1)
+			return (-1);
 	}
 	return (0);
 }
@@ -70,16 +86,16 @@ int	handle_redirection(t_redirlst *redir)
 	{
 		if (redir->type == RD_HEREDOC)
 		{
-			dup2(redir->heredoc_fd, STDIN_FILENO);
-			close_file(fd_in);
+			if (p_dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
+			return (-1);
 		}
 		else if (redir->type == RD_IN)
 		{
 			fd_in = open_file(redir->content, O_RDONLY, 0);
 			if (fd_in == -1)
 				return (-1);
-			dup2(fd_in, STDIN_FILENO);
-			close_file(fd_in);
+			if (p_dup2(fd_in, STDIN_FILENO) == -1)
+				return (-1);
 		}
 		else if (redir->type == RD_OUT_T || redir->type == RD_OUT_A)
 		{
