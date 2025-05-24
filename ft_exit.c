@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/24 17:54:03 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/24 18:16:08 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int	ft_exit(char **cmd, t_ms *ms)
 	if (cmd[1] != NULL)
 	{
 		i = -1;
-		if (cmd[1][i] == '-' || cmd[1][++i] == '+')
+		++i;
+		if (cmd[1][i] == '-' || cmd[1][i] == '+')
 			i++;
 		while (cmd[1][++i])
 			ft_error_1(cmd, i, ms);
