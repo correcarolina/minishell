@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/25 18:31:29 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:32:49 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,17 @@ void	setup_heredoc_signals(void)
 {
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+//handles ctrl c in heredoc
+void	ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd)
+{
+	if (g_signo == SIGINT)
+	{
+		ex_SI = 1;
+		g_signo = 0;
+		close_fd(w_fd);
+		write(1, "\n", 1);
+		exit(130);
+	}
 }

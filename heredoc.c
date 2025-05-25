@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/25 18:32:30 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:33:11 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,108 +14,74 @@
 
 extern volatile sig_atomic_t	g_signo;
 
-static char	*ft_expand_heredoc(t_ms *mini, char **line)//non cosi
+static void	ft_hd_ctrld(char *line, volatile sig_atomic_t g_signo, char *delim)
 {
-	char	*start;
-	char	*expanded;
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	expanded = ft_strdup("");
-	if (!expanded)
-		return (NULL);
-	start = *line;
-	while (*start)
+	if (!line && g_signo != SIGINT)
 	{
-		i = 0;
-		while (start[i] && start[i] != '$')
-			i++;
-		tmp = ft_substr(start, 0, i);
-		expanded = ft_strjoin_free(expanded, tmp);
-		free(tmp);
-		start += i;
-		if (*start == '$')
-		{
-			start++;
-			expanded = ft_get_expansion(*mini, &start, expanded);
-		}
+		write(STDERR_FILENO, "bash: warning: here-document delimited ", 40);
+		write(STDERR_FILENO, "by end-of-file (wanted `", 25);
+		write(STDERR_FILENO, delim, ft_strlen(delim));
+		write(STDERR_FILENO, "')\n", 3);
 	}
-	return (expanded);
+}
+
+static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
+{
+	char	*tmp;
+
+	if (!*line && g_signo != SIGINT)
+	{
+		ft_hd_ctrld(*line, g_signo, delim);
+		return (0);
+	}
+	if (ft_strcmp(*line, delim) == 0)
+		return (0);
+	if (ft_strchr(*line, '$') && !quoted_hd)
+	{
+		tmp = ft_expand_heredoc(mini, line);
+		if (!tmp)
+			return (-1);
+		free(*line);
+		*line = tmp;
+	}
+	return (1);
 }
 
 static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 {
-	char    *line;
-	char	*tmp;
-    int		quoted_hd;
-	int		was_sigint;  // per tenere traccia di SIGINT
+	char	*line;
+	int		quoted_hd;
+	int		res;
 
-	was_sigint = 0;
 	setup_heredoc_signals();
-	quoted_hd = 0;
-	if (delimiter && delimiter[0] == S_QUOTE && delimiter[1] != '\0')
-	{
-		quoted_hd = 1;
-		delimiter++;
-	}
+	quoted_hd = ft_check_delimiter_quote(&delimiter);
 	while (1)
 	{
 		line = readline(AQUA "HEREDOC> " DEFAULT);
-		if (g_signo == SIGINT)
-		{
-			was_sigint = 1;
-			g_signo = 0;  // Resetto
-			close_fd(write_fd);
-			write(1, "\n",1);
-			exit(130);  // 128 + SIGINT (2)
-		}
-		if (!line && g_signo != SIGINT)
-		{
-			write(STDERR_FILENO, "warning: here-document delimited by end-of-file (wanted `", 57);
-			write(STDERR_FILENO, delimiter, ft_strlen(delimiter));
-			write(STDERR_FILENO, "')\n", 3);
+		ft_hd_ctrlc(g_signo, 0, write_fd);
+		res = handle_line(mini, &line, delimiter, quoted_hd);
+		if (res <= 0)
 			break;
-		}
-		if (ft_strcmp(line, delimiter) == 0)
-			break;
-		if (ft_strchr(line, '$') && quoted_hd == 0)
-		{
-			tmp = ft_expand_heredoc(mini, &line);
-			if (!tmp) 
-			{
-				free(line);
-				break;
-			}
-			free(line);
-			line = tmp;
-		}
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
 	}
+	free(line);
 	g_signo = 0;
 	close_fd(write_fd);
 	exit(0);
 }
 
-static int	create_heredoc(t_ms	*mini, t_redirlst *current)
+static int	create_heredoc(t_ms *mini, t_redirlst *current)
 {
 	int		fd[2];
 	pid_t	pid;
-	int     status;
 
 	if (pipe(fd) == -1)
-	{
-		perror("pipe");
-		return (-1);
-	}
+		return (perror("pipe"), -1);
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		return (-1);
-	}
+		return (perror("fork"), -1);
 	if (pid == 0)
 	{
 		close_fd(fd[0]);
@@ -123,17 +89,7 @@ static int	create_heredoc(t_ms	*mini, t_redirlst *current)
 	}
 	close(fd[1]);
 	current->heredoc_fd = fd[0];
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGINT)
-			return (-130);
-	}
-	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-	{
-		return (-130);
-	}
-	return (0);
+	return (ft_wait_heredoc(pid));
 }
 
 int	handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini)
@@ -147,11 +103,9 @@ int	handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini)
 		current = actual_cmd->redir;
 		while (current)
 		{
-			if (current->type == RD_HEREDOC)
-			{
-				if (create_heredoc(mini, current) == -1)
-					return (-1);
-			}
+			if (current->type == RD_HEREDOC
+				&& create_heredoc(mini, current) == -1)
+				return (-1);
 			current = current->next;
 		}
 		actual_cmd = actual_cmd->next;

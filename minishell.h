@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/25 17:22:34 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:33:06 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,13 @@ int			redirection_out(t_redirlst *redir);
 
 int			handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini);
 
+/************************** heredoc_utils *************************************/
+char		*ft_append_text_before_dollar(char **start);
+void		ft_append_expansion(t_ms *mini, char **start, char **expanded);
+char		*ft_expand_heredoc(t_ms *mini, char **line);
+int			ft_wait_heredoc(pid_t pid);
+int			ft_check_delimiter_quote(char **delimiter);
+
 /*2f******************************* executor **********************************/
 
 int			execute_builtin(char **cmd, t_ms *mini);
@@ -234,6 +241,7 @@ void		signal_handler(int signo);
 void		setup_signals(void);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
+void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
 
 /********************************** others ************************************/
 /*nel main per ora*/
