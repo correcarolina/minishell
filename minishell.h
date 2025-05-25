@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/24 18:15:04 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:22:34 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ void		ft_error_print(char *str, t_ms *mini, int err);
 void		signal_handler(int signo);
 void		setup_signals(void);
 void		setup_child_signals(void);
-
+void		setup_heredoc_signals(void);
 
 /********************************** others ************************************/
 /*nel main per ora*/

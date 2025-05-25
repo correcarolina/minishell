@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/08 12:52:53 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/25 18:32:30 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_signo;
 
 static char	*ft_expand_heredoc(t_ms *mini, char **line)//non cosi
 {
@@ -44,11 +46,13 @@ static char	*ft_expand_heredoc(t_ms *mini, char **line)//non cosi
 
 static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 {
-	char	*line;
+	char    *line;
 	char	*tmp;
-	int		quoted_hd;
+    int		quoted_hd;
+	int		was_sigint;  // per tenere traccia di SIGINT
 
-	//gestire i segnali, se esce con ctrl+d stampare messaggio di warning
+	was_sigint = 0;
+	setup_heredoc_signals();
 	quoted_hd = 0;
 	if (delimiter && delimiter[0] == S_QUOTE && delimiter[1] != '\0')
 	{
@@ -58,20 +62,39 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 	while (1)
 	{
 		line = readline(AQUA "HEREDOC> " DEFAULT);
-		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
-			break ;
-		if (ft_strchr(line, '$') && quoted_hd == 1)//da aggiungere non farlo se delimiter e fra virgolette
+		if (g_signo == SIGINT)
 		{
-			tmp = ft_expand_heredoc(mini, &line);//if (!tmp) free(line), break???;
-			free(line);//se lungo questo check spostarlo in ft_expand_heredoc
+			was_sigint = 1;
+			g_signo = 0;  // Resetto
+			close_fd(write_fd);
+			write(1, "\n",1);
+			exit(130);  // 128 + SIGINT (2)
+		}
+		if (!line && g_signo != SIGINT)
+		{
+			write(STDERR_FILENO, "warning: here-document delimited by end-of-file (wanted `", 57);
+			write(STDERR_FILENO, delimiter, ft_strlen(delimiter));
+			write(STDERR_FILENO, "')\n", 3);
+			break;
+		}
+		if (ft_strcmp(line, delimiter) == 0)
+			break;
+		if (ft_strchr(line, '$') && quoted_hd == 0)
+		{
+			tmp = ft_expand_heredoc(mini, &line);
+			if (!tmp) 
+			{
+				free(line);
+				break;
+			}
+			free(line);
 			line = tmp;
 		}
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
 	}
+	g_signo = 0;
 	close_fd(write_fd);
 	exit(0);
 }
@@ -80,6 +103,7 @@ static int	create_heredoc(t_ms	*mini, t_redirlst *current)
 {
 	int		fd[2];
 	pid_t	pid;
+	int     status;
 
 	if (pipe(fd) == -1)
 	{
@@ -99,7 +123,16 @@ static int	create_heredoc(t_ms	*mini, t_redirlst *current)
 	}
 	close(fd[1]);
 	current->heredoc_fd = fd[0];
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			return (-130);
+	}
+	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	{
+		return (-130);
+	}
 	return (0);
 }
 
