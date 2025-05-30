@@ -1,23 +1,37 @@
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --errors-for-leak-kinds=all --track-fds=yes --trace-children=yes --suppressions=readline.supp ./minishell
 
-10/02
+30/05
+
+ls | exit   ----> sigpipe
+
+
+	
 
 
 
 < Makefile | wc -l  (se in una pipeline c'e la redirection ma no il comando,
-	non manda correttamente quello che prende dal file sulla pipe)
+	non manda correttamente quello che prende dal file sulla pipe) con 
+    <Makefile | grep token    funziona quindi lasciamo perdere
 
 cat | cat | grep #exit code dovrebbe essere 2  (che e quello di grep)
-exit gestire numero piu lungo di long long
+minishell da 130 e  poi stampa un '\n' che non dovrebbe    ctrl c non deve stampare sempre \n
+per ogni ctrl + C che faccio quando rimane appeso mi stampa un cambio linea
+che non andrebbe
+biin/ls
+/biin/ls:
+bash: ./TEMPP: Permission denied    exit 126   ft_print_error 4
+bash: /biin/ls: No such file or directory    exit 127    ft_print_error 3
 
-#echo
-echo -n -nmnn -nnnn efdfdfhheh
-echo -n -n -n jgdj
+leaks e da sistemaare tipo di errore:
+cacorrea@c1r4p1:~/sgoinfre/minishell$ mm
+Command 'mm' not found, but can be installed with:
+apt install multimail
+Please ask your administrator.
+cacorrea@c1r4p1:~/sgoinfre/minishell$ /bin/lss
+bash: /bin/lss: No such file or directory
+cacorrea@c1r4p1:~/sgoinfre/minishell$ 
 
 
-
-cd,pwd,exit,env,export,unset,
-echo
 
 dal manuale di bash
 All builtins return an exit status of 2 to indicate incorrect usage,
@@ -35,20 +49,22 @@ set follow-fork-mode parent  per evitare di entrare nei seguenti child
 
 
 
+LEAKS   AL 28/05/25
+exit da solo leaks 40 bytes in 1 block main, aperti 3 fd
+ctrl + D non leaks lascia aperti 3 fd
 
 
 
 
+LEAKS OK
+comandi semplici da soli:
+    (cat, mkdir, rmdir, ls  lascia aperto 1 fd)
+    (more lascia 3 fd aperti)
+    fd ok: rm file, wc, touch
 
 
-
-
-ft dollar funziona
-
-
-
-
-
+GUAI:
+ls | cat -e rimane aperto
 
 
 ALLOCAZIONI DA LIBERARE A FINE PROGRAMMA
@@ -72,8 +88,10 @@ legge la linea
 controlla se e valida
 la mette nella lista e la espande
 cerca gli operatori e fa il parsing
-la mette in una struttura-array
-la manda in esecuzione
+crea un cmdblock con il comando in una matrice e le redirections in una lista
+fa una lista di cmdblocks
+scorre questa lista e 
+manda in esecuzionem ogni nodo (cmdblock)
 salva il exit status
 libera la lista con l'input
 ricomincia
@@ -124,7 +142,7 @@ export "cia'o"=mondo -> deve dare errore (gia fatto)
 export 'cia"o'=mondo (gia fatto)
 export ciao+=mondo -> appende la stringa alla variabile gia esistente
 export cia+o=mondo -> errore (gia fatto)
-echo ciao | > p -> deve dare errore (gia fatto)
+echo ciao | > p ->  (gia fatto)
 echo ciao | > -> deve dare errore (gia fatto)
 $ echo ciao | exit oppure ls | exit non fa niente (o meglio esesgue ls, lo scrive nella 
 pipe poi esce dalla minishell cosi noi non vediamo il contenuto della pipe)
@@ -175,6 +193,8 @@ int		handle_heredoc(char *delimiter); fare questa funzione
 
 nel caso l'input sia ""  o '' gestire: errore di bash \n e Command '' not found
 cacorrea@c1r4p8:~$ ""
+funzionava, ora seggfault!!!!!!!!!!!!!!!!
+
 
 Command '' not found, but can be installed with:
 cacorrea@c1r4p8:~$ echo ciao | ""

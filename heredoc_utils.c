@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:22:54 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/25 19:31:37 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:41:09 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*ft_expand_heredoc(t_ms *mini, char **line)
 	while (*start)
 	{
 		part = ft_append_text_before_dollar(&start);
-		expanded = ft_strjoin_free(expanded, part);
+		expanded = ft_strjoin_free_both(expanded, part);
 		free(part);
 		ft_append_expansion(mini, &start, &expanded);
 	}

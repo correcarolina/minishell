@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/13 16:15:53 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:14:12 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
+void child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 {
 	int status;
 
@@ -23,9 +23,10 @@ void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 	if (prev_fd != -1)
 		dup2(prev_fd, STDIN_FILENO);
 	if (cmd->next)//non e l'ultimo comando
-		dup2(next_fd, STDOUT_FILENO);
+		dup2(next_fd[1], STDOUT_FILENO);
 	close_fd(prev_fd);
-	close_fd(next_fd);
+	close_fd(next_fd[1]);
+	close_fd(next_fd[0]);
 	if (handle_redirection(cmd->redir) == -1)
 	{
 		ft_clear_cmdblock(&ms->cmdblocks);
@@ -38,8 +39,11 @@ void child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms)
 	}
 	status = execute_single_command(cmd->cmd, ms);
 	ft_clear_cmdblock(&ms->cmdblocks);
+	ms_cleanup(ms);
+	free(ms);
 	exit(status);
 }
+
 
 //takes the command block list and creates pipes between them (one pipe per
 //command block if it is not the last one)
@@ -63,7 +67,7 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 		}
 		pid = fork();
 		if (pid == 0)//child
-			child_process(cmdblock, prev_fd, pipe_fd[1], ms);
+			child_process(cmdblock, prev_fd, pipe_fd, ms);
 		close_fd(prev_fd);
 		if (cmdblock->next)//non e l'ultimo commando
 		{
@@ -74,6 +78,7 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 			close_fd(pipe_fd[0]);
 		cmdblock = cmdblock->next;
 	}
+	close_fd(prev_fd);
 }
 
 int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
@@ -83,11 +88,6 @@ int execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 	if (!cmdblocks || !cmdblocks->cmd || \
 		(!cmdblocks->cmd[0] && !cmdblocks->redir))//se ci sono solo redir nella cmdblock bisogna arrivare a create_pipes
 		return (0);//oppure return errore?
-    /* if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
-    {
-        handle_redirection(cmdblocks->redir);
-        return (ft_exit(cmdblocks->cmd, ms));
-    } */
     if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
     {
         handle_redirection(cmdblocks->redir);

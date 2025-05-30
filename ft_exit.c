@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/24 18:16:08 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:28:08 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	ft_exit(char **cmd, t_ms *ms)
 	}
 	ft_clear_cmdblock(&ms->cmdblocks);
 	ms_cleanup(ms);
+	free(ms);
 	exit(exit_code & 255);
 	return (42);
 }

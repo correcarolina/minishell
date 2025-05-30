@@ -76,13 +76,13 @@ int ft_cd(char **cmd, t_ms *mini)
     char *target_dir;
     
     if (getcwd(owd, 1024) == NULL)
-        return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
+        return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
     if (cmd[1] == NULL)
     {
         target_dir = get_home_dir(mini);
         if (!target_dir)
         {
-            ft_putstr_fd("cd: HOME not set\n", 2);
+            ft_putstr_fd("minishell: cd: HOME not set\n", 2);
             mini->exit_status = 1;
             return (1);
         }
@@ -101,7 +101,7 @@ int ft_cd(char **cmd, t_ms *mini)
     }
 
     if (getcwd(cwd, 1024) == NULL)
-        return (ft_putstr_fd("cd: getcwd error\n", 2), 1);
+        return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
 
     update_pwd_vars(mini, cwd, owd);
     if (mini->cwd)

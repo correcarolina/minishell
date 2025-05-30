@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 09:56:34 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/18 09:56:36 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:40:30 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,15 @@ char	*ft_get_token(t_ms mini, char **str, int hd)
 		hd = 42;
 	while (**str && !ft_isspace(**str) && !ft_ismetachar(**str))
 	{
-		if (**str == '$')
+		if (**str == '$' && hd != 1)
 		{
 			(*str)++;
 			token = ft_get_expansion(mini, str, token);
 		}
 		else if (**str == D_QUOTE)
-			token = ft_strjoin_free(token, doublequote(mini, str));
+			token = ft_strjoin_free_both(token, doublequote(mini, str));
 		else if (**str == S_QUOTE)
-			token = ft_strjoin_free(token, singlequote(str));
+			token = ft_strjoin_free_both(token, singlequote(str));
 		else
 			token = ft_get_plain_word(str, token);
 	}

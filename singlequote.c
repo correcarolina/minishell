@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   singlequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:28:37 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/13 17:28:40 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:21:49 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ char	*singlequote(char **str)
 		else
 			word[i++] = *(*str)++;
 	}
-	while (**str && **str != S_QUOTE)
-		word = ft_get_plain_word(str, word);
+	/* while (**str && **str != S_QUOTE)
+		word = ft_get_plain_word(str, word); */
 	if (**str == S_QUOTE)
 		(*str)++;
 	return (word);

@@ -1,31 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_error_print.c                                   :+:      :+:    :+:   */
+/*   ft_print_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 12:03:19 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/21 12:03:22 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/29 13:22:33 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_error_print(char *str, t_ms *mini, int err)
+static void	ft_print_error1(char *str)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+}
+
+void	ft_print_error(char *str, t_ms *mini, int err)
 {
 	if (err == 1)
 	{
-		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(str, 2);
 		ft_putendl_fd(": command not found", 2);
 		mini->exit_status = 127;
 	}
 	else if (err == 2)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(str, 2);
+		ft_print_error1(str);
 		ft_putendl_fd(": numeric argument required", 2);
 		mini->exit_status = 2;
 	}
+	else if (err == 3)
+	{
+		ft_print_error1(str);
+		ft_putendl_fd(": No such file or directory", 2);
+		mini->exit_status = 127;
+	}
+	else if (err == 4)
+	{
+		ft_print_error1(str);
+		ft_putendl_fd(": Permission denied 👀", 2);
+		mini->exit_status = 126;
+	}
 }
+

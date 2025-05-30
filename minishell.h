@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/25 19:33:06 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:36:53 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void		print_builtin_error(char *builtin, char *arg, t_ms *mini);
 int			ft_ismetachar(int c);
 int			is_str_operator(char *str);
 int			ft_isvalid_name(char *str);
-char		*ft_strjoin_free(char *s1, char *s2);
+char		*ft_strjoin_free_both(char *s1, char *s2);
 
 /*(2ft)*********************** check_input ************************************/
 
@@ -205,7 +205,7 @@ char		**envlst_to_matrix(t_envlst *env);
 
 /************************** execute_cmdblocks *********************************/
 
-void		child_process(t_cmdblock *cmd, int prev_fd, int next_fd, t_ms *ms);
+void		child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms);
 void		create_pipes(t_cmdblock *cmdblock, t_ms *ms);
 int			execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
 int			wait_for_childs(void);
@@ -232,9 +232,9 @@ int			execute_builtin(char **cmd, t_ms *mini);
 int			execute_single_command(char **cmd, t_ms *mini);
 int			check_access(char *cmd, t_ms *mini, int print_error);
 
-/**************************** ft_error_print **********************************/
+/**************************** ft_print_error **********************************/
 
-void		ft_error_print(char *str, t_ms *mini, int err);
+void		ft_print_error(char *str, t_ms *mini, int err);
 
 /* ******************************SIGNALS************************************* */
 void		signal_handler(int signo);

@@ -66,7 +66,7 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		write(write_fd, "\n", 1);
 		free(line);
 	}
-	free(line);
+	//free(line);
 	g_signo = 0;
 	close_fd(write_fd);
 	exit(0);

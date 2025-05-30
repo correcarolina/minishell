@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:50:59 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/01/31 17:51:03 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:53:47 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static void	handle_word(t_ms *mini, char **str, t_list **input)
 	if (last_is_heredoc(*input))
 		hd = 1;
 	word = ft_get_token(*mini, str, hd);
-	if (word != NULL && *word != '\0')
+	if (word != NULL)/*  && *word != '\0' levato per segfault in caso di ""*/
 	{
 		if (is_str_operator(word))
 		{
@@ -107,7 +107,7 @@ static void	handle_word(t_ms *mini, char **str, t_list **input)
 			ft_append_node(input, ft_lstnew(word));
 	}
 }
-
+//takes the input string and split it in tokens added at a parsing t_list
 void	tokenize(t_ms *mini, char *str, t_list **input)
 {
 	while (*str)

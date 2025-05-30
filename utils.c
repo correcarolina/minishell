@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 11:07:28 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/05 11:07:31 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:39:59 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	ft_isvalid_name(char *str)
 	return (1);
 }
 
-//concatenates two strings while freeing the first one
+/* //concatenates two strings while freeing the first one
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*result;
@@ -79,5 +79,28 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	result = ft_strjoin(s1, s2);
 	free(s1);
 	return (result);
-}
+} */
+// concatenates two strings while freeing both s1 and s2
+char	*ft_strjoin_free_both(char *s1, char *s2)
+{
+	char *result;
 
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+	{
+		result = ft_strdup(s2);
+		free(s2);
+		return (result);
+	}
+	if (!s2)
+	{
+		result = ft_strdup(s1);
+		free(s1);
+		return (result);
+	}
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	return (result);
+}
