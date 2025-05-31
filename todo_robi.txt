@@ -57,3 +57,5 @@ il main sara da dividere, lasciamolo per ultima cosa
 questo il comando per usare valgring:
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --errors-for-leak-kinds=all --track-fds=yes --trace-children=yes --suppressions=readline.supp ./minishell
 
+segnali ctrl \ non funziona piu, ne in heredoc ne in minishell
+chiedere se cd - e da gestire

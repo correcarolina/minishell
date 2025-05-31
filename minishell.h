@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/30 17:36:53 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/05/31 23:51:25 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,10 @@ typedef struct s_ms_
 	int			stdinout_copy[2];
 	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
 }			t_ms;
+
+/************************ ft_init *********************************************/
+
+t_ms		*ft_init(char **env);
 
 /****************list_utils**** list for parsing ******************************/
 

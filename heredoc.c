@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/25 19:33:11 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:37:14 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,14 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
+		line = NULL;
 	}
-	//free(line);
+	free(line);
 	g_signo = 0;
 	close_fd(write_fd);
+	ft_clear_cmdblock(&mini->cmdblocks);
+	ms_cleanup(mini);
+	free(mini);
 	exit(0);
 }
 
@@ -85,6 +89,8 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 	if (pid == 0)
 	{
 		close_fd(fd[0]);
+		close(mini->stdinout_copy[0]);
+		close(mini->stdinout_copy[1]);
 		here_child(mini, current->content, fd[1]);
 	}
 	close(fd[1]);

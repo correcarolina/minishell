@@ -64,8 +64,10 @@ comandi semplici da soli:
 
 
 GUAI:
-ls | cat -e rimane aperto
-
+echo 1 > outfile rimane appeso
+OLDPWD va settato dopo che si cambia directory nelle variabili di ambiente?
+    perche quando parte bash non ce l'ha ma dopo che cambi si
+ls | echo fine    oppure ls | cat infile   sigpipe E da gestire???
 
 ALLOCAZIONI DA LIBERARE A FINE PROGRAMMA
 
