@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin_free_both.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/12 09:57:09 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 15:56:02 by cacorrea         ###   ########.fr       */
+/*   Created: 2025/06/03 16:05:26 by cacorrea          #+#    #+#             */
+/*   Updated: 2025/06/03 16:06:36 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*returns a pointer to a new string which is a duplicate of the string s.
-  Memory for the new string is obtained with malloc, can be freed with free*/
-
-char	*ft_strdup(const char *s)
+// concatenates two strings while freeing both s1 and s2
+char	*ft_strjoin_free_both(char *s1, char *s2)
 {
-	size_t	len;
-	char	*dup;
+	char	*result;
 
-	len = ft_strlen(s);
-	dup = (char *)ft_calloc((len + 1), sizeof(char));
-	if (dup == NULL)
+	if (!s1 && !s2)
 		return (NULL);
-	ft_strlcpy(dup, s, len + 1);
-	return (dup);
+	if (!s1)
+	{
+		result = ft_strdup(s2);
+		free(s2);
+		return (result);
+	}
+	if (!s2)
+	{
+		result = ft_strdup(s1);
+		free(s1);
+		return (result);
+	}
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	return (result);
 }

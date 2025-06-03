@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_lst.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:10:29 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/12 19:01:28 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:23:26 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+//functions for handling the list of command blocks
 
 t_cmdblock	*ft_new_cmdblock(char **cmd, t_redirlst *redir)
 {
@@ -44,12 +46,12 @@ void	ft_append_cmdblock(t_cmdblock **lst, t_cmdblock *new_node)
 	}
 }
 
-//clear the list
+//clear the list of command blocks
 void	ft_clear_cmdblock(t_cmdblock **head)
 {
 	t_cmdblock	*tmp;
-	tmp = NULL;
 
+	tmp = NULL;
 	if (!head || !*head)
 		return ;
 	while (*head != NULL)

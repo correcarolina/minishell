@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 11:40:24 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/08 11:40:27 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:41:06 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env(char **cmd, t_ms	*mini)//e il cmd
+//Prints the current environment variables in the standard "key=value" format
+int	ft_env(char **cmd, t_ms	*mini)
 {
 	t_envlst	*temp;
 
@@ -33,6 +34,7 @@ int	ft_env(char **cmd, t_ms	*mini)//e il cmd
 	return (0);
 }
 
+//Prints the environment variables in a format used by the `export` built-in
 void	env_export_print(t_envlst *env)
 {
 	t_envlst	*temp;

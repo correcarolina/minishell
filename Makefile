@@ -6,7 +6,7 @@
 #    By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/05/31 23:51:30 by cacorrea         ###   ########.fr        #
+#    Updated: 2025/06/03 19:18:31 by cacorrea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		check_input.c parser.c parse_utils.c redir_lst.c final_parse.c \
 		cmd_lst.c executor.c handle_redirection.c execute_cmdblocks.c \
 		exec_utils.c ft_echo.c ft_cd.c ft_exit.c heredoc.c signals.c \
-		environment_utils.c ft_print_error.c heredoc_utils.c ft_init.c
+		environment_utils.c ft_print_error.c heredoc_utils.c ft_init.c \
+		builtins.c
 
 LIBFT = ./libft/libft.a
 

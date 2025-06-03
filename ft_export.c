@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 12:25:55 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/31 23:27:08 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:41:56 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,19 +133,3 @@ int	ft_export(char **cmd, t_ms *mini)
 	mini->exit_status = status;
 	return (status);
 }
-
-	//else
-		//msg errore (export: 'str': not a valid identifier)ma continua nel ciclo
-	//cacorrea@c1r5p3:~/sgoinfre/minishell$ export =
-	//bash: export: `=': not a valid identifier
-	//cacorrea@c1r5p3:~/sgoinfre/minishell$ export=
-	//cacorrea@c1r5p3:~/sgoinfre/minishell$ 
-	//cosa li passo?: 	una str: env ciao carolina
-	//					una matrice:	env'\0'
-	//									ciao'\0'
-	//									carolina'\0'
-	//					o una lista: 	env'\0' -->  ciao'\0' -->  carolina'\0'
-	
-	//se ci sono gli args == sto settando una var:
-	//se ce la chiave eliminarla, se non ce non fa niente, lo fa automaticamente env_rm_node
-	//e poi appendere il nodo

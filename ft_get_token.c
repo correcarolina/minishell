@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 09:56:34 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/30 17:40:30 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:20:02 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,13 @@ char	*ft_get_expansion(t_ms mini, char **str, char *word)
 	return (word);
 }
 
-//gets a token from the input string checking one char at a time 
+static char	*ft_expand_variable(t_ms mini, char **str, char *token)
+{
+	(*str)++;
+	return (ft_get_expansion(mini, str, token));
+}
 
+//gets a token from the input string checking one char at a time 
 char	*ft_get_token(t_ms mini, char **str, int hd)
 {
 	char	*token;
@@ -61,10 +66,7 @@ char	*ft_get_token(t_ms mini, char **str, int hd)
 	while (**str && !ft_isspace(**str) && !ft_ismetachar(**str))
 	{
 		if (**str == '$' && hd != 1)
-		{
-			(*str)++;
-			token = ft_get_expansion(mini, str, token);
-		}
+			token = ft_expand_variable(mini, str, token);
 		else if (**str == D_QUOTE)
 			token = ft_strjoin_free_both(token, doublequote(mini, str));
 		else if (**str == S_QUOTE)

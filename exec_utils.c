@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:18:20 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/29 11:20:56 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:12:56 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,12 @@ int	only_one_cmd(t_cmdblock *cmdblocks)
 	return (0);
 }
 
-int	is_built_in(char *cmd)
+void	close_2_fds(int fd1, int fd2)
 {
-	if (ft_strncmp(cmd, "exit", 5) == 0 || \
-		ft_strncmp(cmd, "echo", 5) == 0 || \
-		ft_strncmp(cmd, "cd", 3) == 0 || \
-		ft_strncmp(cmd, "pwd", 4) == 0 || \
-		ft_strncmp(cmd, "export", 7) == 0 || \
-		ft_strncmp(cmd, "unset", 6) == 0 || \
-		ft_strncmp(cmd, "env", 4) == 0)
-		return (1);
-	return (0);
-}
-
-void	close_fd(int fd)
-{
-	if (fd != -1)
-		close(fd);
+	if (fd1 >= 0)
+		close(fd1);
+	if (fd2 >= 0)
+		close(fd2);
 }
 
 //Duplicates the given key and value, joins them with an '=' character,
@@ -65,7 +54,7 @@ static char	*dup_key_value(char *key, char *value)
 }
 
 //takes the env list and creates a matrix of strings to pass to execve
-char **envlst_to_matrix(t_envlst *env)
+char	**envlst_to_matrix(t_envlst *env)
 {
 	char		**matrix;
 	int			i;
@@ -91,4 +80,3 @@ char **envlst_to_matrix(t_envlst *env)
 	matrix[i] = NULL;
 	return (matrix);
 }
-

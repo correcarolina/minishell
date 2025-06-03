@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:04:52 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/08 11:04:55 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:47:46 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 t_redirlst	*ft_redir_lstnew(char *content, int type)
 {
 	t_redirlst	*new;
-	int		i;
+	int			i;
 
 	i = 0;
 	new = (t_redirlst *)malloc(sizeof(t_redirlst));
@@ -69,4 +69,3 @@ void	ft_redir_clear_lst(t_redirlst **head)
 		*head = temp;
 	}
 }
-

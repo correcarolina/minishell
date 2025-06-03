@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   environment_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:30:55 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/20 10:30:59 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:26:10 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//function to clear one node
+//functions for handling the list of environement
 
+//function to clear one node
 void	env_clear_node(t_envlst *node)
 {
 	if (!node)
@@ -25,7 +26,6 @@ void	env_clear_node(t_envlst *node)
 }
 
 //function to clear the list
-
 void	env_clear_lst(t_envlst **head)
 {
 	t_envlst	*temp;
@@ -44,7 +44,6 @@ void	env_clear_lst(t_envlst **head)
 }
 
 //copies a matrix into a linked list
-
 t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
 {
 	int			j;
@@ -67,7 +66,6 @@ t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix)
 }
 
 //function to get the size of the list
-
 int	ft_lstsize(t_envlst *lst)
 {
 	int			i;

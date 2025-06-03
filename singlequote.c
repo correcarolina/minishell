@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:28:37 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/30 17:21:49 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:49:10 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ char	*singlequote(char **str)
 		else
 			word[i++] = *(*str)++;
 	}
-	/* while (**str && **str != S_QUOTE)
-		word = ft_get_plain_word(str, word); */
 	if (**str == S_QUOTE)
 		(*str)++;
 	return (word);
@@ -60,9 +58,10 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 {
 	size_t		i;
 	char		*name;
-	char		*value = NULL;//levare una riga per sistemare questo
+	char		*value;
 
 	i = 0;
+	value = NULL;
 	if (**str == '\0' || ft_isspace(**str) || **str == D_QUOTE)
 		return (ft_chartostr('$'));
 	else if (**str == '?')

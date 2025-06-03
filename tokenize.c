@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:50:59 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/30 17:53:47 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:56:56 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,22 @@ static void	handle_operator(char **str, t_list **input)
 
 static int	last_is_heredoc(t_list *lst)
 {
-	t_list	*last = ft_lstlast(lst);
-	return (last && last->content && ft_strcmp(last->content, "<<") == 0);
-}
+	t_list	*last;
 
+	last = ft_lstlast(lst);
+	if (last == NULL || last->content == NULL)
+		return (0);
+	if (ft_strncmp(last->content, "<<", 3) == 0)
+		return (1);
+	return (0);
+}
 
 static void	handle_word(t_ms *mini, char **str, t_list **input)
 {
 	char	*word;
 	t_list	*temp;
 	int		hd;
-	
+
 	hd = 0;
 	if (last_is_heredoc(*input))
 		hd = 1;
@@ -107,6 +112,7 @@ static void	handle_word(t_ms *mini, char **str, t_list **input)
 			ft_append_node(input, ft_lstnew(word));
 	}
 }
+
 //takes the input string and split it in tokens added at a parsing t_list
 void	tokenize(t_ms *mini, char *str, t_list **input)
 {

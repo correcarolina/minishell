@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/29 11:28:08 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:32:48 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	ft_exit(char **cmd, t_ms *ms)
 	}
 	ft_clear_cmdblock(&ms->cmdblocks);
 	ms_cleanup(ms);
-	free(ms);
 	exit(exit_code & 255);
 	return (42);
 }

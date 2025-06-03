@@ -64,10 +64,15 @@ comandi semplici da soli:
 
 
 GUAI:
-echo 1 > outfile rimane appeso
 OLDPWD va settato dopo che si cambia directory nelle variabili di ambiente?
     perche quando parte bash non ce l'ha ma dopo che cambi si
 ls | echo fine    oppure ls | cat infile   sigpipe E da gestire???
+cacorrea@c1r3p8:~/sgoinfre/minishell$ /bin/ls/bb
+bash: /bin/ls/bb: Not a directory
+cacorrea@c1r3p8:~/sgoinfre/minishell$ echo $?
+126   a me da 127
+
+
 
 ALLOCAZIONI DA LIBERARE A FINE PROGRAMMA
 

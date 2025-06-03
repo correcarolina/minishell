@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/31 22:37:14 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:45:16 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		ft_hd_ctrlc(g_signo, 0, write_fd);
 		res = handle_line(mini, &line, delimiter, quoted_hd);
 		if (res <= 0)
-			break;
+			break ;
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
@@ -72,7 +72,6 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 	close_fd(write_fd);
 	ft_clear_cmdblock(&mini->cmdblocks);
 	ms_cleanup(mini);
-	free(mini);
 	exit(0);
 }
 

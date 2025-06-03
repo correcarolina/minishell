@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:17:03 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/02/07 17:17:10 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:28:41 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/********************funziona e non ha leaks*********************/
 
 //creates a new node and puts an environment variable into two separates strings
 //the key is the string before the '=' and the value is the string after the '='
@@ -70,7 +68,6 @@ void	env_append_node(t_envlst **lst, t_envlst *new)
 //@str: the key to be removed
 //if key is found, the node is removed and the memory is freeded, 
 //if not found, the list remains unchanged
-
 void	env_rm_node(t_envlst **head, char *str)
 {
 	t_envlst	*temp;
@@ -122,7 +119,6 @@ t_envlst	*env_get_node(t_envlst **head, char *key)
 //Searches for the given environment variable in my t_ms struct and returns 
 //its value as a newly allocated string. 
 //If the variable is not found, prints an error message and returns NULL.
-
 char	*ft_getenv_var(t_ms *mini, char *name)
 {
 	t_envlst	*temp;

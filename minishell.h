@@ -6,13 +6,12 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/31 23:51:25 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:39:40 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -29,12 +28,10 @@
 # include <termios.h>  
 # include <errno.h>
 # include <limits.h>
-
 # include "libft/libft.h"
 
 # define S_QUOTE	39
 # define D_QUOTE	34
-
 # define PIPE		1
 # define RD_IN		2	// < filename
 # define RD_OUT_T	3	// > filename
@@ -48,6 +45,7 @@
 # define OUTFILE_A	11
 
 extern volatile sig_atomic_t g_signo;
+
 #define GREEN "\001\033[1;92m\002"
 #define AQUA "\001\033[1;36m\002"
 #define DEFAULT "\001\033[0m\002"
@@ -88,32 +86,28 @@ typedef struct s_cmdblock
 	t_redirlst			*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
 	struct s_cmdblock	*next;
 }			t_cmdblock;
-//forse la lista per il parsing deve diventare questo una volta che elimino
-//o includo qui negli fd le pipes e le redirections
 
-//qui devo fare un elenco delle cose? enum REDIRECT 1 PIPE 2...???
-/*definire una struct ms che ha le cose principali che non so quali sono
-sicuramente una copia delle env variables (envcpy.c)che copio appena inizia
-il programma, questa ms struct me la porto dietro tutto il tempo*/
+//minishell's main struct
 typedef struct s_ms_
 {
 	t_envlst	*myenv;
 	char		*cwd;
 	t_cmdblock 	*cmdblocks;
 	int			stdinout_copy[2];
-	int			exit_status;//of the most recently executed foreground pipeline. or put it in a global var
+	int			exit_status;
 }			t_ms;
 
 /************************ ft_init *********************************************/
 
 t_ms		*ft_init(char **env);
+void		ms_cleanup(t_ms *ms);
 
 /****************list_utils**** list for parsing ******************************/
 
 t_list		*ft_lstnew(char *content);
 void		ft_append_node(t_list **lst, t_list *new_node);
+t_list		*ft_lstlast(t_list *lst);
 void		ft_clear_lst(t_list **head);
-t_list		*ft_lstlast(t_list *lst);//da levare perche non si usa???
 
 /******************* cmd_lst ****list utils for command block******************/
 
@@ -145,7 +139,6 @@ char		*ft_get_expansion(t_ms mini, char **str, char *word);
 
 int			ft_check_pipes(t_list *line);
 int			ft_parse(t_list *line);
-void		debug_printer(t_list *line);
 
 /*(5ft)parse_utils*/
 void		ft_assign_operator(t_list *line);
@@ -162,11 +155,9 @@ void		free_matrix(char **matrix, int i);
 
 /*(5ft)*******************************utils************************************/
 
-void		print_builtin_error(char *builtin, char *arg, t_ms *mini);
 int			ft_ismetachar(int c);
 int			is_str_operator(char *str);
 int			ft_isvalid_name(char *str);
-char		*ft_strjoin_free_both(char *s1, char *s2);
 
 /*(2ft)*********************** check_input ************************************/
 
@@ -188,8 +179,13 @@ void		env_clear_lst(t_envlst **head);
 t_envlst	*ft_env_cpy(t_envlst *myenv, char **matrix);
 int			ft_lstsize(t_envlst *lst);
 
-
 /******************************** builtins*************************************/
+
+int			execute_builtin(char **cmd, t_ms *mini);
+int			is_built_in(char *cmd);
+void		print_builtin_error(char *builtin, char *arg, t_ms *mini);
+
+/************************* builtins files *************************************/
 
 int			ft_pwd(t_ms *mini);
 int			ft_env(char **cmd, t_ms *mini);
@@ -203,8 +199,7 @@ int 		ft_exit(char **cmd, t_ms *ms);
 /************************** exec_utils ****************************************/
 
 int			only_one_cmd(t_cmdblock *cmdblocks);
-int			is_built_in(char *cmd);
-void		close_fd(int fd);
+void		close_2_fds(int fd1, int fd2);
 char		**envlst_to_matrix(t_envlst *env);
 
 /************************** execute_cmdblocks *********************************/
@@ -216,14 +211,16 @@ int			wait_for_childs(void);
 
 /*5f********************* handle_redirection **********************************/
 
-int			handle_redirection(t_redirlst *redir);
-int			redirection_out(t_redirlst *redir);
+int			handle_redirection(t_redirlst *redir, t_ms *mini);
+int			redirection_out(t_redirlst *redir, t_ms *mini);
+void		close_fd(int fd);
 
 /*4f***************************** heredoc *************************************/
 
 int			handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini);
 
 /************************** heredoc_utils *************************************/
+
 char		*ft_append_text_before_dollar(char **start);
 void		ft_append_expansion(t_ms *mini, char **start, char **expanded);
 char		*ft_expand_heredoc(t_ms *mini, char **line);
@@ -232,23 +229,20 @@ int			ft_check_delimiter_quote(char **delimiter);
 
 /*2f******************************* executor **********************************/
 
-int			execute_builtin(char **cmd, t_ms *mini);
 int			execute_single_command(char **cmd, t_ms *mini);
-int			check_access(char *cmd, t_ms *mini, int print_error);
+void		create_single_pipe(t_cmdblock *cmd, int pipe_fd[2]);
 
 /**************************** ft_print_error **********************************/
 
 void		ft_print_error(char *str, t_ms *mini, int err);
+void		ft_print_error2(char *str, t_ms *mini, int err);
 
 /* ******************************SIGNALS************************************* */
+
 void		signal_handler(int signo);
 void		setup_signals(void);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
 void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
-
-/********************************** others ************************************/
-/*nel main per ora*/
-void		ms_cleanup(t_ms *ms);
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
+#    By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 12:10:32 by cacorrea          #+#    #+#              #
-#    Updated: 2025/04/26 18:32:47 by rd-agost         ###   ########.fr        #
+#    Updated: 2025/06/03 16:07:34 by cacorrea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SRC	:= ft_isalpha.c \
 	ft_substr.c \
 	ft_strjoin.c \
 	ft_strjoin_3.c \
+	ft_strjoin_free_both.c \
 	ft_strtrim.c \
 	ft_split.c \
 	ft_itoa.c \
