@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/25 19:32:49 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:36:07 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,20 @@ volatile sig_atomic_t g_signo = 0;  // 0 = nessun segnale
 
 void	signal_handler(int signo)
 {
-	g_signo = signo;
 	if (signo == SIGINT)
 	{
+		printf("\n");
 		close(0);
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	else if (signo == SIGQUIT)
-	{
-		write(STDOUT_FILENO, "\b\b  \b\b", 6);
-		rl_redisplay();
+		g_signo = signo;
+		//rl_replace_line("", 0);
+		//rl_redisplay();
 	}
 }
 
 void	setup_signals(void)
 {
 	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	setup_child_signals(void)
