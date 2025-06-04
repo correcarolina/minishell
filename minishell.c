@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 13:58:58 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:52:51 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	main(int ac, char **av, char **env)
 		handle_line(mini, line);
 	}
 	ms_cleanup(mini);
+	if (line == NULL && g_signo != SIGINT)
+		exit(0);
 	return (mini->exit_status);
 }
 

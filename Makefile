@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+         #
+#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/06/03 19:18:31 by cacorrea         ###   ########.fr        #
+#    Updated: 2025/06/04 19:40:56 by rd-agost         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,10 +38,9 @@ $(NAME): $(SRCS) $(LIBFT)
 
 val: all
 		@mkdir -p ./supp
-		@echo "{\n\tname=\"readline\"\n\tmalloc:reachable=1\n\tmatch-leak-kinds: reachable\n\t...\n}" > ./supp/supp.supp
-		@echo "Created Valgrind suppression file"
-		valgrind --leak-check=full --track-origins=yes -s --show-leak-kinds=all \
-		--suppressions=./supp/supp.supp ./$(NAME)
+		@echo "\033[0;96mCreated Valgrind suppression file\033[0m"
+		valgrind --leak-check=full --track-origins=yes -s --show-leak-kinds=all --suppressions=readline.supp ./$(NAME)
+		
 
 clean:
 	@make clean -C ./libft
