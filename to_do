@@ -3,7 +3,7 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --errors-fo
 30/05
 
 ls | exit   ----> sigpipe
-
+(below main) quindi va bene cosi, non dipende da noi
 
 	
 
@@ -51,7 +51,6 @@ set follow-fork-mode parent  per evitare di entrare nei seguenti child
 
 LEAKS   AL 28/05/25
 exit da solo leaks 40 bytes in 1 block main, aperti 3 fd
-ctrl + D non leaks lascia aperti 3 fd
 
 
 
@@ -60,7 +59,7 @@ LEAKS OK
 comandi semplici da soli:
     (cat, mkdir, rmdir, ls  lascia aperto 1 fd)
     (more lascia 3 fd aperti)
-    fd ok: rm file, wc, touch
+    0 fds aperti: rm file, wc, touch
 
 
 GUAI:
@@ -70,8 +69,57 @@ ls | echo fine    oppure ls | cat infile   sigpipe E da gestire???
 cacorrea@c1r3p8:~/sgoinfre/minishell$ /bin/ls/bb
 bash: /bin/ls/bb: Not a directory
 cacorrea@c1r3p8:~/sgoinfre/minishell$ echo $?
-126   a me da 127
+126
 
+
+modificata per return 2 anziche 130 in cat | cat |grep
+che sarebbero la stessa cosa, 2 + 128 = 130, ma bash fa differenza se
+la shell e interattiva o no, questo se vede con isatty, per noi e sempre
+interattiva, anche se puo funzionare anche come non interattiva:
+non funziona, sarebbe sempre interattiva e quindi ritorna 2?
+static int	handle_signal_exit(int status)
+{
+	int	sig;
+
+	sig = WTERMSIG(status);
+	if (sig == SIGINT)
+	{
+		printf("sono in handle_signal_exit\n");
+		write(STDERR_FILENO, "\n", 1);
+		if (isatty(STDIN_FILENO))//is this shell interactive?
+			return (printf("and isatty\n"), 2);
+	}
+	else if (sig == SIGQUIT)
+		ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
+	return (128 + sig);
+}
+
+anche questa modificata perche secondo chat bash cerca di fare execve 
+anche se non ha l'access al file, altrimenti non mi sa spiegare questo
+errore: 
+/bin/ls/nnn
+bash: /bin/ls/nnn: Not a directory
+echo $? = 126
+la funzione attuale lo fa, questa e quella vecchia
+static int	try_exec_path(char **cmd, char **env, t_ms *mini)
+{
+	if (access(cmd[0], F_OK) == 0)
+	{
+		if (access(cmd[0], X_OK) == 0)
+		{
+			execve(cmd[0], cmd, env);
+			if (errno == ENOTDIR)
+				ft_print_error2(cmd[0], mini, 5); // Not a directory
+			else
+				perror("execve");
+		}
+		else
+			ft_print_error(cmd[0], mini, 4); // Permission denied
+	}
+	else
+		ft_print_error(cmd[0], mini, 3); // No such file or directory
+	return (mini->exit_status);
+}
 
 
 ALLOCAZIONI DA LIBERARE A FINE PROGRAMMA

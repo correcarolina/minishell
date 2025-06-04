@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:08:07 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:20:55 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:52:50 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	execute_in_path(char **cmd, char **env, t_ms *mini)
 	}
 	cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"));
 	if (!cmd_path)
-	{
+	 {
 		ft_print_error(cmd[0], mini, 1);//command not found
 		ft_free_matrix(env);
 		return (127);
@@ -68,23 +68,18 @@ static int	execute_in_path(char **cmd, char **env, t_ms *mini)
 
 static int	try_exec_path(char **cmd, char **env, t_ms *mini)
 {
-	if (access(cmd[0], F_OK) == 0)
-	{
-		if (access(cmd[0], X_OK) == 0)
-		{
-			execve(cmd[0], cmd, env);
-			if (errno == ENOTDIR)
-				ft_print_error2(cmd[0], mini, 5); // Not a directory
-			else
-				perror("execve");
-		}
-		else
-			ft_print_error(cmd[0], mini, 4); // Permission denied
-	}
-	else
+	execve(cmd[0], cmd, env);
+	if (errno == EACCES)
+		ft_print_error(cmd[0], mini, 4); // Permission denied
+	else if (errno == ENOENT)
 		ft_print_error(cmd[0], mini, 3); // No such file or directory
+	else if (errno == ENOTDIR)
+		ft_print_error2(cmd[0], mini, 5); // Not a directory
+	else
+		perror("execve");
 	return (mini->exit_status);
 }
+
 
 int	execute_single_command(char **cmd, t_ms *mini)
 {
@@ -120,46 +115,3 @@ void	create_single_pipe(t_cmdblock *cmd, int pipe_fd[2])
 	}
 }
 
-/* //funzione originale funzionante prima di dividerla
-int	execute_single_command(char **cmd, t_ms *mini)
-{
-	char **env;
-	char *cmd_path;
-
-	if (is_built_in(cmd[0]))
-		return (execute_builtin(cmd, mini));
-	env = envlst_to_matrix(mini->myenv);
-	if (access(cmd[0], X_OK) == 0)
-	{
-		execve(cmd[0], cmd, env);
-		ft_free_matrix(env);
-		return (0);
-	}
-	if (cmd[0][0] != '/')
-	{
-		cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"));
-		if (!cmd_path)
-		{
-			ft_print_error(cmd[0], mini, 1);
-			ft_free_matrix(env);
-			return (127);
-		}
-		execve(cmd_path, cmd, env);
-		free(cmd_path);
-	}
-	else if (access(cmd[0], F_OK) == 0)
-	{
-		ft_print_error(cmd[0], mini, 4);
-		ft_free_matrix(env);
-		return (126);
-	}
-	else
-	{
-		ft_print_error(cmd[0], mini, 3);
-		ft_free_matrix(env);
-		return (127);
-	}
-	ft_free_matrix(env);
-	mini->exit_status = 126;
-	return (perror("execve"), 127);
-} */
