@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
+#    By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/06/04 19:40:56 by rd-agost         ###   ########.fr        #
+#    Updated: 2025/06/05 11:16:10 by cacorrea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS = minishell.c list_utils.c utils.c tokenize.c environment.c ft_pwd.c \
 		cmd_lst.c executor.c handle_redirection.c execute_cmdblocks.c \
 		exec_utils.c ft_echo.c ft_cd.c ft_exit.c heredoc.c signals.c \
 		environment_utils.c ft_print_error.c heredoc_utils.c ft_init.c \
-		builtins.c
+		builtins.c exec_utils2.c
 
 LIBFT = ./libft/libft.a
 

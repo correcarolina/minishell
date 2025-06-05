@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/04 19:52:51 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:40:04 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	process_cmds(t_ms *mini, char *line)
 	return (0);
 }
 
-static int	handle_line(t_ms *mini, char *line)//void????
+static int	handle_line(t_ms *mini, char *line)
 {
 	t_list		*input;
 

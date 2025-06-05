@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:39:40 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:13:20 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,9 +198,15 @@ int 		ft_exit(char **cmd, t_ms *ms);
 
 /************************** exec_utils ****************************************/
 
+int			cmd_not_found(char *cmd, char **env, t_ms *mini, char *cmd_path);
 int			only_one_cmd(t_cmdblock *cmdblocks);
-void		close_2_fds(int fd1, int fd2);
 char		**envlst_to_matrix(t_envlst *env);
+
+/**************************** esec_utils2 *************************************/
+
+void		create_single_pipe(t_cmdblock *cmd, int pipe_fd[2]);
+void		close_fd(int fd);
+void		close_2_fds(int fd1, int fd2);
 
 /************************** execute_cmdblocks *********************************/
 
@@ -213,7 +219,6 @@ int			wait_for_childs(void);
 
 int			handle_redirection(t_redirlst *redir, t_ms *mini);
 int			redirection_out(t_redirlst *redir, t_ms *mini);
-void		close_fd(int fd);
 
 /*4f***************************** heredoc *************************************/
 
@@ -230,7 +235,6 @@ int			ft_check_delimiter_quote(char **delimiter);
 /*2f******************************* executor **********************************/
 
 int			execute_single_command(char **cmd, t_ms *mini);
-void		create_single_pipe(t_cmdblock *cmd, int pipe_fd[2]);
 
 /**************************** ft_print_error **********************************/
 

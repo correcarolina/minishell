@@ -6,11 +6,20 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:18:20 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:12:56 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:11:55 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	cmd_not_found(char *cmd_name, char **env, t_ms *mini, char *cmd_path)
+{
+	ft_print_error(cmd_name, mini, 1);
+	ft_free_matrix(env);
+	free(cmd_path);
+	return (mini->exit_status);
+}
+
 
 int	only_one_cmd(t_cmdblock *cmdblocks)
 {
@@ -20,14 +29,6 @@ int	only_one_cmd(t_cmdblock *cmdblocks)
 	if (current->next == NULL)
 		return (1);
 	return (0);
-}
-
-void	close_2_fds(int fd1, int fd2)
-{
-	if (fd1 >= 0)
-		close(fd1);
-	if (fd2 >= 0)
-		close(fd2);
 }
 
 //Duplicates the given key and value, joins them with an '=' character,

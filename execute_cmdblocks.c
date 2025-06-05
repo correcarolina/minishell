@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/04 11:19:15 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:53:42 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 	if (handle_redirection(cmd->redir, ms) == -1)
 	{
 		ft_clear_cmdblock(&ms->cmdblocks);
+		ms_cleanup(ms);/************ora invalid read, se lo levo leaks */
 		exit(ms->exit_status);
 	}
 	if (!cmd->cmd || !cmd->cmd[0])

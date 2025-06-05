@@ -6,17 +6,11 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 22:00:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:53:13 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:22:23 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	close_fd(int fd)
-{
-	if (fd >= 0)
-		close(fd);
-}
 
 // This function duplicates fd1 to fd2 and closes fd1.
 int	p_dup2(int fd1, int fd2)
@@ -42,7 +36,10 @@ static int	open_file(char *filename, int flags, mode_t mode, t_ms *mini)
 	if (fd == -1)
 	{
 		if (errno == EACCES)
+		{
 			ft_print_error(filename, mini, 4); //Permission denied
+			mini->exit_status = 1;
+		}
 		else if (errno == ENOENT)
 			ft_print_error(filename, mini, 3); //No such file or directory
 		else

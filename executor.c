@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:08:07 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/04 13:52:50 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:12:12 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static char	*get_path(char *cmd, char *envpath)
 		free(initial_path);
 		if (access(cmd_path, X_OK) == 0)
 		{
-			free(envpath);
 			ft_free_matrix(path_array);
 			return (cmd_path);
 		}	
@@ -39,31 +38,7 @@ static char	*get_path(char *cmd, char *envpath)
 		i++;
 	}
 	ft_free_matrix(path_array);
-	return (free(envpath), NULL);
-}
-
-static int	execute_in_path(char **cmd, char **env, t_ms *mini)
-{
-	char	*cmd_path;
-
-	if (cmd[0] && cmd[0][0] == '\0')
-	{
-		ft_putendl_fd("\'\': command not found", 2);
-		ft_free_matrix(env);
-		return (127);
-	}
-	cmd_path = get_path(cmd[0], ft_getenv_var(mini, "PATH"));
-	if (!cmd_path)
-	 {
-		ft_print_error(cmd[0], mini, 1);//command not found
-		ft_free_matrix(env);
-		return (127);
-	}
-	execve(cmd_path, cmd, env);
-	perror("execve");
-	free(cmd_path);
-	ft_free_matrix(env);
-	return (126);
+	return (NULL);
 }
 
 static int	try_exec_path(char **cmd, char **env, t_ms *mini)
@@ -76,10 +51,47 @@ static int	try_exec_path(char **cmd, char **env, t_ms *mini)
 	else if (errno == ENOTDIR)
 		ft_print_error2(cmd[0], mini, 5); // Not a directory
 	else
+	{
 		perror("execve");
+		mini->exit_status = 126;
+	}
 	return (mini->exit_status);
 }
 
+static int	missing_path(char **cmd, char **env, t_ms *mini)
+{
+	int	status;
+
+	status = try_exec_path(cmd, env, mini);
+	ft_free_matrix(env);
+	return (status);
+}
+
+static int	execute_in_path(char **cmd, char **env, t_ms *mini)
+{
+	char	*cmd_path;
+	char	*path_env;
+
+	if (cmd[0] && cmd[0][0] == '\0')
+	{
+		ft_print_error("''", mini, 1);//command not found
+		ft_free_matrix(env);
+		return (mini->exit_status);
+	}
+	path_env = ft_getenv_var(mini, "PATH");
+	if (!path_env || path_env[0] == '\0')
+		return (missing_path(cmd, env, mini));
+	cmd_path = get_path(cmd[0], path_env);
+	free(path_env);
+	if (!cmd_path)
+		return (cmd_not_found(cmd[0], env, mini, cmd_path));
+	execve(cmd_path, cmd, env);
+	perror("execve");
+	free(cmd_path);
+	ft_free_matrix(env);
+	mini->exit_status = 126;
+	return (126);
+}
 
 int	execute_single_command(char **cmd, t_ms *mini)
 {
@@ -95,6 +107,7 @@ int	execute_single_command(char **cmd, t_ms *mini)
 		execve(cmd[0], cmd, env);
 		perror("execve");
 		ft_free_matrix(env);
+		mini->exit_status = 126;
 		return (126);
 	}
 	if (ft_strchr(cmd[0], '/'))
@@ -104,14 +117,5 @@ int	execute_single_command(char **cmd, t_ms *mini)
 		return (status);
 	}
 	return (execute_in_path(cmd, env, mini));
-}
-
-void	create_single_pipe(t_cmdblock *cmd, int pipe_fd[2])
-{
-	if (cmd->next && pipe(pipe_fd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
 }
 
