@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 13:53:42 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:12:30 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 	if (handle_redirection(cmd->redir, ms) == -1)
 	{
 		ft_clear_cmdblock(&ms->cmdblocks);
-		ms_cleanup(ms);/************ora invalid read, se lo levo leaks */
-		exit(ms->exit_status);
+		rl_clear_history();
+		ms_cleanup(ms);
+		exit(1);
 	}
 	if (!cmd->cmd || !cmd->cmd[0])
 	{
@@ -38,6 +39,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 	}
 	status = execute_single_command(cmd->cmd, ms);
 	ft_clear_cmdblock(&ms->cmdblocks);
+	rl_clear_history();
 	ms_cleanup(ms);
 	exit(status);
 }
@@ -102,7 +104,7 @@ static int	handle_signal_exit(int status)
 		write(STDERR_FILENO, "\n", 1);
 	else if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
-	return (128 + sig);
+	return (sig);
 }
 
 int	wait_for_childs(void)
