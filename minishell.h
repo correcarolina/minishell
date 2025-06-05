@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 13:13:20 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 20:27:13 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,11 @@
 # define INFILE		9
 # define OUTFILE_T	10
 # define OUTFILE_A	11
+# define GREEN "\001\033[1;92m\002"
+# define AQUA "\001\033[1;36m\002"
+# define DEFAULT "\001\033[0m\002"
 
 extern volatile sig_atomic_t g_signo;
-
-#define GREEN "\001\033[1;92m\002"
-#define AQUA "\001\033[1;36m\002"
-#define DEFAULT "\001\033[0m\002"
 
 //una lista per fare il parsing
 typedef struct s_list

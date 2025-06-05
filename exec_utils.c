@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:18:20 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 13:11:55 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 20:17:06 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	cmd_not_found(char *cmd_name, char **env, t_ms *mini, char *cmd_path)
 	free(cmd_path);
 	return (mini->exit_status);
 }
-
 
 int	only_one_cmd(t_cmdblock *cmdblocks)
 {

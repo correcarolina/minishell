@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 11:07:28 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:14:21 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 19:53:16 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 /*checks only for the metacharacters that we need in this project,
 if is pipe or redirect returns 1, else returns 0*/
@@ -55,4 +53,3 @@ int	ft_isvalid_name(char *str)
 	}
 	return (1);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:14:49 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 11:17:27 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/05 20:17:00 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,3 @@ void	close_2_fds(int fd1, int fd2)
 	if (fd2 >= 0)
 		close(fd2);
 }
-
-

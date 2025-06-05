@@ -6,13 +6,13 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/04 19:36:07 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/05 20:12:08 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t g_signo = 0;  // 0 = nessun segnale
+volatile sig_atomic_t	g_signo = 0;  // 0 = nessun segnale
 
 void	signal_handler(int signo)
 {
