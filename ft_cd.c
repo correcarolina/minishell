@@ -6,14 +6,11 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/05/12 18:50:41 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/05 19:37:55 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*devo aggiornare mini->cwd ogni volta che cambio directory
-mettere in mini->exit_status il valore di $?*/
 
 /**
  * Updates PWD and OLDPWD environment variables after changing directory
@@ -52,7 +49,7 @@ static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
 static char	*get_home_dir(t_ms *mini)
 {
 	t_envlst	*home_node;
-	
+
 	home_node = mini->myenv;
 	while (home_node)
 	{
@@ -63,12 +60,76 @@ static char	*get_home_dir(t_ms *mini)
 	return (NULL);
 }
 
-/**
+static char	*get_target_directory(char **cmd, t_ms *mini)
+{
+	char	*target_dir;
+
+	if (cmd[1] == NULL)
+	{
+		target_dir = get_home_dir(mini);
+		if (!target_dir)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			mini->exit_status = 1;
+			return (NULL);
+		}
+	}
+	else
+		target_dir = cmd[1];
+	return (target_dir);
+}
+
+static int	perform_cd(char *target_dir, t_ms *mini, char *old_dir)
+{
+	char	cwd[1024];
+
+	if (chdir(target_dir) != 0)
+	{
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(target_dir, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+		mini->exit_status = 1;
+		return (1);
+	}	
+	if (getcwd(cwd, 1024) == NULL)
+		return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
+	update_pwd_vars(mini, cwd, old_dir);
+	if (mini->cwd)
+		free(mini->cwd);
+	mini->cwd = ft_strdup(cwd);
+	if (!mini->cwd)
+	{
+		ft_putstr_fd("cd: memory allocation error\n", 2);
+		return (mini->exit_status = 1, 1);
+	}
+	return (0);
+}
+
+int	ft_cd(char **cmd, t_ms *mini)
+{
+	char	owd[1024];
+	char	*target_dir;
+
+	if (getcwd(owd, 1024) == NULL)
+		return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
+	target_dir = get_target_directory(cmd, mini);
+	if (!target_dir)
+		return (1);
+	if (perform_cd(target_dir, mini, owd))
+		return (1);
+	mini->exit_status = 0;
+	return (0);
+}
+
+/* 
+
  * Change directory command implementation
  * @param data Command block containing cd command and arguments
  * @param mini Pointer to the shell structure
  * @return Exit status (0 for success, 1 for error)
- */
+ 
 int ft_cd(char **cmd, t_ms *mini)
 {
     char cwd[1024];
@@ -119,8 +180,7 @@ int ft_cd(char **cmd, t_ms *mini)
     mini->exit_status = 0;
     return (0);
 }
-
-
+ */
 /* //--------------------------------TESTING OONLY
 
 char *ft_strdup(const char *s)
@@ -162,7 +222,6 @@ t_envlst *create_env_node(char *key, char *value)
     
     return (node);
 }
-
 t_envlst *init_env(void)
 {
     t_envlst *env_head = NULL;
@@ -193,7 +252,6 @@ t_envlst *init_env(void)
     
     return (env_head);
 }
-
 void display_env(t_envlst *env)
 {
     t_envlst *current = env;
@@ -206,7 +264,6 @@ void display_env(t_envlst *env)
     }
     printf("---------------------------\n\n");
 }
-
 t_cmdblock *create_test_cmd(char **args)
 {
     t_cmdblock *cmd = malloc(sizeof(t_cmdblock));
@@ -234,14 +291,12 @@ void free_env(t_envlst *env)
         current = next;
     }
 }
-
 void free_cmd(t_cmdblock *cmd)
 {
     if (cmd)
         free(cmd);
     // not freeing cmd->cmd as it's statically allocated in this test
 }
-
 int main(int argc, char *argv[])
 {
     t_ms mini;
