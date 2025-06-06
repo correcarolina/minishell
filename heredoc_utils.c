@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:22:54 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/05/31 21:32:28 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:15:37 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,11 @@ int	ft_wait_heredoc(pid_t pid)
 
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		return (-130);
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-		return (-130);
+	{
+		write(1,"\n",1);
+		return (-1);
+	}
+	printf("bash: warning: here-document at line 1 delimited by eof\n");
 	return (0);
 }
 

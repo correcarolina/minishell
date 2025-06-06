@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 13:17:10 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 16:54:28 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,11 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 
 	setup_heredoc_signals();
 	quoted_hd = ft_check_delimiter_quote(&delimiter);
+	g_signo = 0;
 	while (1)
 	{
+
 		line = readline(AQUA "HEREDOC> " DEFAULT);
-		ft_hd_ctrlc(g_signo, 0, write_fd);
 		if (!line)
 			break ;
 		res = handle_line(mini, &line, delimiter, quoted_hd);
@@ -69,8 +70,6 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		free(line);
 		line = NULL;
 	}
-	free(line);
-	g_signo = 0;
 	close_fd(write_fd);
 	ft_clear_cmdblock(&mini->cmdblocks);
 	ms_cleanup(mini);
@@ -87,12 +86,13 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), -1);
+	signal(SIGINT, SIG_IGN);
 	if (pid == 0)
 	{
 		close_fd(fd[0]);
 		close(mini->stdinout_copy[0]);
 		close(mini->stdinout_copy[1]);
-		setup_child_signals(); // <--------------
+		//setup_child_signals(); // <--------------
 		here_child(mini, current->content, fd[1]);
 	}
 	close(fd[1]);

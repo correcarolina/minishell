@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 15:25:07 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 16:52:22 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,7 @@ void		signal_handler(int signo);
 void		setup_signals(void);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
-void		ft_hd_ctrlc(int signo, int ex_SI, int w_fd);
+void		ft_hd_ctrlc(int signo);
 //void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
 
 void	child_sighand(int sig);
