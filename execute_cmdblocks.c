@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 12:30:35 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 15:35:59 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 
 	status = 0;
 	close_2_fds(ms->stdinout_copy[0], ms->stdinout_copy[1]);
-	setup_child_signals();
+	// setup_child_signals();
 	if (prev_fd != -1)
 		dup2(prev_fd, STDIN_FILENO);
 	if (cmd->next)//non e l'ultimo comando
@@ -60,6 +60,8 @@ pid_t	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 	while (cmdblock)
 	{//se non e l'ultimo comando crea la pipe
 		create_single_pipe(cmdblock, pipe_fd);
+		signal(SIGINT, child_sighand);
+		signal(SIGQUIT, child_sighand);
 		pid = fork();
 		if (pid == 0)//child
 			child_process(cmdblock, prev_fd, pipe_fd, ms);
@@ -108,10 +110,11 @@ static int	handle_signal_exit(int status)
 	int	sig;
 
 	sig = WTERMSIG(status);
-	if (sig == SIGINT)
-		write(STDERR_FILENO, "\n", 1);
-	else if (sig == SIGQUIT)
-		ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
+	// if (sig == SIGINT)
+	// 	write(STDERR_FILENO, "\n", 1);
+	// else 
+	// if (sig == SIGQUIT)
+	// 	ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
 	return (128 + sig);
 }
 
@@ -122,7 +125,7 @@ int	wait_children(pid_t last_pid)
 	pid_t	pid;// Stores the process ID of terminated children
 
 	last_status = 0;
-	while ((pid = wait(&status)) > 0)// Loop continues as long as there are children to wait for
+	while ((pid = wait(&status)) != -1)// Loop continues as long as there are children to wait for
 	{
 		if (pid == last_pid)
 		{

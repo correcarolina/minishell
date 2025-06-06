@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 20:31:23 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 15:56:19 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ void	run_shell_loop(t_ms *mini)
 	{
 		g_signo = 0;
 		line = readline(GREEN "minishell> " DEFAULT);
+		printf("segnale: %d riga 77 \n", g_signo);
 		if (g_signo == SIGINT)
 		{
 			dup2(mini->stdinout_copy[0], 0);
-			continue ;
+			printf("segnale: %d riga 81 \n", g_signo);
 		}
 		if (line == NULL && g_signo != SIGINT)
 		{
@@ -85,8 +86,10 @@ void	run_shell_loop(t_ms *mini)
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
+		printf("segnale:%d riga 90 \n", g_signo);
 		add_history(line);
 		handle_line(mini, line);
+		setup_signals();
 	}
 }
 
@@ -122,7 +125,7 @@ int	main(int ac, char **av, char **env)
 			free (line);
 			line = NULL;
 			ft_clear_lst(&input);
-			dup2(mini->stdinout_copy[0], STDIN_FILENO);
+			dup2(mini->stdinout_copy[0],signal_handler STDIN_FILENO);
 			dup2(mini->stdinout_copy[1], STDOUT_FILENO);
 			return (1);
 		}
@@ -192,7 +195,7 @@ int	main(int ac, char **av, char **env)
 		return (1);
 	setup_signals();
 	while(1)
-	{
+	{signal_handler
 		g_signo = 0;
         line = readline(GREEN "minishell> " DEFAULT);
 		if (g_signo == SIGINT)
