@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+         #
+#    By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/30 12:57:06 by cacorrea          #+#    #+#              #
-#    Updated: 2025/06/05 17:35:53 by rd-agost         ###   ########.fr        #
+#    Updated: 2025/06/06 10:22:27 by cacorrea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(NAME): $(SRCS) $(LIBFT)
 
 val: all
 		@echo "\033[0;96mCreated Valgrind suppression file\033[0m"
-		valgrind --leak-check=full --track-fds=yes --track-origins=yes -s --show-leak-kinds=all --suppressions=readline.supp ./$(NAME)
+		valgrind --leak-check=full --track-fds=yes --track-origins=yes -s --show-leak-kinds=all --trace-children=yes --suppressions=readline.supp ./$(NAME)
 		
 
 clean:

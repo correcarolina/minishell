@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 16:12:30 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 12:30:35 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 //takes the command block list and creates pipes between them (one pipe per
 //command block if it is not the last one)
 //it also forks a child for each command block
-void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
+pid_t	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 {
 	int			pipe_fd[2];
 	int			prev_fd;
@@ -74,24 +74,32 @@ void	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 		cmdblock = cmdblock->next;
 	}
 	close_fd(prev_fd);
+	return (pid);
 }
 
 int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 {
-	int	ret;
-
+	int		ret;
+	pid_t	last_pid;
+	
+	last_pid = -1;
 	if (!cmdblocks || !cmdblocks->cmd || \
 		(!cmdblocks->cmd[0] && !cmdblocks->redir))//se non ci sono ne comandi ne redirections
 		return (0);//oppure return errore?
-	if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
+	if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
+    {
+        handle_redirection(cmdblocks->redir, ms);
+        return (ft_exit(cmdblocks->cmd, ms, 1));
+    }
+	else if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
 	{
 		if (handle_redirection(cmdblocks->redir, ms) == -1)
 			return (ms->exit_status);
 		ret = execute_builtin(cmdblocks->cmd, ms);
 		return (ret);
 	}
-	create_pipes(cmdblocks, ms);
-	ms->exit_status = wait_for_childs();
+	last_pid = create_pipes(cmdblocks, ms);
+	ms->exit_status = wait_children(last_pid);
 	return (ms->exit_status);
 }
 
@@ -104,34 +112,37 @@ static int	handle_signal_exit(int status)
 		write(STDERR_FILENO, "\n", 1);
 	else if (sig == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
-	return (sig);
+	return (128 + sig);
 }
 
-int	wait_for_childs(void)
+int	wait_children(pid_t last_pid)
 {
 	int		status;// Stores the exit status of child processes
 	int		last_status;// Stores the last exit status
 	pid_t	pid;// Stores the process ID of terminated children
 
 	last_status = 0;
-	pid = wait(&status);// Wait for any child process to terminate
-	while (pid > 0)// Loop continues as long as there are children to wait for
+	while ((pid = wait(&status)) > 0)// Loop continues as long as there are children to wait for
 	{
-		if (WIFEXITED(status))// Child terminated normally
-			last_status = WEXITSTATUS(status);// Return the exit code (0-255)
-		else if (WIFSIGNALED(status))// Child terminated by a signal
-			last_status = handle_signal_exit(status);
-		pid = wait(&status);
+		if (pid == last_pid)
+		{
+			if (WIFEXITED(status))// Child terminated normally
+				last_status = WEXITSTATUS(status);// Return the exit code (0-255)
+			else if (WIFSIGNALED(status))// Child terminated by a signal
+				last_status = handle_signal_exit(status);
+		}
+		else if (WIFSIGNALED(status))
+			handle_signal_exit(status);
 	}
-	g_signo = 0;
 	if (pid == -1 && errno != ECHILD)
 		perror("wait");
+	g_signo = 0;
 	return (last_status);
 }
 
 /* 
 old one: 
-int	wait_for_childs(void) //da aggiunggere qualcosa per segnali
+int	wait_children(void) //da aggiunggere qualcosa per segnali
 {
 	int status;     // Stores the exit status of child processes
 	int	last_status; // Stores the last exit status

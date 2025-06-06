@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 19:09:32 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 19:14:51 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 11:03:33 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	execute_builtin(char **cmd, t_ms *mini)
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		status = ft_env(cmd, mini);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
-		return (ft_exit(cmd, mini));
+		return (ft_exit(cmd, mini, 0));
 	mini->exit_status = status;
 	return (status);
 }

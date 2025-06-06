@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/05 20:12:08 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 13:27:57 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ void	setup_heredoc_signals(void)
 }
 
 //handles ctrl c in heredoc
-void	ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd)
+void	ft_hd_ctrlc(int signo, int ex_SI, int w_fd)
 {
-	if (g_signo == SIGINT)
+	if (signo == SIGINT)
 	{
 		ex_SI = 1;
-		g_signo = 0;
+		signo = 0;
 		close_fd(w_fd);
 		write(1, "\n", 1);
-		exit(130);
+		close(0);
 	}
 }

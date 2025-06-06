@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/05 17:29:41 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 11:01:24 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,14 @@ static void	ft_error_1(char **cmd, int i, t_ms *ms)
 	}
 }
 
-int	ft_exit(char **cmd, t_ms *ms)
+int	ft_exit(char **cmd, t_ms *ms, int p)
 {
 	int	exit_code;
 	int	i;
 
 	exit_code = ms->exit_status;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (p)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (cmd[1] != NULL)
 	{
 		i = -1;

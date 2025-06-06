@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 17:49:10 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 13:17:10 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	ft_hd_ctrld(char *line, volatile sig_atomic_t g_signo, char *delim)
 {
 	if (!line && g_signo != SIGINT)
 	{
-		write(STDERR_FILENO, "bash: warning: here-document delimited ", 40);
+		write(STDERR_FILENO, "minishell: warning: here-document delimited ", 45);
 		write(STDERR_FILENO, "by end-of-file (wanted `", 25);
 		write(STDERR_FILENO, delim, ft_strlen(delim));
 		write(STDERR_FILENO, "')\n", 3);
@@ -29,7 +29,7 @@ static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 {
 	char	*tmp;
 
-	if (!*line && g_signo != SIGINT)
+	if (!line && !*line && g_signo != SIGINT)
 	{
 		ft_hd_ctrld(*line, g_signo, delim);
 		return (0);
@@ -59,6 +59,8 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 	{
 		line = readline(AQUA "HEREDOC> " DEFAULT);
 		ft_hd_ctrlc(g_signo, 0, write_fd);
+		if (!line)
+			break ;
 		res = handle_line(mini, &line, delimiter, quoted_hd);
 		if (res <= 0)
 			break ;
@@ -90,6 +92,7 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 		close_fd(fd[0]);
 		close(mini->stdinout_copy[0]);
 		close(mini->stdinout_copy[1]);
+		setup_child_signals(); // <--------------
 		here_child(mini, current->content, fd[1]);
 	}
 	close(fd[1]);

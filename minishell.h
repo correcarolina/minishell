@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 20:27:13 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 13:28:34 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ int			ft_export(char **cmd, t_ms *mini);
 int			ft_unset(char **cmd, t_ms *mini);
 int			builtin_echo(char **cmd);
 int			ft_cd(char **cmd, t_ms *mini);
-int 		ft_exit(char **cmd, t_ms *ms);
+int 		ft_exit(char **cmd, t_ms *ms, int p);
 
 /************************** exec_utils ****************************************/
 
@@ -210,9 +210,9 @@ void		close_2_fds(int fd1, int fd2);
 /************************** execute_cmdblocks *********************************/
 
 void		child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms);
-void		create_pipes(t_cmdblock *cmdblock, t_ms *ms);
+pid_t		create_pipes(t_cmdblock *cmdblock, t_ms *ms);
 int			execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
-int			wait_for_childs(void);
+int			wait_children(pid_t last_pid);
 
 /*5f********************* handle_redirection **********************************/
 
@@ -246,6 +246,7 @@ void		signal_handler(int signo);
 void		setup_signals(void);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
-void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
+void		ft_hd_ctrlc(int signo, int ex_SI, int w_fd);
+//void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
 
 #endif
