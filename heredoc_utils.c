@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:22:54 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/06 17:15:37 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:21:45 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_wait_heredoc(pid_t pid)
 		write(1,"\n",1);
 		return (-1);
 	}
-	printf("bash: warning: here-document at line 1 delimited by eof\n");
+	printf("minishell: warning: here-document at line 1 delimited by eof\n");
 	return (0);
 }
 

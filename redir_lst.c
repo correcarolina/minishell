@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:04:52 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 13:47:46 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:18:45 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,20 @@ void	ft_redir_clear_lst(t_redirlst **head)
 	{
 		temp = (*head)->next;
 		free((*head)->content);
+		close_fd((*head)->heredoc_fd);
 		free(*head);
 		*head = temp;
 	}
 }
+/* void	close_heredoc_fds(t_redirlst *redir)
+{
+	while (redir)
+	{
+		if (redir->type == RD_HEREDOC && redir->heredoc_fd != -1)
+		{
+			close_fd(redir->heredoc_fd);
+			redir->heredoc_fd = -1;
+		}
+		redir = redir->next;
+	}
+} */

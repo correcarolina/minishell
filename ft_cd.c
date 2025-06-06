@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 19:37:55 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/06 18:25:35 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
+/*
  * Updates PWD and OLDPWD environment variables after changing directory
  * @param mini Pointer to the shell structure
  * @param cwd New current working directory
  * @param owd Previous working directory
- */
+
 static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
 {
 	t_envlst	*pwd_node;
@@ -38,6 +38,32 @@ static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
 	{
 		free(oldpwd_node->value);
 		oldpwd_node->value = ft_strdup(owd);
+	}
+}*/
+static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
+{
+	t_envlst	*pwd_node;
+	t_envlst	*oldpwd_node;
+	char		*temp;
+
+	temp = NULL;
+	pwd_node = env_get_node(&mini->myenv, "PWD");
+	oldpwd_node = env_get_node(&mini->myenv, "OLDPWD");
+	if (pwd_node)
+	{
+		free(pwd_node->value);
+		pwd_node->value = ft_strdup(cwd);
+	}
+	if (oldpwd_node)
+	{
+		free(oldpwd_node->value);
+		oldpwd_node->value = ft_strdup(owd);
+	}
+	else if (!oldpwd_node)
+	{
+		temp = ft_strjoin("OLDPWD=", owd);
+		env_append_node(&mini->myenv, env_new_node(temp));
+		free (temp);
 	}
 }
 

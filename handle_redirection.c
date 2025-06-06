@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 22:00:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 12:22:23 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:59:28 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	handle_redirection(t_redirlst *redir, t_ms *mini)
 		{
 			if (p_dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
 				return (-1);
+			close_fd(redir->heredoc_fd);
 		}
 		else if (redir->type == RD_IN)
 		{
