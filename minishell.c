@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 15:56:19 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:31:28 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	process_cmds(t_ms *mini, char *line)
 {
 	if (handle_heredocs(mini->cmdblocks, mini) == -1)
 	{
-		ft_putendl_fd("minishell: heredoc error", STDERR_FILENO);
+		//ft_putendl_fd("minishell: heredoc error", STDERR_FILENO);
 		ft_clear_cmdblock(&mini->cmdblocks);
 		free(line);
 		line = NULL;
@@ -72,23 +72,25 @@ void	run_shell_loop(t_ms *mini)
 
 	while (1)
 	{
-		g_signo = 0;
 		line = readline(GREEN "minishell> " DEFAULT);
+		g_signo = 0;
 		printf("segnale: %d riga 77 \n", g_signo);
-		if (g_signo == SIGINT)
-		{
-			dup2(mini->stdinout_copy[0], 0);
-			printf("segnale: %d riga 81 \n", g_signo);
-		}
 		if (line == NULL && g_signo != SIGINT)
 		{
 			dup2(mini->stdinout_copy[0], 0);
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
-		printf("segnale:%d riga 90 \n", g_signo);
+		if (g_signo == SIGINT)
+		{
+			dup2(mini->stdinout_copy[0], 0);
+			printf("segnale: %d riga 81 \n", g_signo);
+		}
+		printf("segnale:%d riga 89 \n", g_signo);
 		add_history(line);
+		printf("segnale:%d riga 91 \n", g_signo);
 		handle_line(mini, line);
+		printf("segnale:%d riga 93 \n", g_signo);
 		setup_signals();
 	}
 }

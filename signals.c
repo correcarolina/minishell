@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/06 15:41:48 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:21:41 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ volatile sig_atomic_t	g_signo = 0;  // 0 = nessun segnale
 
 void	signal_handler(int signo)
 {
+	//printf(GREEN "signal handler" DEFAULT);
 	if (signo == SIGINT)
 	{
 		// printf("\n");
@@ -64,19 +65,18 @@ void	setup_child_signals(void)
 
 void	setup_heredoc_signals(void)
 {
-	signal(SIGINT, signal_handler);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 }
 
 //handles ctrl c in heredoc
-void	ft_hd_ctrlc(int signo, int ex_SI, int w_fd)
+void	ft_hd_ctrlc(int signo)
 {
 	if (signo == SIGINT)
 	{
-		ex_SI = 1;
-		signo = 0;
-		close_fd(w_fd);
+		//g_signo = 0;
+		//close_fd(w_fd);
 		write(1, "\n", 1);
-		close(0);
+		exit(130);
 	}
 }

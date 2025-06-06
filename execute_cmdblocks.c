@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 15:35:59 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/06 16:23:23 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 	}
 	last_pid = create_pipes(cmdblocks, ms);
 	ms->exit_status = wait_children(last_pid);
+	printf("segnale: %d riga 98 \n", g_signo);
 	return (ms->exit_status);
 }
 
