@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/06 17:21:41 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:45:05 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	setup_child_signals(void)
 
 void	setup_heredoc_signals(void)
 {
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, ft_hd_ctrlc);
 	signal(SIGQUIT, SIG_IGN);
 }
 
@@ -76,7 +76,10 @@ void	ft_hd_ctrlc(int signo)
 	{
 		//g_signo = 0;
 		//close_fd(w_fd);
+		rl_replace_line("", 0);
 		write(1, "\n", 1);
-		exit(130);
+		close(0);
+		g_signo = 130;
+		//exit(130);
 	}
 }

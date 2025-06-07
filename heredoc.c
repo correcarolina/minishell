@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 16:54:28 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:47:17 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 	g_signo = 0;
 	while (1)
 	{
-
 		line = readline(AQUA "HEREDOC> " DEFAULT);
 		if (!line)
 			break ;
