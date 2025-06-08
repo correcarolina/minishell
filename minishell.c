@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 17:31:28 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 18:18:49 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static int	process_cmds(t_ms *mini, char *line)
 		dup2(mini->stdinout_copy[1], STDOUT_FILENO);
 		return (1);
 	}
+	printf("miniexi %d\n", mini->exit_status);
 	execute_cmdblocks(mini->cmdblocks, mini);
 	ft_clear_cmdblock(&mini->cmdblocks);
 	return (0);
@@ -70,10 +71,13 @@ void	run_shell_loop(t_ms *mini)
 {
 	char	*line;
 
+	signal(SIGINT, signal_handler);
+	//setup_signals(mini);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		line = readline(GREEN "minishell> " DEFAULT);
-		g_signo = 0;
+		mini->exit_status = getsingal(mini);
 		printf("segnale: %d riga 77 \n", g_signo);
 		if (line == NULL && g_signo != SIGINT)
 		{
@@ -91,7 +95,6 @@ void	run_shell_loop(t_ms *mini)
 		printf("segnale:%d riga 91 \n", g_signo);
 		handle_line(mini, line);
 		printf("segnale:%d riga 93 \n", g_signo);
-		setup_signals();
 	}
 }
 
@@ -105,7 +108,7 @@ int	main(int ac, char **av, char **env)
 	mini = ft_init(env);
 	if (!mini)
 		return (1);
-	setup_signals();
+	//setup_signals(mini);
 	run_shell_loop(mini);
 	ms_cleanup(mini);
 	rl_clear_history();
@@ -155,7 +158,7 @@ int	main(int ac, char **av, char **env)
 	mini = ft_init(env);
 	if (!mini)
 		return (1);
-	setup_signals();
+	setup_signals(mini);
 	while (1)
 	{
 		g_signo = 0;
@@ -195,7 +198,7 @@ int	main(int ac, char **av, char **env)
 	mini = ft_init(env);
 	if (!mini)
 		return (1);
-	setup_signals();
+	setup_signals(mini);
 	while(1)
 	{signal_handler
 		g_signo = 0;

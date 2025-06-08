@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:22:54 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/06 20:21:45 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 18:32:16 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern volatile sig_atomic_t	g_signo;
+extern int	g_signo;
 
 char	*ft_append_text_before_dollar(char **start)
 {
@@ -57,12 +57,13 @@ int	ft_wait_heredoc(pid_t pid)
 	int	status;
 
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	if (/* (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		||  */(WIFEXITED(status) && WEXITSTATUS(status) == 130))
 	{
-		write(1,"\n",1);
+		write(1, "\n", 1);
+		write(1, "ctrC\n", 5);
 		return (-1);
 	}
-	printf("minishell: warning: here-document at line 1 delimited by eof\n");
 	return (0);
 }
 
