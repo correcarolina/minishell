@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 17:12:40 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:06:23 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@
 # define S_QUOTE	39
 # define D_QUOTE	34
 # define PIPE		1
-# define RD_IN		2	// < filename
-# define RD_OUT_T	3	// > filename
-# define RD_OUT_A	4	// >> filename
-# define RD_HEREDOC	5	// << delimiter
+# define RD_IN		2
+# define RD_OUT_T	3
+# define RD_OUT_A	4
+# define RD_HEREDOC	5
 # define CMD		6
 # define ARG		7
 # define DELIMITER	8
@@ -47,7 +47,7 @@
 # define AQUA "\001\033[1;36m\002"
 # define DEFAULT "\001\033[0m\002"
 
-extern int g_signo;
+extern int	g_signo;
 
 //una lista per fare il parsing
 typedef struct s_list
@@ -57,7 +57,8 @@ typedef struct s_list
 	struct s_list	*next;
 }			t_list;
 
-//una lista per gestire le variabili di ambiente, in una metto la KEY e in un'altra
+//una lista per gestire le variabili di ambiente,
+//  in una metto la KEY e in un'altra
 // il value, il '=' non lo metto, se poi devo stampare l'elenco di variabili lo
 //aggiungo dopo
 typedef struct s_envlst
@@ -68,7 +69,8 @@ typedef struct s_envlst
 }			t_envlst;
 
 //una lista per gestire le redirections, in un campo metto il nome del file o il
-//delimitatore nel caso di heredoc, in un'altroil type (filein, fileout, append, heredoc)
+//delimitatore nel caso di heredoc, in un'altroil type 
+//(filein, fileout, append, heredoc)
 //e un terzo per il fd nel caso di heredoc
 typedef struct s_redirlst
 {
@@ -79,10 +81,15 @@ typedef struct s_redirlst
 }		t_redirlst;
 
 //questo e il nodo che deve arrivare al executor:
+/* 
+char **cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
+t_redirlst	*redir;//ogni nodo contiene il nome del file e il type 
+// (filein, fileout, append, heredoc)
+*/
 typedef struct s_cmdblock
 {
-	char				**cmd;//un array di str: 0 = cmd, 1 = arg 1, 2 = arg 2...
-	t_redirlst			*redir;//ogni nodo contiene il nome del file e il type (filein, fileout, append, heredoc)
+	char				**cmd;
+	t_redirlst			*redir;
 	struct s_cmdblock	*next;
 }			t_cmdblock;
 
@@ -91,7 +98,7 @@ typedef struct s_ms_
 {
 	t_envlst	*myenv;
 	char		*cwd;
-	t_cmdblock 	*cmdblocks;
+	t_cmdblock	*cmdblocks;
 	int			stdinout_copy[2];
 	int			exit_status;
 }			t_ms;
@@ -147,8 +154,8 @@ void		ft_assign_cmd(t_list *line);
 
 /******************************* final parse **********************************/
 
-char		**ft_cmd_matrix(t_list *line);//queste 2 possono essere static
-t_redirlst	*redir_lst(t_list *line);//queste 2 possono essere static
+char		**ft_cmd_matrix(t_list *line);
+t_redirlst	*redir_lst(t_list *line);
 t_cmdblock	*ft_create_cmdblock(t_list *line);
 void		free_matrix(char **matrix, int i);
 
@@ -193,7 +200,7 @@ int			ft_export(char **cmd, t_ms *mini);
 int			ft_unset(char **cmd, t_ms *mini);
 int			builtin_echo(char **cmd);
 int			ft_cd(char **cmd, t_ms *mini);
-int 		ft_exit(char **cmd, t_ms *ms, int p);
+int			ft_exit(char **cmd, t_ms *ms, int p);
 
 /************************** exec_utils ****************************************/
 
@@ -244,12 +251,8 @@ void		ft_print_error2(char *str, t_ms *mini, int err);
 
 void		signal_handler(int signo);
 void		setup_signals(t_ms *mini);
-void		setup_child_signals(void);
-void		setup_heredoc_signals(void);
 void		ft_hd_ctrlc(int signo);
-//void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
-
-void	child_sighand(int sig);
-int getsingal(t_ms *mini);
+void		child_sighand(int sig);
+int			getsingal(t_ms *mini);
 
 #endif

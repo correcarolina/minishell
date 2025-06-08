@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:31:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 18:18:49 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:48:47 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static int	process_cmds(t_ms *mini, char *line)
 {
 	if (handle_heredocs(mini->cmdblocks, mini) == -1)
 	{
-		//ft_putendl_fd("minishell: heredoc error", STDERR_FILENO);
 		ft_clear_cmdblock(&mini->cmdblocks);
 		free(line);
 		line = NULL;
@@ -24,7 +23,6 @@ static int	process_cmds(t_ms *mini, char *line)
 		dup2(mini->stdinout_copy[1], STDOUT_FILENO);
 		return (1);
 	}
-	printf("miniexi %d\n", mini->exit_status);
 	execute_cmdblocks(mini->cmdblocks, mini);
 	ft_clear_cmdblock(&mini->cmdblocks);
 	return (0);
@@ -72,13 +70,11 @@ void	run_shell_loop(t_ms *mini)
 	char	*line;
 
 	signal(SIGINT, signal_handler);
-	//setup_signals(mini);
 	while (1)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		line = readline(GREEN "minishell> " DEFAULT);
 		mini->exit_status = getsingal(mini);
-		printf("segnale: %d riga 77 \n", g_signo);
 		if (line == NULL && g_signo != SIGINT)
 		{
 			dup2(mini->stdinout_copy[0], 0);
@@ -88,13 +84,9 @@ void	run_shell_loop(t_ms *mini)
 		if (g_signo == SIGINT)
 		{
 			dup2(mini->stdinout_copy[0], 0);
-			printf("segnale: %d riga 81 \n", g_signo);
 		}
-		printf("segnale:%d riga 89 \n", g_signo);
 		add_history(line);
-		printf("segnale:%d riga 91 \n", g_signo);
 		handle_line(mini, line);
-		printf("segnale:%d riga 93 \n", g_signo);
 	}
 }
 
@@ -108,7 +100,6 @@ int	main(int ac, char **av, char **env)
 	mini = ft_init(env);
 	if (!mini)
 		return (1);
-	//setup_signals(mini);
 	run_shell_loop(mini);
 	ms_cleanup(mini);
 	rl_clear_history();
@@ -250,7 +241,6 @@ int	main(int ac, char **av, char **env)
 	ms_cleanup(mini);
 	return (mini->exit_status);
 } */
-
 /* //questo main senza readline non ha leaks 7/4/25
 int	main (int ac, char **av, char **env)
 {

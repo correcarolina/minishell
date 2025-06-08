@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:50:59 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 20:08:33 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:04:53 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char	*ft_operator(char **str)
 	(*str)++;
 	return (operator);
 }
-
 /* static char	*handle_token(t_ms mini, char **str)
 {
 	char	*word;
@@ -48,7 +47,6 @@ char	*ft_operator(char **str)
 		word = ft_get_token(mini, str);
 	return (word);
 }
-
 //splits the input, and put the tokens into a linked list
 void	tokenize(t_ms *mini, char *str, t_list **input)
 {
@@ -100,7 +98,7 @@ static void	handle_word(t_ms *mini, char **str, t_list **input)
 	if (last_is_heredoc(*input))
 		hd = 1;
 	word = ft_get_token(*mini, str, hd);
-	if (word != NULL)/*  && *word != '\0' levato per segfault in caso di ""*/
+	if (word != NULL)
 	{
 		if (is_str_operator(word))
 		{

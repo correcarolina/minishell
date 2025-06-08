@@ -6,14 +6,13 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:10:29 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 17:54:29 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:44:56 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //functions for handling the list of command blocks
-
 t_cmdblock	*ft_new_cmdblock(char **cmd, t_redirlst *redir)
 {
 	t_cmdblock	*new;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   singlequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:28:37 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 13:49:10 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:01:17 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,12 @@ char	*ft_dollar_expansion(t_ms mini, char **str)
 	}
 	else if (**str != '_' && !ft_isalpha(**str))
 	{
-		(*str)++;//cosa fa se trova $.1var cioe un name non valido?
-		return (ft_strdup(""));//salta il primo char dopo $ e poi passa al seguente token
+		(*str)++;
+		return (ft_strdup(""));
 	}
 	while ((*str)[i] != '\0' && (ft_isalnum((*str)[i]) || (*str)[i] == '_'))
 		i++;
-	name = ft_substr(*str, 0, i);//checks for NULL in getenv_var
+	name = ft_substr(*str, 0, i);
 	value = ft_getenv_var(&mini, name);
 	free(name);
 	(*str) += i;
@@ -91,7 +91,7 @@ char	*doublequote(t_ms mini, char **str)
 	word = ft_calloc(1, sizeof(char));
 	if (!word)
 		return (NULL);
-	(*str)++;//skips the first double quote
+	(*str)++;
 	while (**str && **str != D_QUOTE)
 	{
 		if (**str == '$')

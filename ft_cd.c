@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 18:25:35 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:46:32 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,6 @@ int ft_cd(char **cmd, t_ms *mini)
 }
  */
 /* //--------------------------------TESTING OONLY
-
 char *ft_strdup(const char *s)
 {
     char *dup;
@@ -219,7 +218,6 @@ char *ft_strdup(const char *s)
         memcpy(dup, s, len);
     return (dup);
 }
-
 int ft_strcmp(const char *s1, const char *s2)
 {
     while (*s1 && (*s1 == *s2))
@@ -229,13 +227,11 @@ int ft_strcmp(const char *s1, const char *s2)
     }
     return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
-
 void ft_putstr_fd(char *s, int fd)
 {
     if (s)
         write(fd, s, strlen(s));
 }
-
 t_envlst *create_env_node(char *key, char *value)
 {
     t_envlst *node = malloc(sizeof(t_envlst));

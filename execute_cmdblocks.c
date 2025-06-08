@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 20:20:55 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:02:56 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 
 	status = 0;
 	close_2_fds(ms->stdinout_copy[0], ms->stdinout_copy[1]);
-	// setup_child_signals();
 	if (prev_fd != -1)
 		dup2(prev_fd, STDIN_FILENO);
-	if (cmd->next)//non e l'ultimo comando
+	if (cmd->next)
 		dup2(next_fd[1], STDOUT_FILENO);
 	close_fd(prev_fd);
 	close_2_fds(next_fd[1], next_fd[0]);
@@ -58,15 +57,15 @@ pid_t	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	while (cmdblock)
-	{//se non e l'ultimo comando crea la pipe
+	{
 		create_single_pipe(cmdblock, pipe_fd);
 		signal(SIGINT, child_sighand);
 		signal(SIGQUIT, child_sighand);
 		pid = fork();
-		if (pid == 0)//child
+		if (pid == 0)
 			child_process(cmdblock, prev_fd, pipe_fd, ms);
 		close_fd(prev_fd);
-		if (cmdblock->next)//non e l'ultimo commando
+		if (cmdblock->next)
 		{
 			close(pipe_fd[1]);
 			prev_fd = pipe_fd[0];
@@ -83,11 +82,11 @@ int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 {
 	int		ret;
 	pid_t	last_pid;
-	
+
 	last_pid = -1;
 	if (!cmdblocks || !cmdblocks->cmd || \
-		(!cmdblocks->cmd[0] && !cmdblocks->redir))//se non ci sono ne comandi ne redirections
-		return (0);//oppure return errore?
+		(!cmdblocks->cmd[0] && !cmdblocks->redir))
+		return (0);
 	if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
     {
         handle_redirection(cmdblocks->redir, ms);
@@ -102,7 +101,6 @@ int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 	}
 	last_pid = create_pipes(cmdblocks, ms);
 	ms->exit_status = wait_children(last_pid);
-	printf("segnale: %d riga 98 \n", g_signo);
 	return (ms->exit_status);
 }
 
@@ -111,28 +109,23 @@ static int	handle_signal_exit(int status)
 	int	sig;
 
 	sig = WTERMSIG(status);
-	// if (sig == SIGINT)
-	// 	write(STDERR_FILENO, "\n", 1);
-	// else 
-	// if (sig == SIGQUIT)
-	// 	ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
 	return (128 + sig);
 }
 
 int	wait_children(pid_t last_pid)
 {
-	int		status;// Stores the exit status of child processes
-	int		last_status;// Stores the last exit status
-	pid_t	pid;// Stores the process ID of terminated children
+	int		status;
+	int		last_status;
+	pid_t	pid;
 
 	last_status = 0;
-	while ((pid = wait(&status)) != -1)// Loop continues as long as there are children to wait for
+	while ((pid = wait(&status)) != -1)
 	{
 		if (pid == last_pid)
 		{
-			if (WIFEXITED(status))// Child terminated normally
-				last_status = WEXITSTATUS(status);// Return the exit code (0-255)
-			else if (WIFSIGNALED(status))// Child terminated by a signal
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
 				last_status = handle_signal_exit(status);
 		}
 		else if (WIFSIGNALED(status))
@@ -167,22 +160,17 @@ int	wait_children(void) //da aggiunggere qualcosa per segnali
 	return (last_status);
 }
 */
-
-
 /* Key Components:
 Wait Loop:
-
 wait(&status) suspends the parent process until a child terminates
 Returns the PID of the terminated child
 Stores the exit status in status
 Status Checking:
-
 WIFEXITED(status): Checks if child exited normally
 WEXITSTATUS(status): Gets the exit code (0-255)
 WIFSIGNALED(status): Checks if child was terminated by a signal
 WTERMSIG(status): Gets the signal number that caused termination
 Return Values:
-
 Normal exit: Returns the child's exit code
 Signal termination: Returns 128 + signal number (POSIX convention)
 Error: Returns -1

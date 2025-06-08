@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   environment_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:30:55 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 12:26:10 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:45:27 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //functions for handling the list of environement
-
 //function to clear one node
 void	env_clear_node(t_envlst *node)
 {

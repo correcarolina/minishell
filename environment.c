@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:17:03 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 12:28:41 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:45:44 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_envlst	*env_new_node(char *var)
 		free(new);
 		return (NULL);
 	}
-	if (i == ft_strlen(var))//se non c'e '='
+	if (i == ft_strlen(var))
 		new->value = NULL;
 	else
 		new->value = ft_strdup((var + i + 1));

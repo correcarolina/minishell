@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:15:27 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/03/12 19:15:30 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:03:19 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 //This functions iterate through the linked list of tokens and assign a type 
 
-//qui nella strncmp includo anche il terminatore \0 per non assegnare uno di questi operatori
+//qui nella strncmp includo anche il terminatore \0 
+// per non assegnare uno di questi operatori
 //a un token che non è un operatore ma in quotes es: "| grep "
 void	ft_assign_operator(t_list *line)
 {

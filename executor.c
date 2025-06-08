@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:08:07 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 14:47:26 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 20:54:09 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ static int	try_exec_path(char **cmd, char **env, t_ms *mini)
 {
 	execve(cmd[0], cmd, env);
 	if (errno == EACCES)
-		ft_print_error(cmd[0], mini, 4); // Permission denied
+		ft_print_error(cmd[0], mini, 4);
 	else if (errno == ENOENT)
-		ft_print_error(cmd[0], mini, 3); // No such file or directory
+		ft_print_error(cmd[0], mini, 3);
 	else if (errno == ENOTDIR)
-		ft_print_error2(cmd[0], mini, 5); // Not a directory
+		ft_print_error2(cmd[0], mini, 5);
 	else
 	{
 		perror("execve");
@@ -74,7 +74,7 @@ static int	execute_in_path(char **cmd, char **env, t_ms *mini)
 
 	if (cmd[0] && cmd[0][0] == '\0')
 	{
-		ft_print_error("''", mini, 1);//command not found
+		ft_print_error("''", mini, 1);
 		ft_free_matrix(env);
 		return (mini->exit_status);
 	}
@@ -118,4 +118,3 @@ int	execute_single_command(char **cmd, t_ms *mini)
 	}
 	return (execute_in_path(cmd, env, mini));
 }
-
