@@ -6,13 +6,13 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/07 18:45:05 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 18:28:22 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t	g_signo = 0;  // 0 = nessun segnale
+int g_signo = 0;  // 0 = nessun segnale
 
 void	signal_handler(int signo)
 {
@@ -21,21 +21,38 @@ void	signal_handler(int signo)
 	{
 		// printf("\n");
 		// close(0);
-		g_signo = signo;
+		g_signo = 2;
+		// printf(" signal %d\n", signo);
 		//rl_replace_line("", 0);
 		//rl_redisplay();
-		printf("\n");
+		// printf("\n");
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
 
-void	setup_signals(void)
+int getsingal(t_ms *mini)
 {
+	if (g_signo == SIGINT)
+	{
+		g_signo = 0;
+		// printf("130 SI VOLA\n");
+		return (130);
+	}
+	// printf("ESCO DIO MERDA\n");
+	return (mini->exit_status);
+}
+
+/* void	setup_signals(t_ms *mini)
+{
+
+	if (g_signo == SIGINT)
+		mini->exit_status = 130;
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
-}
+} */
 
 void	child_sighand(int sig)
 {
@@ -78,8 +95,8 @@ void	ft_hd_ctrlc(int signo)
 		//close_fd(w_fd);
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
+		g_signo = SIGINT;
 		close(0);
-		g_signo = 130;
 		//exit(130);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 16:52:22 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 17:12:40 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # define AQUA "\001\033[1;36m\002"
 # define DEFAULT "\001\033[0m\002"
 
-extern volatile sig_atomic_t g_signo;
+extern int g_signo;
 
 //una lista per fare il parsing
 typedef struct s_list
@@ -243,12 +243,13 @@ void		ft_print_error2(char *str, t_ms *mini, int err);
 /* ******************************SIGNALS************************************* */
 
 void		signal_handler(int signo);
-void		setup_signals(void);
+void		setup_signals(t_ms *mini);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
 void		ft_hd_ctrlc(int signo);
 //void		ft_hd_ctrlc(volatile sig_atomic_t g_signo, int ex_SI, int w_fd);
 
 void	child_sighand(int sig);
+int getsingal(t_ms *mini);
 
 #endif

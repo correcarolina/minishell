@@ -6,32 +6,32 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/07 18:47:17 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 18:36:01 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern volatile sig_atomic_t	g_signo;
+extern int g_signo;
 
-static void	ft_hd_ctrld(char *line, volatile sig_atomic_t g_signo, char *delim)
+static void	ft_hd_ctrld(char *delim)
 {
-	if (!line && g_signo != SIGINT)
-	{
+	 
 		write(STDERR_FILENO, "minishell: warning: here-document delimited ", 45);
 		write(STDERR_FILENO, "by end-of-file (wanted `", 25);
 		write(STDERR_FILENO, delim, ft_strlen(delim));
 		write(STDERR_FILENO, "')\n", 3);
-	}
+	
 }
 
 static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 {
 	char	*tmp;
 
-	if (!line && !*line && g_signo != SIGINT)
+	if (!line /* && !*line && g_signo != SIGINT */)
 	{
-		ft_hd_ctrld(*line, g_signo, delim);
+		printf("___________>\n");
+		ft_hd_ctrld(delim);
 		return (0);
 	}
 	if (ft_strcmp(*line, delim) == 0)
@@ -53,14 +53,34 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 	int		quoted_hd;
 	int		res;
 
-	setup_heredoc_signals();
+	signal(SIGINT, ft_hd_ctrlc);
+	//setup_heredoc_signals();
 	quoted_hd = ft_check_delimiter_quote(&delimiter);
-	g_signo = 0;
 	while (1)
 	{
+		// mini->exit_status = getsingal(mini);
+		// if ( g_signo == SIGINT)
+		// {
+		// 	printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
+		// 	exit(2);
+		// }
 		line = readline(AQUA "HEREDOC> " DEFAULT);
-		if (!line)
+		// mini->exit_status = getsingal(mini);
+		if (!line && g_signo != SIGINT)
+		{
+			mini->exit_status = getsingal(mini);
+			write(1, "ctrlD\n", 6);
+			printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
 			break ;
+		}
+		else if (!line && g_signo == SIGINT)
+		{
+			mini->exit_status = getsingal(mini);
+			close_fd(write_fd);
+			ft_clear_cmdblock(&mini->cmdblocks);
+			ms_cleanup(mini);
+			exit(130);
+		}
 		res = handle_line(mini, &line, delimiter, quoted_hd);
 		if (res <= 0)
 			break ;
@@ -111,7 +131,8 @@ int	handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini)
 		while (current)
 		{
 			if (current->type == RD_HEREDOC
-				&& create_heredoc(mini, current) == -1)
+				&& create_heredoc(mini, current) == -1
+				&& signal(SIGINT, signal_handler))
 				return (-1);
 			current = current->next;
 		}
