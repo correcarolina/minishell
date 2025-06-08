@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 23:26:00 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 17:19:04 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:47:44 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 // Initialize and allocate the main minishell structure (t_mini).
 // Copies environment variables, retrieves PWD, and duplicates stdin/stdout.
 // Returns a pointer to the initialized structure or NULL on failure.
-
 t_ms	*ft_init(char **env)
 {
 	t_ms		*mini;

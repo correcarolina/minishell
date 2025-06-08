@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 12:25:55 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 13:41:56 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:47:19 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ int	ft_export(char **cmd, t_ms *mini)
 
 	i = 1;
 	status = 0;
-	if (cmd[1] == NULL)//se non ci sono argomenti
+	if (cmd[1] == NULL)
 		env_export_print(mini->myenv);
-	else//else fare un ciclo per tutti gli args
+	else
 	{
 		while (cmd[i] != NULL)
 		{

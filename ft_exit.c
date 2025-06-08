@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/07 16:25:17 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:02:14 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,22 @@ static int	ft_overflow(char *str)
 
 static int	is_numeric(const char *str)
 {
-    int i = 0;
+	int	i;
 
-    if (!str || !str[0])
-        return 0;
-    if (str[i] == '-' || str[i] == '+')
-        i++;
-    if (!str[i])
-        return 0;
-    while (str[i])
-    {
-        if (!ft_isdigit(str[i]))
-            return 0;
-        i++;
-    }
-    return 1;
+	i = 0;
+	if (!str || !str[0])
+		return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 static void	ft_error_1(char **cmd, int i, t_ms *ms)
@@ -67,29 +68,29 @@ static void	ft_error_1(char **cmd, int i, t_ms *ms)
 	}
 }
 
-
 int	ft_exit(char **cmd, t_ms *ms, int p)
 {
-    int	exit_code = ms->exit_status;
+	int	exit_code;
 
-    if (p)
-        ft_putendl_fd("exit", STDOUT_FILENO);
-    if (cmd[1])
-    {
+	exit_code = ms->exit_status;
+	if (p)
+		ft_putendl_fd("exit", STDOUT_FILENO);
+	if (cmd[1])
+	{
 		if (cmd[2])
-        {
+		{
 			ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
 			ft_clear_cmdblock(&ms->cmdblocks);
 			ms_cleanup(ms);
 			rl_clear_history();
 			exit(1);
-        }
+		}
 		ft_error_1(cmd, 0, ms);
-        exit_code = ft_atoi(cmd[1]);
-    }
-    ft_clear_cmdblock(&ms->cmdblocks);
-    ms_cleanup(ms);
-    rl_clear_history();
-    exit(exit_code & 255);
-    return (42);
+		exit_code = ft_atoi(cmd[1]);
+	}
+	ft_clear_cmdblock(&ms->cmdblocks);
+	ms_cleanup(ms);
+	rl_clear_history();
+	exit(exit_code & 255);
+	return (42);
 }

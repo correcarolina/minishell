@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   db_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 20:04:01 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 12:24:51 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:00:20 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	printcommand(t_cmdblock *head)
+/* void	printcommand(t_cmdblock *head)
 {
 	t_cmdblock	*tmp;
 	t_redirlst	*redir;
@@ -56,13 +56,11 @@ void	printcommand(t_cmdblock *head)
 		printf("\n");
 		tmp = tmp->next;
 	}
-}
-
+} */
 //This function is a helper to debug the parser.
 //Add "debug_printer(line);" in ft_parse() after ft_assign_cmd to see the output
 //of the parser.
-void	debug_printer(t_list *line)/********* da levare ************/
-{
+/* void	debug_printer(t_list *line){
 	t_list	*current;
 	char	*token_type;
 
@@ -98,4 +96,4 @@ void	debug_printer(t_list *line)/********* da levare ************/
 		current = current->next;
 	}
 	printf("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-}
+} */

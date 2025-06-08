@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:01:33 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 12:50:20 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 20:46:26 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	// if (!s)
-	// 	return (NULL);
 	while (*s)
 	{
 		if (*s == (char)c)

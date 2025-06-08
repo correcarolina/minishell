@@ -6,34 +6,26 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 18:36:01 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/08 20:45:30 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_signo;
+extern int	g_signo;
 
-static void	ft_hd_ctrld(char *delim)
+static void	ft_clear_n_exit(t_ms *mini, int exit_status, int write_fd)
 {
-	 
-		write(STDERR_FILENO, "minishell: warning: here-document delimited ", 45);
-		write(STDERR_FILENO, "by end-of-file (wanted `", 25);
-		write(STDERR_FILENO, delim, ft_strlen(delim));
-		write(STDERR_FILENO, "')\n", 3);
-	
+	close_fd(write_fd);
+	ft_clear_cmdblock(&mini->cmdblocks);
+	ms_cleanup(mini);
+	exit(exit_status);
 }
 
 static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 {
 	char	*tmp;
 
-	if (!line /* && !*line && g_signo != SIGINT */)
-	{
-		printf("___________>\n");
-		ft_hd_ctrld(delim);
-		return (0);
-	}
 	if (ft_strcmp(*line, delim) == 0)
 		return (0);
 	if (ft_strchr(*line, '$') && !quoted_hd)
@@ -47,41 +39,33 @@ static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 	return (1);
 }
 
-static void	here_child(t_ms *mini, char *delimiter, int write_fd)
+/* static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 {
 	char	*line;
 	int		quoted_hd;
 	int		res;
 
 	signal(SIGINT, ft_hd_ctrlc);
-	//setup_heredoc_signals();
 	quoted_hd = ft_check_delimiter_quote(&delimiter);
 	while (1)
 	{
-		// mini->exit_status = getsingal(mini);
-		// if ( g_signo == SIGINT)
-		// {
-		// 	printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
-		// 	exit(2);
-		// }
 		line = readline(AQUA "HEREDOC> " DEFAULT);
-		// mini->exit_status = getsingal(mini);
 		if (!line && g_signo != SIGINT)
 		{
 			mini->exit_status = getsingal(mini);
-			write(1, "ctrlD\n", 6);
 			printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
 			break ;
 		}
 		else if (!line && g_signo == SIGINT)
 		{
 			mini->exit_status = getsingal(mini);
-			close_fd(write_fd);
-			ft_clear_cmdblock(&mini->cmdblocks);
-			ms_cleanup(mini);
-			exit(130);
+			//close_fd(write_fd);
+			//ft_clear_cmdblock(&mini->cmdblocks);
+			//ms_cleanup(mini);
+			//exit(130); 
+			ft_clear_n_exit(mini, 130, write_fd);
 		}
-		res = handle_line(mini, &line, delimiter, quoted_hd);
+		res = handle_line(mini, &line, delimiter, quoted_hd);\
 		if (res <= 0)
 			break ;
 		write(write_fd, line, ft_strlen(line));
@@ -89,10 +73,46 @@ static void	here_child(t_ms *mini, char *delimiter, int write_fd)
 		free(line);
 		line = NULL;
 	}
-	close_fd(write_fd);
-	ft_clear_cmdblock(&mini->cmdblocks);
-	ms_cleanup(mini);
-	exit(0);
+	//close_fd(write_fd);
+	ft_clear_n_exit(mini, 0, write_fd);
+} */
+
+static int	process_hd_inpt(t_ms *ms, char *delmitr, int quotd_hd, int write_fd)
+{
+	char	*line;
+	int		res;
+
+	line = readline(AQUA "HEREDOC> " DEFAULT);
+	if (!line && g_signo != SIGINT)
+	{
+		ms->exit_status = getsingal(ms);
+		printf("minishell: warning: here-document delimited by \
+end-of-file (wanted `%s')\n", delmitr);
+		return (0);
+	}
+	else if (!line && g_signo == SIGINT)
+	{
+		ms->exit_status = getsingal(ms);
+		ft_clear_n_exit(ms, 130, write_fd);
+	}
+	res = handle_line(ms, &line, delmitr, quotd_hd);
+	if (res <= 0)
+		return (free(line), 0);
+	write(write_fd, line, ft_strlen(line));
+	write(write_fd, "\n", 1);
+	free(line);
+	return (1);
+}
+
+static void	here_child(t_ms *mini, char *delimiter, int write_fd)
+{
+	int	quoted_hd;
+
+	signal(SIGINT, ft_hd_ctrlc);
+	quoted_hd = ft_check_delimiter_quote(&delimiter);
+	while (process_hd_inpt(mini, delimiter, quoted_hd, write_fd))
+		;
+	ft_clear_n_exit(mini, 0, write_fd);
 }
 
 static int	create_heredoc(t_ms *mini, t_redirlst *current)
@@ -111,7 +131,6 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 		close_fd(fd[0]);
 		close(mini->stdinout_copy[0]);
 		close(mini->stdinout_copy[1]);
-		//setup_child_signals(); // <--------------
 		here_child(mini, current->content, fd[1]);
 	}
 	close(fd[1]);

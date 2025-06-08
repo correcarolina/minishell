@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 22:00:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/06 19:59:28 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:48:08 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ static int	open_file(char *filename, int flags, mode_t mode, t_ms *mini)
 	{
 		if (errno == EACCES)
 		{
-			ft_print_error(filename, mini, 4); //Permission denied
+			ft_print_error(filename, mini, 4);
 			mini->exit_status = 1;
 		}
 		else if (errno == ENOENT)
-			ft_print_error(filename, mini, 3); //No such file or directory
+			ft_print_error(filename, mini, 3);
 		else
 		{
 			ft_putstr_fd("minishell: ", 2);
