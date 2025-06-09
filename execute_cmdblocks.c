@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/09 12:16:28 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:09:05 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,45 +131,3 @@ int	wait_children(pid_t last_pid)
 	g_signo = 0;
 	return (last_status);
 }
-
-/* 
-old one: 
-int	wait_children(void) //da aggiunggere qualcosa per segnali
-{
-	int status;     // Stores the exit status of child processes
-	int	last_status; // Stores the last exit status
-	pid_t pid;      // Stores the process ID of terminated children
-
-	last_status = 0;
-	pid = wait(&status);  // Wait for any child process to terminate
-	while (pid > 0)  // Loop continues as long as there are children to wait for
-	{
-		if (WIFEXITED(status))                  // Child terminated normally
-			last_status = WEXITSTATUS(status);       // Return the exit code (0-255)
-		else if (WIFSIGNALED(status))           // Child terminated by a signal
-			last_status = (128 + WTERMSIG(status));    // Return 128 + signal number
-		pid = wait(&status);
-	}
-	if (pid == -1 && errno != ECHILD)  // Error checking
-		perror("wait");
-	return (last_status);
-}
-*/
-/* Key Components:
-Wait Loop:
-wait(&status) suspends the parent process until a child terminates
-Returns the PID of the terminated child
-Stores the exit status in status
-Status Checking:
-WIFEXITED(status): Checks if child exited normally
-WEXITSTATUS(status): Gets the exit code (0-255)
-WIFSIGNALED(status): Checks if child was terminated by a signal
-WTERMSIG(status): Gets the signal number that caused termination
-Return Values:
-Normal exit: Returns the child's exit code
-Signal termination: Returns 128 + signal number (POSIX convention)
-Error: Returns -1
-Common Signal Return Examples:
-SIGTERM (15): Returns 143 (128 + 15)
-SIGKILL (9): Returns 137 (128 + 9)
-SIGSEGV (11): Returns 139 (128 + 11) */
