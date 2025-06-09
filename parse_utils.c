@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:15:27 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 22:03:19 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:15:33 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	ft_set_file_type(int redir_type)
 	return (0);
 }
 
-void	ft_assign_file(t_list *line)
+int	ft_assign_file(t_list *line)
 {
 	t_list	*current;
 	int		redir_type;
@@ -69,15 +69,16 @@ void	ft_assign_file(t_list *line)
 				current->type = ft_set_file_type(redir_type);
 			else
 			{
-				ft_putstr_fd("Error: syntax error near unexpected token👻\n", 2);
-				return ;
+				ft_putstr_fd("Error: syntax error near unexpected token\n", 2);
+				return (1);
 			}
 		}
 		current = current->next;
 	}
+	return (0);
 }
 
-void	ft_assign_delimiter(t_list *line)
+int	ft_assign_delimiter(t_list *line)
 {
 	t_list	*current;
 
@@ -91,12 +92,13 @@ void	ft_assign_delimiter(t_list *line)
 				current->type = DELIMITER;
 			else
 			{
-				ft_putstr_fd("Error: syntax error near unexpected token😈\n", 2);
-				return ;
+				ft_putstr_fd("Error: syntax error near unexpected token\n", 2);
+				return (1);
 			}
 		}
 		current = current->next;
 	}
+	return (0);
 }
 
 void	ft_assign_cmd(t_list *line)

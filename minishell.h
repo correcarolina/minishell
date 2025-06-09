@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/09 13:00:54 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:15:16 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,8 @@ int			ft_parse(t_list *line);
 
 /*(5ft)parse_utils*/
 void		ft_assign_operator(t_list *line);
-void		ft_assign_delimiter(t_list *line);
-void		ft_assign_file(t_list *line);
+int			ft_assign_delimiter(t_list *line);
+int			ft_assign_file(t_list *line);
 void		ft_assign_cmd(t_list *line);
 
 /******************************* final parse **********************************/
