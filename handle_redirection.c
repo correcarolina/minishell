@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 22:00:04 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 21:48:08 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 12:33:39 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // This function duplicates fd1 to fd2 and closes fd1.
-int	p_dup2(int fd1, int fd2)
+static int	p_dup2(int fd1, int fd2)
 {
 	if (dup2(fd1, fd2) == -1)
 	{
@@ -53,7 +53,7 @@ static int	open_file(char *filename, int flags, mode_t mode, t_ms *mini)
 	return (fd);
 }
 
-int	redirection_out(t_redirlst *redir, t_ms *mini)
+static int	redirection_out(t_redirlst *redir, t_ms *mini)
 {
 	int		fd_out;
 	char	*file;
@@ -89,7 +89,6 @@ int	handle_redirection(t_redirlst *redir, t_ms *mini)
 		{
 			if (p_dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
 				return (-1);
-			close_fd(redir->heredoc_fd);
 		}
 		else if (redir->type == RD_IN)
 		{

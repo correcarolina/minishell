@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:14:49 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 20:17:00 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:00:12 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,19 @@ void	close_2_fds(int fd1, int fd2)
 		close(fd1);
 	if (fd2 >= 0)
 		close(fd2);
+}
+
+void	inizilize_3fds(int *fd1, int pipe_fd[2])
+{
+	*fd1 = -1;
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+}
+
+void	ft_clear_n_exit(t_ms *mini, int exit_status, int write_fd)
+{
+	close_fd(write_fd);
+	ft_clear_cmdblock(&mini->cmdblocks);
+	ms_cleanup(mini);
+	exit(exit_status);
 }

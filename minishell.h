@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:32:53 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 22:06:23 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:00:54 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ typedef struct s_ms_
 
 t_ms		*ft_init(char **env);
 void		ms_cleanup(t_ms *ms);
+void		clean_cmdblocks_ms_and_history(t_ms*mini);
 
 /****************list_utils**** list for parsing ******************************/
 
@@ -213,10 +214,12 @@ char		**envlst_to_matrix(t_envlst *env);
 void		create_single_pipe(t_cmdblock *cmd, int pipe_fd[2]);
 void		close_fd(int fd);
 void		close_2_fds(int fd1, int fd2);
+void		inizilize_3fds(int *fd1, int pipe_fd[2]);
+void		ft_clear_n_exit(t_ms *mini, int exit_status, int write_fd);
 
 /************************** execute_cmdblocks *********************************/
 
-void		child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms);
+void		child_process(t_cmdblock *cmd, int pv_fd, int nxt_fd[2], t_ms *ms);
 pid_t		create_pipes(t_cmdblock *cmdblock, t_ms *ms);
 int			execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms);
 int			wait_children(pid_t last_pid);
@@ -224,7 +227,6 @@ int			wait_children(pid_t last_pid);
 /*5f********************* handle_redirection **********************************/
 
 int			handle_redirection(t_redirlst *redir, t_ms *mini);
-int			redirection_out(t_redirlst *redir, t_ms *mini);
 
 /*4f***************************** heredoc *************************************/
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 23:26:00 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 21:47:44 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 12:17:56 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,11 @@ void	ms_cleanup(t_ms *mini)
 	mini->stdinout_copy[0] = -1;
 	mini->stdinout_copy[1] = -1;
 	free(mini);
+}
+
+void	clean_cmdblocks_ms_and_history(t_ms*mini)
+{
+	ft_clear_cmdblock(&mini->cmdblocks);
+	ms_cleanup(mini);
+	rl_clear_history();
 }

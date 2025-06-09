@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/08 22:02:14 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 11:24:20 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ static void	ft_error_1(char **cmd, int i, t_ms *ms)
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(cmd[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		ft_clear_cmdblock(&ms->cmdblocks);
-		ms_cleanup(ms);
-		rl_clear_history();
+		clean_cmdblocks_ms_and_history(ms);
 		exit(2);
 	}
 }
@@ -80,9 +78,7 @@ int	ft_exit(char **cmd, t_ms *ms, int p)
 		if (cmd[2])
 		{
 			ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-			ft_clear_cmdblock(&ms->cmdblocks);
-			ms_cleanup(ms);
-			rl_clear_history();
+			clean_cmdblocks_ms_and_history(ms);
 			exit(1);
 		}
 		ft_error_1(cmd, 0, ms);

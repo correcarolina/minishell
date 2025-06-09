@@ -3,24 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 20:45:30 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:02:22 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 extern int	g_signo;
-
-static void	ft_clear_n_exit(t_ms *mini, int exit_status, int write_fd)
-{
-	close_fd(write_fd);
-	ft_clear_cmdblock(&mini->cmdblocks);
-	ms_cleanup(mini);
-	exit(exit_status);
-}
 
 static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 {
@@ -119,7 +111,9 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 {
 	int		fd[2];
 	pid_t	pid;
+	int		status;
 
+	status = 0;
 	if (pipe(fd) == -1)
 		return (perror("pipe"), -1);
 	pid = fork();
@@ -134,8 +128,9 @@ static int	create_heredoc(t_ms *mini, t_redirlst *current)
 		here_child(mini, current->content, fd[1]);
 	}
 	close(fd[1]);
+	status = ft_wait_heredoc(pid);
 	current->heredoc_fd = fd[0];
-	return (ft_wait_heredoc(pid));
+	return (status);
 }
 
 int	handle_heredocs(t_cmdblock *cmdblocks, t_ms *mini)

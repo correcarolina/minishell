@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmdblocks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:19:05 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/08 22:02:56 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 12:16:28 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 	close_2_fds(next_fd[1], next_fd[0]);
 	if (handle_redirection(cmd->redir, ms) == -1)
 	{
-		ft_clear_cmdblock(&ms->cmdblocks);
-		rl_clear_history();
-		ms_cleanup(ms);
+		clean_cmdblocks_ms_and_history(ms);
 		exit(1);
 	}
 	if (!cmd->cmd || !cmd->cmd[0])
@@ -37,9 +35,7 @@ void	child_process(t_cmdblock *cmd, int prev_fd, int next_fd[2], t_ms *ms)
 		exit(EXIT_SUCCESS);
 	}
 	status = execute_single_command(cmd->cmd, ms);
-	ft_clear_cmdblock(&ms->cmdblocks);
-	rl_clear_history();
-	ms_cleanup(ms);
+	clean_cmdblocks_ms_and_history(ms);
 	exit(status);
 }
 
@@ -53,9 +49,7 @@ pid_t	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 	pid_t		pid;
 
 	pid = 0;
-	prev_fd = -1;
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
+	inizilize_3fds(&prev_fd, pipe_fd);
 	while (cmdblock)
 	{
 		create_single_pipe(cmdblock, pipe_fd);
@@ -74,8 +68,7 @@ pid_t	create_pipes(t_cmdblock *cmdblock, t_ms *ms)
 			close_fd(pipe_fd[0]);
 		cmdblock = cmdblock->next;
 	}
-	close_fd(prev_fd);
-	return (pid);
+	return (close_fd(prev_fd), pid);
 }
 
 int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
@@ -88,10 +81,10 @@ int	execute_cmdblocks(t_cmdblock *cmdblocks, t_ms *ms)
 		(!cmdblocks->cmd[0] && !cmdblocks->redir))
 		return (0);
 	if (only_one_cmd(cmdblocks) && ft_strcmp(cmdblocks->cmd[0], "exit") == 0)
-    {
-        handle_redirection(cmdblocks->redir, ms);
-        return (ft_exit(cmdblocks->cmd, ms, 1));
-    }
+	{
+		handle_redirection(cmdblocks->redir, ms);
+		return (ft_exit(cmdblocks->cmd, ms, 1));
+	}
 	else if (only_one_cmd(cmdblocks) && is_built_in(cmdblocks->cmd[0]))
 	{
 		if (handle_redirection(cmdblocks->redir, ms) == -1)
@@ -119,7 +112,8 @@ int	wait_children(pid_t last_pid)
 	pid_t	pid;
 
 	last_status = 0;
-	while ((pid = wait(&status)) != -1)
+	pid = wait(&status);
+	while (pid != -1)
 	{
 		if (pid == last_pid)
 		{
@@ -130,8 +124,9 @@ int	wait_children(pid_t last_pid)
 		}
 		else if (WIFSIGNALED(status))
 			handle_signal_exit(status);
+		pid = wait(&status);
 	}
-	if (pid == -1 && errno != ECHILD)
+	if (errno != ECHILD)
 		perror("wait");
 	g_signo = 0;
 	return (last_status);
