@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 21:10:51 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/03 12:21:20 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:46:47 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,9 @@ static int	paired_quotes(const char *str)
 int	ft_isvalid_input(const char *input)
 {
 	if (input == NULL || ft_isempty_str(input) || (!paired_quotes(input)))
+	{
+		free((void *)input);
 		return (0);
+	}	
 	return (1);
 }

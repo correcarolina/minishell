@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:53:17 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/08 21:58:57 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:24:57 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ void	child_sighand(int sig)
 	if (sig == SIGINT)
 	{
 		g_signo = SIGINT;
-		rl_replace_line("", 0);
-		rl_redisplay();
 		if (isatty(STDOUT_FILENO))
 			printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 	else if (sig == SIGQUIT)
 	{

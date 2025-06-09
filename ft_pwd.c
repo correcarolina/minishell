@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:39:58 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/05 20:11:13 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:06:36 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 int	ft_pwd(t_ms *mini)
 {
-	char	cwd[1024];
+	char	cwd[4096];
 
-	if (getcwd(cwd, 1024) == NULL)
+	if (getcwd(cwd, 4096) == NULL)
 	{
 		ft_putstr_fd("pwd: getcwd error\n", 2);
 		mini->exit_status = 1;

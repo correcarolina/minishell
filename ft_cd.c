@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 18:57:08 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/09 13:09:35 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:06:36 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,7 @@
  * @param mini Pointer to the shell structure
  * @param cwd New current working directory
  * @param owd Previous working directory
-
-static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
-{
-	t_envlst	*pwd_node;
-	t_envlst	*oldpwd_node;
-
-	pwd_node = mini->myenv;
-	while (pwd_node && ft_strcmp(pwd_node->key, "PWD") != 0)
-		pwd_node = pwd_node->next;
-	oldpwd_node = mini->myenv;
-	while (oldpwd_node && ft_strcmp(oldpwd_node->key, "OLDPWD") != 0)
-		oldpwd_node = oldpwd_node->next;
-	if (pwd_node)
-	{
-		free(pwd_node->value);
-		pwd_node->value = ft_strdup(cwd);
-	}
-	if (oldpwd_node)
-	{
-		free(oldpwd_node->value);
-		oldpwd_node->value = ft_strdup(owd);
-	}
-}*/
+ */
 static void	update_pwd_vars(t_ms *mini, char *cwd, char *owd)
 {
 	t_envlst	*pwd_node;
@@ -100,6 +78,16 @@ static char	*get_target_directory(char **cmd, t_ms *mini)
 			return (NULL);
 		}
 	}
+	else if (cmd[1] && strcmp(cmd[1], "-") == 0)
+	{
+		target_dir = ft_getenv_var(mini, "OLDPWD");
+		if (!target_dir)
+		{
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+			mini->exit_status = 1;
+			return (NULL);
+		}
+	}
 	else
 		target_dir = cmd[1];
 	return (target_dir);
@@ -107,7 +95,7 @@ static char	*get_target_directory(char **cmd, t_ms *mini)
 
 static int	perform_cd(char *target_dir, t_ms *mini, char *old_dir)
 {
-	char	cwd[1024];
+	char	cwd[4096];
 
 	if (chdir(target_dir) != 0)
 	{
@@ -119,7 +107,7 @@ static int	perform_cd(char *target_dir, t_ms *mini, char *old_dir)
 		mini->exit_status = 1;
 		return (1);
 	}	
-	if (getcwd(cwd, 1024) == NULL)
+	if (getcwd(cwd, 4096) == NULL)
 		return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
 	update_pwd_vars(mini, cwd, old_dir);
 	if (mini->cwd)
@@ -135,10 +123,10 @@ static int	perform_cd(char *target_dir, t_ms *mini, char *old_dir)
 
 int	ft_cd(char **cmd, t_ms *mini)
 {
-	char	owd[1024];
+	char	owd[4096];
 	char	*target_dir;
 
-	if (getcwd(owd, 1024) == NULL)
+	if (getcwd(owd, 4096) == NULL)
 		return (ft_putstr_fd("minishell: cd: getcwd error\n", 2), 1);
 	target_dir = get_target_directory(cmd, mini);
 	if (!target_dir)
