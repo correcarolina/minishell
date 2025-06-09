@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:52:50 by cacorrea          #+#    #+#             */
-/*   Updated: 2025/06/09 13:02:22 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:06:02 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static int	handle_line(t_ms *mini, char **line, char *delim, int quoted_hd)
 		if (!line && g_signo != SIGINT)
 		{
 			mini->exit_status = getsingal(mini);
-			printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
+			printf("minishell: warning: here-document 
+			delimited by end-of-file (wanted `%s')\n", delimiter);
 			break ;
 		}
 		else if (!line && g_signo == SIGINT)
