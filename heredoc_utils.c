@@ -6,7 +6,7 @@
 /*   By: rd-agost <rd-agost@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:22:54 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/08 19:43:00 by rd-agost         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:10:23 by rd-agost         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,51 +73,3 @@ int	ft_check_delimiter_quote(char **delimiter)
 	}
 	return (0);
 }
-
-/* char	*ft_append_text_before_dollar(char **start)
-{
-	char	*tmp;
-	char	*expanded_part;
-	int		i;
-
-	i = 0;
-	while ((*start)[i] && (*start)[i] != '$')
-		i++;
-	tmp = ft_substr(*start, 0, i);
-	expanded_part = tmp;
-	*start += i;
-	return (expanded_part);
-}
-
-void	ft_append_expansion(t_ms *mini, char **start, char **expanded)
-{
-	char	*tmp;
-
-	if (**start == '$')
-	{
-		(*start)++;
-		tmp = ft_get_expansion(*mini, start, *expanded);
-		free(*expanded);
-		*expanded = tmp;
-	}
-}
-
-char	*ft_expand_heredoc(t_ms *mini, char **line)
-{
-	char	*start;
-	char	*expanded;
-	char	*part;
-
-	start = *line;
-	expanded = ft_strdup("");
-	if (!expanded)
-		return (NULL);
-	while (*start)
-	{
-		part = ft_append_text_before_dollar(&start);
-		expanded = ft_strjoin_free_both(expanded, part);
-		free(part);
-		ft_append_expansion(mini, &start, &expanded);
-	}
-	return (expanded);
-} */
