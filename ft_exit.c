@@ -6,7 +6,7 @@
 /*   By: cacorrea <cacorrea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:38:22 by rd-agost          #+#    #+#             */
-/*   Updated: 2025/06/09 18:50:03 by cacorrea         ###   ########.fr       */
+/*   Updated: 2025/06/11 10:20:32 by cacorrea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static int	is_alpha(const char *str)
 		return (0);
 	while (*str)
 	{
+		if (str[0] == '+' || str[0] == '-')
+			str++;
 		if (!ft_isdigit(*str))
 			return (1);
 		str++;
